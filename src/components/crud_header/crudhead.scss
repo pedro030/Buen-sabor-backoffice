@@ -1,0 +1,53 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+}
+
+.crud-container-head {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 4.5em;
+    border-bottom: 1px solid #888;
+
+    .crud-name {
+        font-size: 1.3em;
+        font-weight: bold;
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 1.5em;
+        height: 2.2em;
+
+        .btn-filter, .btn-add {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .3em;
+            background: none;
+            border-radius: 10px;
+            border: .1em solid orange;
+
+            &:hover {
+                background-color: orange;
+                color: white;
+                cursor: pointer;
+            }
+        }
+
+        .btn-filter {
+            width: 5em;
+        }
+
+        .btn-add {
+            width: 10em;
+        }
+
+        .icon-add, .icon-filter {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
