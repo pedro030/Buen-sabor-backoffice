@@ -1,0 +1,99 @@
+@function bottom_shadow() {
+    @return -1px 5px 4px 0px rgba(0, 0, 0, 0.25)
+}
+
+.nav {
+    position: sticky;
+    background-color: #fff;
+    width: 100%;
+    top: 0rem;
+    z-index: 2;
+}
+
+.top_nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    padding-left: 2rem;
+    color: var(--main-original-bg-color);
+    font-family: Prata;
+    cursor: pointer;
+}
+
+.searchInput {
+    width: 580px;
+    font-size: .9rem;
+    border-radius: 21.83px;
+    line-height: 2;
+    background-color: var(--main-opacity-bg-color);
+    padding-left: 2rem;
+    font-family: Poppins, FontAwesome;
+    border: 0px;
+    backdrop-filter: blur(10px);
+}
+
+// .searchInput::placeholder{
+//     background-image: url(../../assets//searcher.svg);
+//     background-repeat: no-repeat;
+//     background-position: 1.7rem;
+//     color: #000;
+// }
+
+.searchInput:focus{
+    outline: 2px ridge var(--main-original-bg-color);
+
+}
+
+.under_nave {
+    padding-bottom: .2rem;
+}
+
+.items {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: #00000050;
+
+    .active{
+        color: #000;
+    }
+
+    li {
+        padding-right: 2rem;
+        font-family: Poppins, FontAwesome;
+
+        .circle {
+            background: #CDFFCD;
+            border-radius: 50%;
+            width: 1.7rem;
+            height: 1.7rem;
+            padding: .2rem;
+            box-shadow: bottom_shadow();
+
+            .small_circle {
+                position: relative;
+                bottom: 2.6rem;
+                left: 1.2rem;
+                background: #007F00;
+                width: 13px;
+                height: 13px;
+                text-align: center;
+                color: white;
+            }
+        }
+
+        button {
+            border-radius: 20px;
+            background-color: var(--main-original-bg-color);
+            color: white;
+            padding: 5px 15px 5px 15px;
+            border: 0px;
+        }
+    }
+
+}
