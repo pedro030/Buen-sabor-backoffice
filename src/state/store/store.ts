@@ -5,6 +5,6 @@ const store = configureStore({
     reducer
 })
 
-store.subscribe(() => console.log(store));
+store.subscribe(() => store);
 
 export default store;

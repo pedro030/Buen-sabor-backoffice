@@ -1,10 +1,13 @@
 import { Category } from "../models/Category";
+import { loadCategories } from "../state/actions/categoryActions";
+import store from "../state/store/store";
+
 
 export const getCategories = async():Promise<Category[]> =>{
     const resp = await fetch("http://localhost:3000/categories")
     const data = await resp.json();
-
-    return data;
+    store.dispatch(loadCategories(data))
+    return data
 }
 
 export const newCategory = async(newCategory: Category) =>{
@@ -14,10 +17,9 @@ export const newCategory = async(newCategory: Category) =>{
         body: JSON.stringify(newCategory)
     };
 
-    fetch('http://localhost:3000/categories', requestOptions)
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.log(error));
+    const resp = await fetch('http://localhost:3000/categories', requestOptions)
+    const data = await resp.json()
+    return data
 }
 
 export const updateCategory = async(category: Category) => {
@@ -27,8 +29,7 @@ export const updateCategory = async(category: Category) => {
         body: JSON.stringify(category)
     };
 
-    fetch(`http://localhost:3000/categories/${category.id}`, requestOptions)
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.log(error));
+    const resp = await fetch(`http://localhost:3000/categories/${category.id}`, requestOptions)
+    const data = await resp.json()
+    return data
 }

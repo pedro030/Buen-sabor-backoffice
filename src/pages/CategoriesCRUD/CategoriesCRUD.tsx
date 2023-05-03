@@ -7,21 +7,25 @@ import { useState, useEffect } from "react"
 import CategoryForm from "../../components/modals/category_form/CategoryForm"
 import { getCategories } from "../../services/Category"
 import { Category } from "../../models/Category"
+import { useDispatch, useSelector } from "react-redux"
+import { loadCategories } from "../../state/actions/categoryActions"
+import { categoriesSelector } from "../../state/selectors"
 
 function CategoriesCRUD() {
 
-  const [category, setCategory] = useState<Category[]>()
+  const category = useSelector(categoriesSelector)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    getCategories().then(cat => {
-      setCategory(cat);
+    getCategories().then((data) => {
+      dispatch(loadCategories(data))
     })
   }, [])
 
-  const deleteCategory = (categoryId: string) => {
-    const newCategories = category?.filter(cat => cat.id !== categoryId)
-    setCategory(newCategories);
-  }
+  // const deleteCategory = (categoryId: string) => {
+  //   const newCategories = category?.filter(cat => cat.id !== categoryId)
+  //   setCategory(newCategories);
+  // }
 
   return (
     <div className="container-crud">
@@ -32,8 +36,8 @@ function CategoriesCRUD() {
             <span>Category Name</span>
             <span>Status</span>
           </div>
-          { category?.map(cat => {
-            return <CrudCardCategory key={cat.id} category={cat} deleteCategory={deleteCategory}/>
+          { category.map((cat:Category) => {
+            return <CrudCardCategory key={cat.id} category={cat}/>
           })}
         </div>
     </div>

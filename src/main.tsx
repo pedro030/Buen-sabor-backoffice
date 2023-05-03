@@ -4,12 +4,15 @@ import 'normalize.css'
 import './index.scss'
 import Auth0ProviderWithNavigate from './components/auth0/Auth0ProviderWithNavigate.jsx'
 import App from './App';
-import routes from './router/routes'
+import { Provider } from 'react-redux'
+import store from './state/store/store';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <BrowserRouter>
-    <Auth0ProviderWithNavigate>
-      <App/>
-    </Auth0ProviderWithNavigate>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Auth0ProviderWithNavigate>
+        <App />
+      </Auth0ProviderWithNavigate>
+    </BrowserRouter>
+  </Provider>
 )

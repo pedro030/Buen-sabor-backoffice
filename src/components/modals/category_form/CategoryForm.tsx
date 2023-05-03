@@ -2,7 +2,8 @@ import React from 'react'
 import { Category } from '../../../models/Category'
 import { Field, Form, Formik } from 'formik'
 import './CategoryForm.scss'
-import { newCategory, updateCategory } from '../../../services/Category'
+import { getCategories, newCategory, updateCategory } from '../../../services/Category'
+
 
 interface Props{
     category?: Category,
@@ -19,7 +20,9 @@ const CategoryForm = ({category, open, onClose}:Props) => {
                 name: state.name,
                 active: state.status === 'true'
             }).then(()=>{
-                onClose()
+                getCategories().then(()=>{
+                    onClose()
+                })
             })
         }else{
             const randomInt = Math.floor(Math.random() * 100)
@@ -29,7 +32,9 @@ const CategoryForm = ({category, open, onClose}:Props) => {
                 id: randomInt.toString()
             }
             newCategory(newCat).then(()=>{
-                onClose();
+                getCategories().then(() => {
+                    onClose()
+                })
             })
         }
         
