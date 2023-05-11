@@ -38,7 +38,9 @@ const Measure = () => {
               EditModal={MeasureForm}
               DeleteModal={CrudDeleteModal}
               loadAction={loadMeasures}
-              apiServ={measureService}/>
+              apiServ={measureService}
+                modelo='Measure'
+              />
           })}
     </div>
   )

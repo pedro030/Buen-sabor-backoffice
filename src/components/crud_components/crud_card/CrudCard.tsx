@@ -3,6 +3,8 @@ import './CrudCard.scss'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { ApiServ } from '../../../services/ApiServ';
+import { Measure } from '../../../models/Measure';
+import MeasureInfo from '../crud_info/MeasureInfo';
 
 // prototipo de lo que tiene que recibir el modal de edicion
 interface PropsModal {
@@ -14,11 +16,7 @@ interface PropsModal {
 }
 // las props que recibe el modal para editar
 interface Props {
-    obj:{
-        id:string;
-        name?:string;
-        measure?:string;
-    }
+    obj:any
     // modalForm para editar el obj
     EditModal: React.FC<PropsModal>
     // modal para eliminar
@@ -27,15 +25,19 @@ interface Props {
     apiServ: ApiServ<any>
     // es la accion que guarda los datos en el reducer
     loadAction: (items: any[]) => any
+    modelo: string;
 }
-const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal}:Props) => {
+const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal, modelo}:Props) => {
     const [open, setOpen]=useState<boolean>(false)
     const [openDelete, setOpenDelete] = useState<boolean>(false)
 
   return (
       <div className='card-container-crud'>
           <div className='card-container-info'>
-              <span className='card-name'>{obj.name || obj.measure}</span>
+              {modelo === "Measure" && <MeasureInfo obj={obj}/>}
+              {modelo === "Category" &&
+                  <span className='card-name'>{obj.name}</span>
+              }
           </div>
           <div className='card-crud-opc'>
             <RiEyeLine className='eye-icon' onClick={()=>console.log("open detail")}/>

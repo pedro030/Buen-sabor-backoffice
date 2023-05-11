@@ -29,7 +29,6 @@ function CategoriesCRUD() {
           <CrudCreateButton Modal={CategoryForm} Title='Category'/>
           <div className="th-container">
             <span>Category Name</span>
-            <span>Status</span>
           </div>
           { category && category[0] && category.map((cat:Category) => {
             return <CrudCard
@@ -38,7 +37,9 @@ function CategoriesCRUD() {
             EditModal={CategoryForm}
             loadAction={loadCategories}
             apiServ={categoryService}
-            DeleteModal={CrudDeleteModal}/>
+            DeleteModal={CrudDeleteModal}
+            modelo='Category'
+            />
           })}
     </>
   )
