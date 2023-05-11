@@ -29,6 +29,9 @@ function CategoriesCRUD() {
           <CrudCreateButton Modal={CategoryForm} Title='Category'/>
           <div className="th-container">
             <span>Category Name</span>
+            <span></span>
+            <span></span>
+            <span>Subcategory</span>
           </div>
           { category && category[0] && category.map((cat:Category) => {
             return <CrudCard

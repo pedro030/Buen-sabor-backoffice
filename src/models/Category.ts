@@ -1,7 +1,6 @@
 export interface Category{
     name: string;
-    id: string;
+    id: number;
     active:boolean;
-    subcategories?: Category[];
-    products?: any[];
+    subcategories?: Category;
 }

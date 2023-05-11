@@ -65,6 +65,11 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                               <label htmlFor='name'>Name</label>
                               <Field name='name' type='text' className='input-text' />
                         </div>
+
+                        <div className="field">
+                              <label htmlFor='subcategories'>Subcategory</label>
+                              <Field name='subcategories' type='text' className='input-text' />
+                        </div>
                         {/* <div className="field">
                             <label htmlFor='macrocategory'>Macrocategory</label>
                             <Field name="macrocategory" as="select">

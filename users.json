@@ -1,24 +1,28 @@
 {
   "categories": [
     {
-      "id": "3",
-      "name": "Hot Dogsss"
-    },
-    {
-      "name": "arroz",
-      "id": "19"
-    },
-    {
-      "name": "fideos",
-      "id": "65"
-    },
-    {
       "name": "Burgers",
       "id": "R_B61Ht"
     },
     {
       "name": "Pizza",
       "id": "T4koyYm"
+    },
+    {
+      "name": "Vegetarian Burger",
+      "subcategories": {
+        "name": "Burgers",
+        "id": "R_B61Ht"
+      },
+      "id": "ZcIqfB7"
+    },
+    {
+      "name": "Vegetarian Pizza",
+      "subcategories": {
+        "name": "Pizza",
+        "id": "T4koyYm"
+      },
+      "id": "twPVe4z"
     }
   ],
   "measures": [
