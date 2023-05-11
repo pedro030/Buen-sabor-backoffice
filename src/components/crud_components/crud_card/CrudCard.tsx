@@ -3,8 +3,9 @@ import './CrudCard.scss'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { ApiServ } from '../../../services/ApiServ';
-import { Measure } from '../../../models/Measure';
 import MeasureInfo from '../crud_info/MeasureInfo';
+import IngredientInfo from '../crud_info/IngredientInfo';
+import CategoryInfo from '../crud_info/CategoryInfo';
 
 // prototipo de lo que tiene que recibir el modal de edicion
 interface PropsModal {
@@ -35,9 +36,8 @@ const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal, modelo}:Pro
       <div className='card-container-crud'>
           <div className='card-container-info'>
               {modelo === "Measure" && <MeasureInfo obj={obj}/>}
-              {modelo === "Category" &&
-                  <span className='card-name'>{obj.name}</span>
-              }
+              {modelo === "Ingredient" && <IngredientInfo obj={obj}/>}
+              {modelo === "Category" && <CategoryInfo obj={obj}/>}
           </div>
           <div className='card-crud-opc'>
             <RiEyeLine className='eye-icon' onClick={()=>console.log("open detail")}/>

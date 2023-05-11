@@ -29,7 +29,31 @@
     {
       "measure": "other",
       "id": 5
+    },
+    {
+      "measure": "kg",
+      "id": 6
     }
   ],
-  "ingredients":[]
+  "ingredients": [
+    {
+      "id": 1,
+      "name": "Harina",
+      "cost": 1,
+      "stock": 20,
+      "measure": [
+        {
+          "measure": "kg",
+          "id": 6
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Harina",
+      "cost": 1,
+      "stock": 20,
+      "measure": []
+    }
+  ]
 }

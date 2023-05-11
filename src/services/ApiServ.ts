@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { userSelector } from '../state/selectors';
 import store from '../state/store/store';
 
-export class ApiServ<T extends {id: number}> {
+export class ApiServ<T extends {id: string}> {
     endpoint: string = "";
     token = store.getState().userSession.token
 

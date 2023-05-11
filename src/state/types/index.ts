@@ -6,3 +6,6 @@ export const LOAD_MEASURE = "LOAD_UNITS_OF_MEASURE";
 
 // categories
 export const LOAD_CATEGORIES = "LOAD_CATEGORIES";
+
+// ingredient
+export const LOAD_INGREDIENTS = "LOAD_INGREDIENTS";

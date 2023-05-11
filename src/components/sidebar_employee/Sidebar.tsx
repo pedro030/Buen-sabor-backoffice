@@ -18,6 +18,7 @@ function Sidebar() {
                 <li className="nav-list-item" onClick={()=>navigate('/')}>Home</li>
                 <li className="nav-list-item" onClick={()=>navigate('./categories')}>Categories</li>
                 <li className="nav-list-item" onClick={() => navigate('./measures')}>Measures</li>
+                <li className="nav-list-item" onClick={() => navigate('./ingredients')}>Ingredient</li>
                 {/* <li className="nav-list-item">My Profile</li>
                 <li className="nav-list-item">Adressess</li>
                 <li className="nav-list-item">Order History</li>
