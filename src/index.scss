@@ -1,17 +1,43 @@
 :root {
-    --main-wall-bg-color: #F9F6F4;
-    --main-original-bg-color: #E73636;
-    --main-opacity-bg-color: #F1AAA8;
-  }
-  
-  /* don't work */
-  /* @font-face { 
+  --main-wall-bg-color: #F9F6F4;
+  --main-original-bg-color: #E73636;
+  --main-opacity-bg-color: #F1AAA8;
+}
+
+/* don't work */
+/* @font-face { 
     font-family: Poppins;
     src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap');
   } */
-  
 
-body{
-    background-color: var(--main-wall-bg-color);
-    font-family: Poppins;
+
+body {
+  background-color: var(--main-wall-bg-color);
+  font-family: Poppins;
+}
+
+.btn {
+  font-family: Poppins;
+  font-size: 16px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  place-content: center;
+
+  &:hover {
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.btn-principal {
+  background-color: #E73636;
+  color: #ffffff;
+}
+
+.btn-cancel {
+  background-color: #F9F6F4;
+  color: #E73636;
 }

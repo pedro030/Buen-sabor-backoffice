@@ -1,11 +1,12 @@
 import { combineReducers } from "redux";
 import userSessionReducer from "./userSessionReducer";
-import unitOfMeasureReducer from "./unitOfMeasureReducer";
+import measureReducer from "./measureReducer";
 import categoryReducer from "./categoryReducer";
 
 const reducer = combineReducers({
-    unitOfMeasure: unitOfMeasureReducer,
-    categories: categoryReducer
+    measures: measureReducer,
+    categories: categoryReducer,
+    userSession: userSessionReducer
 })
 
 export default reducer;

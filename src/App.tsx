@@ -7,6 +7,8 @@ import UserProfile from './pages/UserProfile/UserProfile';
 import { AuthenticationGuard } from './components/auth0/AuthenticationGuard';
 import Header from './components/header/Header';
 import CategoriesCRUD from './pages/CategoriesCRUD/CategoriesCRUD';
+import Home from './pages/Home/Home';
+import {Toaster} from 'react-hot-toast'
 
 
 
@@ -26,8 +28,9 @@ const  App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<AuthenticationGuard component={CategoriesCRUD} />} />
+        <Route path="/*" element={<AuthenticationGuard component={Home} />} />
       </Routes>
+      <Toaster/>
     </>
   )
 }

@@ -1,0 +1,29 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+}
+
+.container-crud {
+    display: flex;
+
+    .container-crud-right {
+        width: 85vw;
+
+        .th-container {
+            width: 90%;
+            margin: auto;
+            padding: 1.5em 0 .5em;
+            display: flex;
+            gap: 5em;
+            padding-left: 1em;
+            margin-bottom: .5em;
+            border-bottom: 2px solid #aaa;
+
+            span {
+                font-weight: 500;
+            }
+        }
+    }
+}

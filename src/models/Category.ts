@@ -2,5 +2,6 @@ export interface Category{
     name: string;
     id: string;
     active:boolean;
-    id_macrocategory?: string;
+    subcategories?: Category[];
+    products?: any[];
 }

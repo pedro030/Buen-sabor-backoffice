@@ -1,0 +1,71 @@
+
+
+.card-container-crud {
+    background-color: #ffffff;
+    width: 90%;
+    height: 60px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: .8em;
+    margin-bottom: .5em;
+
+    .card-container-info {
+        display: flex;
+        margin-left: 3em;
+
+        .card-name {
+            width: 10.5em;
+        }
+
+        .card-status-active,
+        .card-status-inactive {
+            padding: 1px 1em;
+            border-radius: 10px;
+        }
+
+        .card-status-active {
+            background-color: green;
+            color: white;
+        }
+
+        .card-status-inactive {
+            background-color: red;
+            color: white;
+        }
+    }
+
+    .card-crud-opc {
+        display: flex;
+        gap: 3em;
+
+        .edit-icon,
+        .eye-icon,
+        .status-iconLock,
+        .status-iconUnlck,
+        .delete-icon {
+            width: 1.5em;
+            height: 1.5em;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        .delete-icon {
+            color: #DE1111;
+        }
+        .edit-icon{
+            color: #FEAF00;
+        }
+
+        .status-iconUnlck {
+            color: green;
+        }
+
+        .delete-icon {
+            margin-right: 2em;
+        }
+    }
+}

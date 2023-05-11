@@ -26,7 +26,7 @@ function CrudCardCategory({category} : any) {
         {category.active ? <TbLockOpen className='status-iconUnlck' onClick={() => handleActive()} /> : <TbLock className='status-iconLock' onClick={() => handleActive()} />}
             {/* <RiDeleteBin6Line className='delete-icon' onClick={() => deleteCategory(category.id)}/> */}
         </div>
-      <CategoryForm open={openForm} onClose={() => setOpenForm(false)} category={category}/>
+      <CategoryForm open={openForm} onClose={() => setOpenForm(false)} obj={category}/>
     </div>
   )
 }

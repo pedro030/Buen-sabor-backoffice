@@ -1,0 +1,51 @@
+import React, { useState } from 'react'
+import './CrudCard.scss'
+import { FiEdit2 } from 'react-icons/fi'
+import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { ApiServ } from '../../../services/ApiServ';
+
+// prototipo de lo que tiene que recibir el modal de edicion
+interface PropsModal {
+    obj: {
+        id: string;
+    }
+    open: boolean,
+    onClose: () => void
+}
+// las props que recibe el modal para editar
+interface Props {
+    obj:{
+        id:string;
+        name?:string;
+        measure?:string;
+    }
+    // modalForm para editar el obj
+    EditModal: React.FC<PropsModal>
+    // modal para eliminar
+    DeleteModal: React.FC<any>
+    // instancia de api serv
+    apiServ: ApiServ<any>
+    // es la accion que guarda los datos en el reducer
+    loadAction: (items: any[]) => any
+}
+const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal}:Props) => {
+    const [open, setOpen]=useState<boolean>(false)
+    const [openDelete, setOpenDelete] = useState<boolean>(false)
+
+  return (
+      <div className='card-container-crud'>
+          <div className='card-container-info'>
+              <span className='card-name'>{obj.name || obj.measure}</span>
+          </div>
+          <div className='card-crud-opc'>
+            <RiEyeLine className='eye-icon' onClick={()=>console.log("open detail")}/>
+            <FiEdit2 className='edit-icon' onClick={() => setOpen(true)} />
+            <RiDeleteBin6Line className='delete-icon' onClick={() => setOpenDelete(true)}/>
+          </div>
+          <EditModal open={open} onClose={() => setOpen(false)} obj={obj}/>
+          <DeleteModal obj={obj} open={openDelete} onClose={() => setOpenDelete(false)} loadAction={loadAction} apiServ={apiServ}/>
+      </div>
+  )
+}
+
+export default CrudCard
