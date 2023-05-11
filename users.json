@@ -2,27 +2,27 @@
   "categories": [
     {
       "name": "Burgers",
-      "id": "R_B61Ht"
+      "id": 1
     },
     {
       "name": "Pizza",
-      "id": "T4koyYm"
+      "id": 2
     },
     {
       "name": "Vegetarian Burger",
       "subcategories": {
         "name": "Burgers",
-        "id": "R_B61Ht"
+        "id": 1
       },
-      "id": "ZcIqfB7"
+      "id": 3
     },
     {
       "name": "Vegetarian Pizza",
       "subcategories": {
         "name": "Pizza",
-        "id": "T4koyYm"
+        "id": 2
       },
-      "id": "twPVe4z"
+      "id": 4
     }
   ],
   "measures": [
@@ -58,6 +58,43 @@
       "cost": 1,
       "stock": 20,
       "measure": []
+    },
+    {
+      "ingredient": "",
+      "name": "Alejo Araya",
+      "cost": "1",
+      "stock": "1",
+      "id": 3
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Fugazza Pizza",
+      "price": 2500,
+      "active": true,
+      "subcategory": {
+        "name": "Vegetarian Pizza",
+        "subcategories": {
+          "name": "Pizza",
+          "id": 2
+        },
+        "id": 4
+      }
+    },
+    {
+      "name": "Soja Burger",
+      "price": "2000",
+      "active": true,
+      "subcategory": {
+        "name": "Vegetarian Burger",
+        "subcategories": {
+          "name": "Burgers",
+          "id": 1
+        },
+        "id": 3
+      },
+      "id": 2
     }
   ]
 }

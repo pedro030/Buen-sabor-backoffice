@@ -1,9 +1,9 @@
 import { Category } from "./Category";
 
 export interface Product{
-    id:string;
-    name: String;
-    price: Number;
-    active: Boolean;
+    id: string,
+    name: string,
+    price: number,
+    active: boolean,
     subcategory?: Category
 }

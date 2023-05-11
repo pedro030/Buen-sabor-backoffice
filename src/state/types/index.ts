@@ -9,3 +9,6 @@ export const LOAD_CATEGORIES = "LOAD_CATEGORIES";
 
 // ingredient
 export const LOAD_INGREDIENTS = "LOAD_INGREDIENTS";
+
+// product
+export const LOAD_PRODUCTS = "LOAD_PRODUCTS";
