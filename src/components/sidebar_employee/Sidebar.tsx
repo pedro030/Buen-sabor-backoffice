@@ -16,15 +16,15 @@ function Sidebar() {
         <div className="nav-container">
             <ul className="nav-list">
                 <li className="nav-list-item" onClick={()=>navigate('/')}>Home</li>
-                <li className="nav-list-item" onClick={()=>navigate('/myprofile')}>My Profile</li>
+                <li className="nav-list-item" onClick={()=>navigate('./categories')}>Categories</li>
+                <li className="nav-list-item" onClick={() => navigate('./measures')}>Measures</li>
+                {/* <li className="nav-list-item">My Profile</li>
                 <li className="nav-list-item">Adressess</li>
                 <li className="nav-list-item">Order History</li>
                 <li className="nav-list-item">Users</li>
                 <li className="nav-list-item">Products</li>
-                <li className="nav-list-item" onClick={()=>navigate('/categories-crud')}>Categories</li>
-                <li className="nav-list-item">Stock</li>
                 <li className="nav-list-item">Rankings</li>
-                <li className="nav-list-item">Movements</li>
+                <li className="nav-list-item">Movements</li> */}
                 <li className="nav-list-item-logout" onClick={()=>logout()}>Log Out</li>
             </ul>
         </div>

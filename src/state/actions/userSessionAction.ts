@@ -1,11 +1,10 @@
-import { SIGN_IN } from "../types"
+import { LOAD_TOKEN } from "../types"
 
-export const sign_in = (username:String, password:String) => {
+export const load_token = (token: string) => {
     return {
-        type: SIGN_IN,
+        type: LOAD_TOKEN,
         payload:{
-            username,
-            password
+            token
         }
     }
 }

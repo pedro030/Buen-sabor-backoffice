@@ -1,0 +1,38 @@
+{
+  "categories": [
+    {
+      "id": "3",
+      "name": "Hot Dogs"
+    },
+    {
+      "name": "arroz",
+      "id": "19"
+    },
+    {
+      "name": "fideos",
+      "id": "65"
+    },
+    {
+      "name": "Burgers",
+      "id": "R_B61Ht"
+    },
+    {
+      "name": "Pizza",
+      "id": "T4koyYm"
+    }
+  ],
+  "measures": [
+    {
+      "measure": "pizcas",
+      "id": 3
+    },
+    {
+      "measure": "litro",
+      "id": 4
+    },
+    {
+      "measure": "other",
+      "id": 5
+    }
+  ]
+}

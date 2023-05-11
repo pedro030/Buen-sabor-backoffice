@@ -1,6 +1,7 @@
 import { Category } from "../models/Category";
 import { loadCategories } from "../state/actions/categoryActions";
 import store from "../state/store/store";
+import { ApiServ } from "./ApiServ";
 
 
 export const getCategories = async():Promise<Category[]> =>{
@@ -32,4 +33,8 @@ export const updateCategory = async(category: Category) => {
     const resp = await fetch(`http://localhost:3000/categories/${category.id}`, requestOptions)
     const data = await resp.json()
     return data
+}
+
+export class CategoryService extends ApiServ<Category>{
+    endpoint = "categories"
 }

@@ -1,4 +1,4 @@
 export interface Measure{
-    id: number;
-    measure: string,
+    id: string;
+    measure: string;
 }

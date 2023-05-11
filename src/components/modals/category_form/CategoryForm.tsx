@@ -2,40 +2,46 @@ import React from 'react'
 import { Category } from '../../../models/Category'
 import { Field, Form, Formik } from 'formik'
 import './CategoryForm.scss'
-import { getCategories, newCategory, updateCategory } from '../../../services/Category'
+import { CategoryService } from '../../../services/Category'
+import { useDispatch } from 'react-redux'
+import { loadCategories } from '../../../state/actions/categoryActions'
+import toast from 'react-hot-toast'
 
 
 interface Props{
-    category?: Category,
+    obj?: any,
     open: boolean,
     onClose: ()=>void
 }
-const CategoryForm = ({category, open, onClose}:Props) => {
+const CategoryForm = ({obj: obj, open, onClose}:Props) => {
     if (!open) return null
+    const dispatch = useDispatch()
+    const categoryService = new CategoryService();
 
     const handleOnSubmit = (state:any) => {
-        if(category?.id){
-            updateCategory({
-                ...category,
-                name: state.name,
-                active: state.status === 'true'
-            }).then(()=>{
-                getCategories().then(()=>{
-                    onClose()
+        if(obj?.id){
+            toast.promise(
+            categoryService.updateObj(state)
+            .then(()=>{
+                categoryService.GetAll().then((res:Category[])=>{
+                    dispatch(loadCategories(res))
                 })
+            })
+            .finally(() => onClose())
+            ,{
+                    loading: 'Loading',
+                    success: 'Got the data',
+                    error: 'Error when fetching',
             })
         }else{
-            const randomInt = Math.floor(Math.random() * 100)
-            const newCat: Category = {
-                name: state.name,
-                active: state.status === 'true',
-                id: randomInt.toString()
-            }
-            newCategory(newCat).then(()=>{
-                getCategories().then(() => {
-                    onClose()
+            categoryService.newObj(state)
+                .then(()=>{
+                    categoryService.GetAll()
+                        .then((res: Category[]) => {
+                            dispatch(loadCategories(res))
+                            onClose()
+                        })
                 })
-            })
         }
         
     }
@@ -44,13 +50,13 @@ const CategoryForm = ({category, open, onClose}:Props) => {
     <div className='overlay' onClick={()=>onClose()}>
         <div className='modal-container' onClick={(e)=>{e.stopPropagation()}}>
             <button onClick={onClose} className='exit-button'>X</button>
-            <h3>New Category</h3>
+            <h3>{obj?'Edit Category':'New Category'}</h3>
             <Formik
-                initialValues={{
-                    name: category?.name || '',
-                    status: category?.active || false,
-                    macrocategory: category?.id_macrocategory || ''
-                }}
+                initialValues={
+                    obj?obj:{
+                        name:""
+                    }
+                }
                   onSubmit={(state) => { handleOnSubmit(state) }}
             >
                 <Form>
@@ -59,27 +65,22 @@ const CategoryForm = ({category, open, onClose}:Props) => {
                               <label htmlFor='name'>Name</label>
                               <Field name='name' type='text' className='input-text' />
                         </div>
-                        <div className="field">
-                            <label htmlFor='status'>Status</label>
-                            <Field name="status" as="select">
-                                <option value='true'>Active</option>
-                                <option value='false'>Inactive</option>
-                            </Field>
-                        </div>
-                        <div className="field">
+                        {/* <div className="field">
                             <label htmlFor='macrocategory'>Macrocategory</label>
                             <Field name="macrocategory" as="select">
                                 <option value='1'>Comida</option>
                                 <option value='2'>Bebida</option>
                             </Field>
-                        </div>
+                        </div> */}
                     </div>
-                    <button
-                        type="submit"
-                        className="button-login"
-                    >Save</button>
+                    <div className="buttons">
+                        <button
+                            type="submit"
+                            className="btn btn-principal"
+                        >Save</button>
+                        <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                    </div>
                 </Form>
-
             </Formik>
         </div>
     </div>

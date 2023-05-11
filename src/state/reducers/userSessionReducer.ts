@@ -1,17 +1,15 @@
-import { SIGN_IN } from "../types";
+import { LOAD_TOKEN } from "../types";
 
 const initialState = {
-    username:'',
-    password: '',
+    token: ""
 }
 
 export default function userSessionReducer(state = initialState, action: any){
     switch (action.type) {
-        case SIGN_IN:
+        case LOAD_TOKEN:
             return{
                 ...state,
-                username: action.payload.username,
-                password: action.payload.password
+                token: action.payload.token
             }
         default:
             return state;
