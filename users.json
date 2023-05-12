@@ -2,10 +2,12 @@
   "categories": [
     {
       "name": "Burgers",
+      "subcategories": null,
       "id": 1
     },
     {
       "name": "Pizza",
+      "subcategories": null,
       "id": 2
     },
     {
@@ -23,6 +25,11 @@
         "id": 2
       },
       "id": 4
+    },
+    {
+      "name": "Vegan Pizza",
+      "subcategories": "Pizza",
+      "id": 5
     }
   ],
   "measures": [
@@ -58,13 +65,6 @@
       "cost": 1,
       "stock": 20,
       "measure": []
-    },
-    {
-      "ingredient": "",
-      "name": "Alejo Araya",
-      "cost": "1",
-      "stock": "1",
-      "id": 3
     }
   ],
   "products": [
@@ -154,7 +154,17 @@
         "id": 2,
         "name": "PROCESS"
       },
-      "user": "Pepe"
+      "user": {
+        "id": 1,
+        "first_name": "Alejo",
+        "last_name": "Araya",
+        "mail": "alejoaraya2000@gmail.com",
+        "password": "**********",
+        "rol": {
+          "id": 4,
+          "type": "CLIENT"
+        }
+      }
     },
     {
       "id": 2,
@@ -169,7 +179,17 @@
         "id": 2,
         "name": "COOCKING"
       },
-      "user": "Armando"
+      "user": {
+        "id": 1,
+        "first_name": "Alejo",
+        "last_name": "Araya",
+        "mail": "alejoaraya2000@gmail.com",
+        "password": "**********",
+        "rol": {
+          "id": 4,
+          "type": "CLIENT"
+        }
+      }
     }
   ],
   "bills": [

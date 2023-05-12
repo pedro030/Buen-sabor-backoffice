@@ -1,4 +1,3 @@
-import { Order } from "./Order";
 import { Rol } from "./Rol";
 
 export interface User{
