@@ -1,10 +1,10 @@
 import React from 'react'
-import { Order } from '../../../models/Order'
+import { Location } from '../../../models/Location'
 import { Field, Form, Formik } from 'formik'
-import './OrderForm.scss'
-import { OrderService } from '../../../services/Order'
+import './LocationForm.scss'
+import { LocationService } from '../../../services/Location'
 import { useDispatch } from 'react-redux'
-import { loadOrders } from '../../../state/actions/orderActions'
+import { loadLocations } from '../../../state/actions/locationActions'
 import toast from 'react-hot-toast'
 
 
@@ -13,18 +13,18 @@ interface Props{
     open: boolean,
     onClose: ()=>void
 }
-const OrderForm = ({obj: obj, open, onClose}:Props) => {
+const LocationForm = ({obj: obj, open, onClose}:Props) => {
     if (!open) return null
     const dispatch = useDispatch()
-    const orderService = new OrderService();
+    const locationService = new LocationService();
 
     const handleOnSubmit = (state:any) => {
         if(obj?.id){
             toast.promise(
-            orderService.updateObj(state)
+            locationService.updateObj(state)
             .then(()=>{
-                orderService.GetAll().then((res:Order[])=>{
-                    dispatch(loadOrders(res))
+                locationService.GetAll().then((res:Location[])=>{
+                    dispatch(loadLocations(res))
                 })
             })
             .finally(() => onClose())
@@ -34,11 +34,11 @@ const OrderForm = ({obj: obj, open, onClose}:Props) => {
                     error: 'Error when fetching',
             })
         }else{
-            orderService.newObj(state)
+            locationService.newObj(state)
                 .then(()=>{
-                    orderService.GetAll()
-                        .then((res: Order[]) => {
-                            dispatch(loadOrders(res))
+                    locationService.GetAll()
+                        .then((res: Location[]) => {
+                            dispatch(loadLocations(res))
                             onClose()
                         })
                 })
@@ -50,7 +50,7 @@ const OrderForm = ({obj: obj, open, onClose}:Props) => {
     <div className='overlay' onClick={()=>onClose()}>
         <div className='modal-container' onClick={(e)=>{e.stopPropagation()}}>
             <button onClick={onClose} className='exit-button'>X</button>
-            <h3>{obj?'Edit Order':'New Order'}</h3>
+            <h3>{obj?'Edit Location':'New Location'}</h3>
             <Formik
                 initialValues={
                     obj?obj:{
@@ -61,33 +61,21 @@ const OrderForm = ({obj: obj, open, onClose}:Props) => {
             >
                 <Form>
                     <div className="inputs-form">
+                        
                         <div className="field">
-                              <label htmlFor='date'>Date</label>
-                              <Field name='date' type='text' className='input-text' />
+                              <label htmlFor='location'>Location</label>
+                              <Field name='location' type='text' className='input-text' />
                         </div>
 
                         <div className="field">
-                              <label htmlFor='withdrawal_mode'>withdrawal_mode</label>
-                              <Field name='withdrawal_mode' type='text' className='input-text' />
+                              <label htmlFor='section'>Section</label>
+                              <Field name='section' type='text' className='input-text' />
                         </div>
 
-                        <div className="field">
-                              <label htmlFor='address'>Address</label>
-                              <Field name='address' type='text' className='input-text' />
-                        </div>
-
-                        <div className="field">
-                              <label htmlFor='status'>Status</label>
-                              <Field name='status' type='Status' className='input-text' />
-                        </div>
-
-                        <div className="field">
-                              <label htmlFor='user'>User</label>
-                              <Field name='user' type='text' className='input-text' />
-                        </div>
+                    
                         {/* <div className="field">
-                            <label htmlFor='macroorder'>Macroorder</label>
-                            <Field name="macroorder" as="select">
+                            <label htmlFor='macrolocation'>Macrolocation</label>
+                            <Field name="macrolocation" as="select">
                                 <option value='1'>Comida</option>
                                 <option value='2'>Bebida</option>
                             </Field>
@@ -107,4 +95,4 @@ const OrderForm = ({obj: obj, open, onClose}:Props) => {
   )
 }
 
-export default OrderForm
+export default LocationForm
