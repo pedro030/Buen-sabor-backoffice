@@ -96,5 +96,80 @@
       },
       "id": 2
     }
+  ],
+  "statues": [
+    {
+      "id": 1,
+      "status": "DONE"
+    },
+    {
+      "id": 2,
+      "status": "PROCESS"
+    },
+    {
+      "id": 3,
+      "status": "DELIVERY"
+    },
+    {
+      "id": 4,
+      "status": "COOKING"
+    }
+  ],
+  "rols": [
+    {
+      "id": 1,
+      "rol": "ADMIN"
+    },
+    {
+      "id": 2,
+      "rol": "DELIVERY"
+    },
+    {
+      "id": 3,
+      "rol": "CHEF"
+    },
+    {
+      "id": 4,
+      "rol": "CLIENT"
+    }
+  ],
+  "addresses": [
+    {
+      "id": 1,
+      "streat": "sin nombre",
+      "number": 6
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "date": "5/12/2023",
+      "withdrawal_mode": "TAKE AWAY",
+      "address": {
+        "id": 1,
+        "streat": "sin nombre",
+        "number": 6
+      },
+      "status": {
+        "id": 2,
+        "name": "PROCESS"
+      },
+      "user": "Pepe"
+    },
+    {
+      "id": 2,
+      "date": "17/12/2023",
+      "withdrawal_mode": "DELIVERY",
+      "address": {
+        "id": 1,
+        "streat": "con nombre",
+        "number": 666
+      },
+      "status": {
+        "id": 2,
+        "name": "COOCKING"
+      },
+      "user": "Armando"
+    }
   ]
 }
