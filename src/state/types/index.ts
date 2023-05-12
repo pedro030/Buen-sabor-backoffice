@@ -23,4 +23,10 @@ export const LOAD_BILLS = "LOAD_BILLS";
 export const LOAD_USERS = "LOAD_USERS";
 
 // SECTION
-export const LOAD_SECTION = "SECTION";
+export const LOAD_SECTION = "LOAD_SECTION";
+
+// LOCATION
+export const LOAD_LOCATION = "LOAD_LOCATION";
+
+// ADDRESSES
+export const LOAD_ADDRESSES = "LOAD_ADDRESSES";

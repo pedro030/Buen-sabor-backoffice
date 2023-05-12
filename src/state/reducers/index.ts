@@ -8,6 +8,8 @@ import orderReducer from "./orderReducer";
 import billReducer from "./billReducer";
 import userReducer from "./userReducer";
 import sectionReducer from "./sectionReducer";
+import locationReducer from "./locationReducer";
+import addressReducer from "./addressReducer";
 
 const reducer = combineReducers({
     measures: measureReducer,
@@ -18,6 +20,8 @@ const reducer = combineReducers({
     bills: billReducer,
     users: userReducer,
     sections: sectionReducer,
+    locations: locationReducer,
+    addresses: addressReducer,
     userSession: userSessionReducer
 })
 

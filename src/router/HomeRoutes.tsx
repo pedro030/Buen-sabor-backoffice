@@ -7,6 +7,8 @@ import Order from "../pages/Order/Order"
 import Bill from "../pages/Bill/Bill"
 import User  from "../pages/User/User"
 import Section from "../pages/Section/Section"
+import Location from "../pages/Location/Location"
+import Address from "../pages/Address/Address"
 
 const homeRoutes = () => {
   return (
@@ -19,6 +21,8 @@ const homeRoutes = () => {
           <Route path="/bills" element={<Bill />} />
           <Route path="/users" element={<User />} />
           <Route path="/sections" element={<Section />} />
+          <Route path="/locations" element={<Location />} />
+          <Route path="/addresses" element={<Address />} />
       </Routes>
   )
 }

@@ -11,6 +11,8 @@ import OrderInfo from '../crud_info/OrderInfo';
 import BillInfo from '../crud_info/BillInfo';
 import UserInfo from '../crud_info/UserInfo';
 import SectionInfo from '../crud_info/SectionInfo';
+import LocationInfo from '../crud_info/LocationInfo';
+import AddressInfo from '../crud_info/AddressInfo';
 
 // prototipo de lo que tiene que recibir el modal de edicion
 interface PropsModal {
@@ -48,6 +50,8 @@ const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal, modelo}:Pro
               {modelo === "Bill" && <BillInfo obj={obj}/>}
               {modelo === "User" && <UserInfo obj={obj}/>}
               {modelo === "Section" && <SectionInfo obj={obj}/>}
+              {modelo === "Location" && <LocationInfo obj={obj}/>}
+              {modelo === "Address" && <AddressInfo obj={obj}/>}
           </div>
           <div className='card-crud-opc'>
             <RiEyeLine className='eye-icon' onClick={()=>console.log("open detail")}/>

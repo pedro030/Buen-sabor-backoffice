@@ -137,7 +137,26 @@
     {
       "id": 1,
       "streat": "sin nombre",
-      "number": 6
+      "number": 6,
+      "location": {
+        "id": 1,
+        "location": "Guaymallen",
+        "section": {
+          "id": 1,
+          "type": "Buena nueva"
+        }
+      },
+      "user": {
+        "id": 1,
+        "first_name": "Alejo",
+        "last_name": "Araya",
+        "mail": "alejoaraya2000@gmail.com",
+        "password": "**********",
+        "rol": {
+          "id": 4,
+          "type": "CLIENT"
+        }
+      }
     }
   ],
   "orders": [
@@ -148,7 +167,26 @@
       "address": {
         "id": 1,
         "streat": "sin nombre",
-        "number": 6
+        "number": 6,
+        "location": {
+          "id": 1,
+          "location": "Guaymallen",
+          "section": {
+            "id": 1,
+            "type": "Buena nueva"
+          }
+        },
+        "user": {
+          "id": 1,
+          "first_name": "Alejo",
+          "last_name": "Araya",
+          "mail": "alejoaraya2000@gmail.com",
+          "password": "**********",
+          "rol": {
+            "id": 4,
+            "type": "CLIENT"
+          }
+        }
       },
       "status": {
         "id": 2,
@@ -235,6 +273,25 @@
       "name": "",
       "type": "Villa nueva",
       "id": 2
+    }
+  ],
+  "locations": [
+    {
+      "id": 1,
+      "location": "Guaymallen",
+      "section": {
+        "id": 1,
+        "type": "Buena nueva"
+      }
+    },
+    {
+      "id": 1,
+      "location": "Guaymallen",
+      "section": {
+        "name": "",
+        "type": "Villa nueva",
+        "id": 2
+      }
     }
   ]
 }
