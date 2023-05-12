@@ -172,7 +172,7 @@
       "user": "Armando"
     }
   ],
-  "bills":[
+  "bills": [
     {
       "id": 1,
       "date": "21/11/201",
@@ -191,19 +191,19 @@
         },
         "user": "Pepe"
       }
-  }
-  ],
-  "users":[
-    {
-    "id": 1,
-    "first_name": "Alejo",
-    "last_name": "Araya",
-    "mail": "alejoaraya2000@gmail.com",
-    "password": "************",
-    "rol": {
-      "id": 4,
-      "type": "CLIENT"
     }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "first_name": "Alejo",
+      "last_name": "Araya",
+      "mail": "alejoaraya2000@gmail.com",
+      "password": "**********",
+      "rol": {
+        "id": 4,
+        "type": "CLIENT"
+      }
     }
   ]
 }
