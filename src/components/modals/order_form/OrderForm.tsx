@@ -78,7 +78,7 @@ const OrderForm = ({obj: obj, open, onClose}:Props) => {
 
                         <div className="field">
                               <label htmlFor='status'>Status</label>
-                              <Field name='status' type='text' className='input-text' />
+                              <Field name='status' type='Status' className='input-text' />
                         </div>
 
                         <div className="field">
