@@ -21,3 +21,6 @@ export const LOAD_BILLS = "LOAD_BILLS";
 
 // USERS
 export const LOAD_USERS = "LOAD_USERS";
+
+// SECTION
+export const LOAD_SECTION = "SECTION";

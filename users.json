@@ -225,5 +225,16 @@
         "type": "CLIENT"
       }
     }
+  ],
+  "sections": [
+    {
+      "id": 1,
+      "type": "Buena nueva"
+    },
+    {
+      "name": "",
+      "type": "Villa nueva",
+      "id": 2
+    }
   ]
 }

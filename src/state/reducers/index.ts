@@ -7,6 +7,7 @@ import productReducer from "./productReducer";
 import orderReducer from "./orderReducer";
 import billReducer from "./billReducer";
 import userReducer from "./userReducer";
+import sectionReducer from "./sectionReducer";
 
 const reducer = combineReducers({
     measures: measureReducer,
@@ -16,6 +17,7 @@ const reducer = combineReducers({
     orders: orderReducer,
     bills: billReducer,
     users: userReducer,
+    sections: sectionReducer,
     userSession: userSessionReducer
 })
 

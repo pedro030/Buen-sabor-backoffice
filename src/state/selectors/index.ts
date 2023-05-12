@@ -13,11 +13,14 @@ export const productSelector = (state: any) => state.products.products
 // Order
 export const orderSelector = (state: any) => state.orders.orders
 
-// BILLS
+// BILL
 export const billSelector = (state: any) => state.bills.bills
 
-// USERS
+// USER
 export const userSelector = (state: any) => state.users.users
+
+// SECTION
+export const sectionSelector = (state: any) => state.sections.sections
 
 
 // User Info
