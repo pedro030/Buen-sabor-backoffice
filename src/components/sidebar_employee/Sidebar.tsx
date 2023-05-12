@@ -1,7 +1,8 @@
-import { CgProfile } from 'react-icons/cg'
 import './sidebar.scss'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
+import { RiUser4Fill } from 'react-icons/ri'
+import { TbCircleFilled } from 'react-icons/tb'
 
 function Sidebar() {
   const { user, logout } = useAuth0()
@@ -9,7 +10,10 @@ function Sidebar() {
   return (
     <div className="container">
       <div className="container-img-user-role">
-        <div className="left-profile-img-container"><CgProfile className="left-profile-img" /></div>
+        <div className="left-profile-img-container">
+          <TbCircleFilled className="left-circle-img"/>
+          <RiUser4Fill className="left-profile-img" />
+        </div>
         <span className="left-username">{`${user?.given_name} ${user?.family_name}`}</span>
         <span className="left-role">Admin</span>
       </div>

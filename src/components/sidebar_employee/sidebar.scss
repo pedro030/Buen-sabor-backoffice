@@ -18,16 +18,26 @@
     align-items: center;
 }
 
-.left-profile-img {
-    width: 100%;
-    height: 100%;
-    color: #8e5e5e;
-}
+
 
 .container .container-img-user-role .left-profile-img-container {
-    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    
+}
+.left-profile-img {
+    position: absolute;
+    font-size: 600%;
+    left: 4.1%;
+    top: 5.8%;
+    color: #E73636;
+}
+
+.left-circle-img{
+    margin-left: 8%;
     width: 80%;
     height: auto;
+    color: #001F22;
 }
 
 .container .container-left-img-user-role .left-role {
@@ -71,22 +81,25 @@
     cursor: pointer;
 }
 
+.dropdown{
+    width: 100%;
+}
 
 .dropbtn {
     background-color: rgb(223, 106, 106);
     color: white;
     padding: 10px;
-    width: 200px;
+    width: 100%;
     font-size: 16px;
     border: none;
     cursor: pointer;
   }
 
-  .dropdown-content {
+  .dropdown .dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 200px;
+    min-width: 15%;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
