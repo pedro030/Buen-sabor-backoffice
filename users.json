@@ -118,19 +118,19 @@
   "rols": [
     {
       "id": 1,
-      "rol": "ADMIN"
+      "type": "ADMIN"
     },
     {
       "id": 2,
-      "rol": "DELIVERY"
+      "type": "DELIVERY"
     },
     {
       "id": 3,
-      "rol": "CHEF"
+      "type": "CHEF"
     },
     {
       "id": 4,
-      "rol": "CLIENT"
+      "type": "CLIENT"
     }
   ],
   "addresses": [
@@ -192,5 +192,18 @@
         "user": "Pepe"
       }
   }
+  ],
+  "users":[
+    {
+    "id": 1,
+    "first_name": "Alejo",
+    "last_name": "Araya",
+    "mail": "alejoaraya2000@gmail.com",
+    "password": "************",
+    "rol": {
+      "id": 4,
+      "type": "CLIENT"
+    }
+    }
   ]
 }

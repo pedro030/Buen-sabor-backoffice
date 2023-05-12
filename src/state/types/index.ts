@@ -18,3 +18,6 @@ export const LOAD_ORDERS = "LOAD_ORDERS";
 
 // BILLS
 export const LOAD_BILLS = "LOAD_BILLS";
+
+// USERS
+export const LOAD_USERS = "LOAD_USERS";

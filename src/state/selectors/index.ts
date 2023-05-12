@@ -16,7 +16,10 @@ export const orderSelector = (state: any) => state.orders.orders
 // BILLS
 export const billSelector = (state: any) => state.bills.bills
 
+// USERS
+export const userSelector = (state: any) => state.users.users
+
 
 // User Info
-export const userSelector = (state: any) => state.userSession
+export const userSessionSelector = (state: any) => state.userSession
 
