@@ -5,6 +5,7 @@ import categoryReducer from "./categoryReducer";
 import ingredientReducer from "./ingredientReducer";
 import productReducer from "./productReducer";
 import orderReducer from "./orderReducer";
+import billReducer from "./billReducer";
 
 const reducer = combineReducers({
     measures: measureReducer,
@@ -12,6 +13,7 @@ const reducer = combineReducers({
     ingredients: ingredientReducer,
     products: productReducer,
     orders: orderReducer,
+    bills: billReducer,
     userSession: userSessionReducer
 })
 

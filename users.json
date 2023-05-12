@@ -171,5 +171,26 @@
       },
       "user": "Armando"
     }
+  ],
+  "bills":[
+    {
+      "id": 1,
+      "date": "21/11/201",
+      "order": {
+        "id": 1,
+        "date": "5/12/2023",
+        "withdrawal_mode": "TAKE AWAY",
+        "address": {
+          "id": 1,
+          "streat": "sin nombre",
+          "number": 6
+        },
+        "status": {
+          "id": 2,
+          "name": "PROCESS"
+        },
+        "user": "Pepe"
+      }
+  }
   ]
 }
