@@ -1,6 +1,6 @@
 import React from 'react'
 import { Product } from '../../../models/Product'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './ProductForm.scss'
 import { ProductService } from '../../../services/Product'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import { categoriesSelector } from '../../../state/selectors'
 import { Category } from '../../../models/Category'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import * as Yup from 'yup';
 
 
 interface Props {
@@ -20,6 +21,13 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const productService = new ProductService();
+
+    const validationSchema = Yup.object({
+        name: Yup.string().max(30).required("Product name is required"),
+        price: Yup.number().required("Product price is required"),
+        subcategory: Yup.string().required("Category is required"),
+        active: Yup.bool().required("Product status is required")
+    })
 
     const categories = useSelector(categoriesSelector)
     const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.subcategories)
@@ -64,9 +72,11 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            name: ""
+                            name: "",
+                            active: false
                         }
                     }
+                    validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     <Form>
@@ -74,16 +84,22 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             <div className="field">
                                 <label htmlFor='name'>Name</label>
                                 <Field name='name' type='text' className='input-text' />
+                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
-                                <label htmlFor='name'>Price</label>
+                                <label htmlFor='price'>Price</label>
                                 <Field name='price' type='text' className='input-text' />
+                                <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
-                                <label htmlFor='name'>Active</label>
-                                <Field name='active' type='text' className='input-text' />
+                                <label htmlFor='active'>Status</label>
+                                <Field name='active' as='select'>
+                                    <option value="true">Active</option>
+                                    <option value="false">Unactive</option>
+                                </Field>
+                                <ErrorMessage name="active">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
@@ -93,6 +109,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                     title='Subcategory'
                                     value='category'
                                 />
+                                <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
 

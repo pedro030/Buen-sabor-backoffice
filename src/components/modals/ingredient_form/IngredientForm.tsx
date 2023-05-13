@@ -1,10 +1,11 @@
 import './IngredientForm.scss'
 import React from 'react'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { Ingredient } from '../../../models/Ingredient'
 import { IngredientService } from '../../../services/Ingredient'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadIngredients } from '../../../state/actions/ingredientActions'
+import * as Yup from 'yup'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import { measureSelector } from '../../../state/selectors'
 
@@ -17,6 +18,15 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const ingredientService = new IngredientService()
     const dispatch = useDispatch()
+
+    // configuracion de validacion
+    const validationSchema = Yup.object({
+        name: Yup.string()
+        .required("Ingredient name is required")
+        .max(30),
+        cost: Yup.number().required("Ingredient cost is required"),
+        stock: Yup.number().required("Ingredient stock is required")
+    })
 
     // Crea o edita dependiendo si obj es pasado como prop
     const handleSubmit = (state: any) => {
@@ -53,9 +63,12 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
               <Formik
                 initialValues={
                     obj || {
-                        ingredient: ""
+                        name: "",
+                        cost: "",
+                        stock:""
                     }
                 }
+                validationSchema={validationSchema}
                 onSubmit={(state) => handleSubmit(state)}
               >
                 <Form>
@@ -63,16 +76,19 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="field">
                             <label htmlFor='ingredient'>Ingredient Name</label>
                             <Field name='name' type='text' className='input-text' />
+                            <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
 
                         <div className="field">
-                            <label htmlFor='ingredient2'>Cost</label>
-                            <Field name='cost' type='text' className='input-text' />
+                            <label htmlFor='cost'>Cost</label>
+                            <Field name='cost' type='number' className='input-text' />
+                            <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
 
                         <div className="field">
-                            <label htmlFor='ingredient3'>Stock</label>
-                            <Field name='stock' type='text' className='input-text' />
+                            <label htmlFor='stock'>Stock</label>
+                            <Field name='stock' type='number' className='input-text' />
+                            <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
 
                         <div className="field">

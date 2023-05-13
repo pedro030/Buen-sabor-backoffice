@@ -12,7 +12,6 @@ const IngredientInfo = ({obj}: props) => {
   return (
         <>
         <span className='card-name'>{obj.name}</span>
-        <span className='card-name'>{obj.cost}</span>
         <span className='card-name'>{obj.stock}</span>
         <span className='card-name'>{obj.measure.name}</span>
         </>

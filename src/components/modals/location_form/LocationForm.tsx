@@ -1,6 +1,6 @@
 import React from 'react'
 import { Location } from '../../../models/Location'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './LocationForm.scss'
 import { LocationService } from '../../../services/Location'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import { loadLocations } from '../../../state/actions/locationActions'
 import toast from 'react-hot-toast'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import { sectionSelector } from '../../../state/selectors'
+import * as Yup from 'yup';
 
 
 interface Props{
@@ -19,6 +20,12 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const locationService = new LocationService();
+
+    // validation form
+    const validationSchema = Yup.object({
+        name: Yup.string().required("Location name required"),
+        section: Yup.string().required("Location section is required")
+    })
 
     const handleOnSubmit = (state:any) => {
         state = {
@@ -63,7 +70,8 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                         name:""
                     }
                 }
-                  onSubmit={(state) => { handleOnSubmit(state) }}
+                validationSchema={validationSchema}
+                onSubmit={(state) => { handleOnSubmit(state) }}
             >
                 <Form>
                     <div className="inputs-form">
@@ -71,6 +79,7 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                         <div className="field">
                               <label htmlFor='name'>Location</label>
                               <Field name='name' type='text' className='input-text' />
+                              <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
 
 
@@ -81,6 +90,7 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                                     title='Section'
                                     value='section'
                                 />
+                                <ErrorMessage name="section">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                         {/* <div className="field">
                               <label htmlFor='section'>Section</label>
