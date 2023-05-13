@@ -11,7 +11,7 @@ import sectionReducer from "./sectionReducer";
 import locationReducer from "./locationReducer";
 import addressReducer from "./addressReducer";
 import rolReducer from "./rolReducer";
-import statusReducer from "./categoryReducer copy";
+import statusReducer from "./statusReducer";
 
 const reducer = combineReducers({
     measures: measureReducer,
@@ -25,7 +25,7 @@ const reducer = combineReducers({
     locations: locationReducer,
     addresses: addressReducer,
     rols: rolReducer,
-    statuses: statusReducer,
+    statues: statusReducer,
     userSession: userSessionReducer
 })
 

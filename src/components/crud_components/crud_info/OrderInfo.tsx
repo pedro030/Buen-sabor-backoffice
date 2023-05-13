@@ -18,7 +18,7 @@ const OrderInfo = ({ obj }: props) => {
       <span className='card-name'>{obj.date}</span>
       <span className='card-name'>{obj.withdrawal_mode}</span>
       <span className='card-name'>{`${obj.address.streat} - ${obj.address.number}`}</span>
-      <span className='card-name'>{obj.status.name}</span>
+      {/* <span className='card-name'>{obj.status.name}</span> */}
       <span className='card-name'>{obj.user.id}</span>
     </>
   )

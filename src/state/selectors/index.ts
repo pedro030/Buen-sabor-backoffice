@@ -32,7 +32,7 @@ export const addressSelector = (state: any) => state.addresses.addresses
 export const rolSelector = (state: any) => state.rols.rols
 
 // STATUES
-export const statusSelector = (state: any) => state.statuses.statuses
+export const statusSelector = (state: any) => state.statues.statues
 
 
 // User Info
