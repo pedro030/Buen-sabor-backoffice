@@ -7,43 +7,44 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loadCategories } from '../../../state/actions/categoryActions'
 import toast from 'react-hot-toast'
 import { categoriesSelector } from '../../../state/selectors'
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 
 
-interface Props{
+interface Props {
     obj?: any,
     open: boolean,
-    onClose: ()=>void
+    onClose: () => void
 }
-const CategoryForm = ({obj: obj, open, onClose}:Props) => {
+const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     // el warning es generado por el useSelector, por ahora no encuentro solucion 
     const categories = useSelector(categoriesSelector)
     const categoryService = new CategoryService();
-    const categoriesOptions: Category[] = categories.filter((cat: Category)=> !cat.subcategories)
+    const categoriesOptions: Category[] = categories.filter((cat: Category) => !cat.subcategories)
 
-    const handleOnSubmit = (state:any) => {
+    const handleOnSubmit = (state: any) => {
         state = {
             ...state,
             subcategories: JSON.parse(state.subcategories)
         }
-        if(obj?.id){
+        if (obj?.id) {
             toast.promise(
-            categoryService.updateObj(state)
-            .then(()=>{
-                categoryService.GetAll().then((res:Category[])=>{
-                    dispatch(loadCategories(res))
-                })
-            })
-            .finally(() => onClose())
-            ,{
+                categoryService.updateObj(state)
+                    .then(() => {
+                        categoryService.GetAll().then((res: Category[]) => {
+                            dispatch(loadCategories(res))
+                        })
+                    })
+                    .finally(() => onClose())
+                , {
                     loading: 'Loading',
                     success: 'Got the data',
                     error: 'Error when fetching',
-            })
-        }else{
+                })
+        } else {
             categoryService.newObj(state)
-                .then(()=>{
+                .then(() => {
                     categoryService.GetAll()
                         .then((res: Category[]) => {
                             dispatch(loadCategories(res))
@@ -51,38 +52,51 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                         })
                 })
         }
-        
+
     }
 
-  return (
-    <div className='overlay' onClick={()=>onClose()}>
-        <div className='modal-container' onClick={(e)=>{e.stopPropagation()}}>
-            <button onClick={onClose} className='exit-button'>X</button>
-            <h3>{obj?'Edit Category':'New Category'}</h3>
-            <Formik
-                initialValues={
-                    obj?
-                    {...obj,
-                        subcategories: JSON.stringify(obj.subcategories)
-                    }:{
-                        name:"",
-                        subcategories: ""
+    return (
+        <div className='overlay' onClick={() => onClose()}>
+            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+                <button onClick={onClose} className='exit-button'>X</button>
+                <h3>{obj ? 'Edit Category' : 'New Category'}</h3>
+                <Formik
+                    initialValues={
+                        obj ?
+                            {
+                                ...obj,
+                                subcategories: JSON.stringify(obj.subcategories)
+                            } : {
+                                name: "",
+                                subcategories: ""
+                            }
                     }
-                }
-                  onSubmit={(state) => { handleOnSubmit(state) }}
-            >
-                <Form>
-                    <div className="inputs-form">
-                        <div className="field">
-                              <label htmlFor='name'>Name</label>
-                              <Field name='name' type='text' className='input-text' />
-                        </div>
+                    onSubmit={(state) => { handleOnSubmit(state) }}
+                >
+                    <Form>
+                        <div className="inputs-form">
+                            <div className="field">
+                                <label htmlFor='name'>Name</label>
+                                <Field name='name' type='text' className='input-text' />
+                            </div>
 
-                        {/* <div className="field">
+                            {/* <div className="field">
                               <label htmlFor='subcategories'>Subcategory</label>
                               <Field name='subcategories' type='text' className='input-text' />
                         </div> */}
-                        <div className="field">
+
+                            <div className="field">
+                                <ComboBoxModel
+                                list={categoriesOptions}
+                                name='subcategories'
+                                title='Subcategory'
+                                value='category'
+                            />
+                            </div>
+
+
+
+                            {/* <div className="field">
                             <label htmlFor='subcategories'>Subcategories</label>
                             <Field name="subcategories" as="select">
                                 <option value="">Seleccionar categoria</option>
@@ -90,20 +104,20 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                                     <option value={JSON.stringify(cat)} key={index}>{cat.name}</option>
                                 ))}
                             </Field>
+                        </div> */}
                         </div>
-                    </div>
-                    <div className="buttons">
-                        <button
-                            type="submit"
-                            className="btn btn-principal"
-                        >Save</button>
-                        <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
-                    </div>
-                </Form>
-            </Formik>
+                        <div className="buttons">
+                            <button
+                                type="submit"
+                                className="btn btn-principal"
+                            >Save</button>
+                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                        </div>
+                    </Form>
+                </Formik>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default CategoryForm
