@@ -96,19 +96,19 @@
   "statues": [
     {
       "id": 1,
-      "status": "DONE"
+      "name": "DONE"
     },
     {
       "id": 2,
-      "status": "PROCESS"
+      "name": "PROCESS"
     },
     {
       "id": 3,
-      "status": "DELIVERY"
+      "name": "DELIVERY"
     },
     {
       "id": 4,
-      "status": "COOKING"
+      "name": "COOKING"
     }
   ],
   "rols": [
@@ -250,6 +250,48 @@
           "type": "CLIENT"
         }
       }
+    },
+    {
+      "name": "",
+      "address": {
+        "id": 1,
+        "streat": "sin nombre",
+        "number": 6,
+        "location": {
+          "id": 1,
+          "name": "Guaymallen",
+          "section": {
+            "id": 1,
+            "type": "Buena nueva"
+          }
+        },
+        "user": {
+          "id": 1,
+          "first_name": "Alejo",
+          "last_name": "Araya",
+          "mail": "alejoaraya2000@gmail.com",
+          "password": "**********",
+          "rol": {
+            "id": 4,
+            "type": "CLIENT"
+          }
+        }
+      },
+      "user": {
+        "name": "",
+        "first_name": "alejo",
+        "last_name": "araya",
+        "mail": "alejoaraya2000@gmail.com",
+        "password": "******",
+        "rol": {
+          "id": 1,
+          "name": "ADMIN"
+        },
+        "id": 1
+      },
+      "date": "123",
+      "withdrawal_mode": "123",
+      "id": 3
     }
   ],
   "bills": [
