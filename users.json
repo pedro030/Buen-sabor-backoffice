@@ -28,7 +28,11 @@
     },
     {
       "name": "Vegan Pizza",
-      "subcategories": "Pizza",
+      "subcategories": {
+        "name": "Pizza",
+        "subcategories": null,
+        "id": 2
+      },
       "id": 5
     }
   ],
@@ -118,19 +122,19 @@
   "rols": [
     {
       "id": 1,
-      "type": "ADMIN"
+      "name": "ADMIN"
     },
     {
       "id": 2,
-      "type": "DELIVERY"
+      "name": "DELIVERY"
     },
     {
       "id": 3,
-      "type": "CHEF"
+      "name": "CHEF"
     },
     {
       "id": 4,
-      "type": "CLIENT"
+      "name": "CLIENT"
     }
   ],
   "addresses": [
@@ -253,45 +257,46 @@
   ],
   "users": [
     {
-      "id": 1,
-      "first_name": "Alejo",
-      "last_name": "Araya",
+      "name": "",
+      "first_name": "alejo",
+      "last_name": "araya",
       "mail": "alejoaraya2000@gmail.com",
-      "password": "**********",
+      "password": "******",
       "rol": {
-        "id": 4,
-        "type": "CLIENT"
-      }
+        "id": 1,
+        "name": "ADMIN"
+      },
+      "id": 1
     }
   ],
   "sections": [
     {
       "id": 1,
-      "type": "Buena nueva"
+      "name": "Buena nueva"
     },
     {
-      "name": "",
-      "type": "Villa nueva",
+      "name": "Villa nueva",
       "id": 2
     }
   ],
   "locations": [
     {
-      "id": 1,
+      "name": "",
       "location": "Guaymallen",
       "section": {
         "id": 1,
-        "type": "Buena nueva"
-      }
+        "name": "Buena nueva"
+      },
+      "id": 1
     },
     {
-      "id": 1,
+      "name": "",
       "location": "Guaymallen",
       "section": {
-        "name": "",
-        "type": "Villa nueva",
+        "name": "Villa nueva",
         "id": 2
-      }
+      },
+      "id": 2
     }
   ]
 }
