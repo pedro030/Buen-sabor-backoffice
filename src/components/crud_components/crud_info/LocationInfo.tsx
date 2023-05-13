@@ -11,7 +11,7 @@ const LocationInfo = ({ obj }: props) => {
   return (
     <>
       <span className='card-name'>{obj.location}</span>
-      <span className='card-name'>{obj.section.type}</span>
+      <span className='card-name'>{obj.section.name}</span>
     </>
   )
 }

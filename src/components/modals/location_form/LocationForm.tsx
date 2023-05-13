@@ -3,9 +3,11 @@ import { Location } from '../../../models/Location'
 import { Field, Form, Formik } from 'formik'
 import './LocationForm.scss'
 import { LocationService } from '../../../services/Location'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadLocations } from '../../../state/actions/locationActions'
 import toast from 'react-hot-toast'
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import { sectionSelector } from '../../../state/selectors'
 
 
 interface Props{
@@ -19,6 +21,10 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
     const locationService = new LocationService();
 
     const handleOnSubmit = (state:any) => {
+        state = {
+            ...state,
+            section: JSON.parse(state.section)
+        }
         if(obj?.id){
             toast.promise(
             locationService.updateObj(state)
@@ -67,10 +73,19 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                               <Field name='location' type='text' className='input-text' />
                         </div>
 
+
                         <div className="field">
+                                <ComboBoxModel
+                                    list={useSelector(sectionSelector)}
+                                    name='section'
+                                    title='Section'
+                                    value='section'
+                                />
+                            </div>
+                        {/* <div className="field">
                               <label htmlFor='section'>Section</label>
                               <Field name='section' type='text' className='input-text' />
-                        </div>
+                        </div> */}
 
                     
                         {/* <div className="field">

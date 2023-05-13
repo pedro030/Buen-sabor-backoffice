@@ -1,4 +1,4 @@
 export interface Section{
     id: string,
-    type: string
+    name: string
 }
