@@ -17,6 +17,7 @@ interface Props{
 const CategoryForm = ({obj: obj, open, onClose}:Props) => {
     if (!open) return null
     const dispatch = useDispatch()
+    // el warning es generado por el useSelector, por ahora no encuentro solucion 
     const categories = useSelector(categoriesSelector)
     const categoryService = new CategoryService();
     const categoriesOptions: Category[] = categories.filter((cat: Category)=> !cat.subcategories)
@@ -65,7 +66,7 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                         subcategories: JSON.stringify(obj.subcategories)
                     }:{
                         name:"",
-                        subcategories:null
+                        subcategories: ""
                     }
                 }
                   onSubmit={(state) => { handleOnSubmit(state) }}
@@ -84,6 +85,7 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                         <div className="field">
                             <label htmlFor='subcategories'>Subcategories</label>
                             <Field name="subcategories" as="select">
+                                <option value="">Seleccionar categoria</option>
                                 {categoriesOptions.map((cat,index) => (
                                     <option value={JSON.stringify(cat)} key={index}>{cat.name}</option>
                                 ))}
