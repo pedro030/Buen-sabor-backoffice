@@ -23,7 +23,7 @@ const Ingredient = () => {
               <span>Ingredient Name</span>
               <span>Stock</span>
               <span>Cost</span>
-              <span>Measure</span>
+              {/* <span>Measure</span> */}
           </div>
           {ingredients && ingredients[0] && ingredients.map((cat: Ingredient) => {
               return <CrudCard 

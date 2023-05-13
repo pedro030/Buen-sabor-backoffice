@@ -34,6 +34,15 @@
         "id": 2
       },
       "id": 5
+    },
+    {
+      "name": "h",
+      "subcategories": {
+        "name": "Burgers",
+        "subcategories": null,
+        "id": 1
+      },
+      "id": 6
     }
   ],
   "measures": [
@@ -48,6 +57,10 @@
     {
       "measure": "kg",
       "id": 6
+    },
+    {
+      "measure": "g",
+      "id": 7
     }
   ],
   "ingredients": [
@@ -345,6 +358,14 @@
         "id": 3
       },
       "id": 3
+    },
+    {
+      "name": "Capital",
+      "section": {
+        "id": 1,
+        "name": "Buena nueva"
+      },
+      "id": 4
     }
   ]
 }

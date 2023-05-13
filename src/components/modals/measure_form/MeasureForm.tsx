@@ -1,10 +1,10 @@
 import './MeasureForm.scss'
-import React from 'react'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik, useFormik } from 'formik'
 import { Measure } from '../../../models/Measure'
 import { MeasureService } from '../../../services/Measure'
 import { useDispatch } from 'react-redux'
 import { loadMeasures } from '../../../state/actions/measureActions'
+import * as Yup from 'yup'
 
 interface Props {
     obj?: any,
@@ -16,6 +16,12 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
     const measureService = new MeasureService()
     const dispatch = useDispatch()
 
+    // form configuration
+    const validationSchema = Yup.object({
+        measure: Yup.string()
+        .required("Measure name is required")
+        .max(10)
+    })
     // Crea o edita dependiendo si obj es pasado como prop
     const handleSubmit = (state: Measure) => {
         if(obj){
@@ -45,18 +51,23 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
               <button onClick={onClose} className='exit-button'>X</button>
               <h3>{obj?'Edit Measure': 'New Measure'}</h3>
               <Formik
-                initialValues={
-                    obj || {
-                        measure: ""
-                    }
-                }
+                initialValues={obj || {
+                  measure: ""
+                }}
                 onSubmit={(state) => handleSubmit(state)}
+                validationSchema={validationSchema}
               >
                 <Form>
                     <div className="inputs-form">
                         <div className="field">
                             <label htmlFor='measure'>Measure Name</label>
-                            <Field name='measure' type='text' className='input-text' />
+                            <Field
+                            name='measure'
+                            type='text'
+                            className={`select`}
+                            error="measure"
+                            />
+                            <ErrorMessage name="measure">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
                     </div>
                     <div className="buttons">
@@ -64,7 +75,7 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
                             type="submit"
                             className="btn btn-principal"
                         >Save</button>
-                        <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                        <button className='btn btn-cancel' onClick={() => onClose()}>Cancel</button>
                     </div>
                 </Form>
               </Formik>

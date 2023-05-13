@@ -41,3 +41,75 @@ body {
   background-color: #F9F6F4;
   color: #E73636;
 }
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+
+  .modal-container {
+    position: relative;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 40%;
+    min-height: fit-content;
+    border-radius: 25px;
+
+    .exit-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: transparent;
+      border: none;
+    }
+
+    .buttons {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+    }
+  }
+}
+
+Form {
+  width: 90%;
+
+  .inputs-form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      width: 40%;
+      margin-bottom: 10px;
+      position: relative;
+      margin-bottom: 20px;
+
+      .error-message {
+        color: #FF0000;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+      }
+
+      label {
+        font-size: 14px;
+        color: #989898;
+        letter-spacing: 0.26em;
+      }
+    }
+  }
+}

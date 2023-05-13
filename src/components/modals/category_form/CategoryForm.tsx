@@ -1,6 +1,6 @@
 import React from 'react'
 import { Category } from '../../../models/Category'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './CategoryForm.scss'
 import { CategoryService } from '../../../services/Category'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import { loadCategories } from '../../../state/actions/categoryActions'
 import toast from 'react-hot-toast'
 import { categoriesSelector } from '../../../state/selectors'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import * as Yup from 'yup'
 
 
 interface Props {
@@ -23,14 +24,20 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
     const categoryService = new CategoryService();
     const categoriesOptions: Category[] = categories.filter((cat: Category) => !cat.subcategories)
 
+    const validationSchema = Yup.object({
+        name: Yup.string()
+            .required("Name is required"),
+        subcategories: Yup.string()
+    })
+
     const handleOnSubmit = (state: any) => {
-        state = {
+        let category = {
             ...state,
-            subcategories: JSON.parse(state.subcategories)
+            subcategories: state.subcategories?JSON.parse(state.subcategories):""
         }
         if (obj?.id) {
             toast.promise(
-                categoryService.updateObj(state)
+                categoryService.updateObj(category)
                     .then(() => {
                         categoryService.GetAll().then((res: Category[]) => {
                             dispatch(loadCategories(res))
@@ -43,7 +50,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                     error: 'Error when fetching',
                 })
         } else {
-            categoryService.newObj(state)
+            categoryService.newObj(category)
                 .then(() => {
                     categoryService.GetAll()
                         .then((res: Category[]) => {
@@ -71,6 +78,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                                 subcategories: ""
                             }
                     }
+                    validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     <Form>
@@ -78,6 +86,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                             <div className="field">
                                 <label htmlFor='name'>Name</label>
                                 <Field name='name' type='text' className='input-text' />
+                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             {/* <div className="field">
