@@ -3,9 +3,10 @@ import { Category } from '../../../models/Category'
 import { Field, Form, Formik } from 'formik'
 import './CategoryForm.scss'
 import { CategoryService } from '../../../services/Category'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadCategories } from '../../../state/actions/categoryActions'
 import toast from 'react-hot-toast'
+import { categoriesSelector } from '../../../state/selectors'
 
 
 interface Props{
@@ -16,9 +17,16 @@ interface Props{
 const CategoryForm = ({obj: obj, open, onClose}:Props) => {
     if (!open) return null
     const dispatch = useDispatch()
+    // el warning es generado por el useSelector, por ahora no encuentro solucion 
+    const categories = useSelector(categoriesSelector)
     const categoryService = new CategoryService();
+    const categoriesOptions: Category[] = categories.filter((cat: Category)=> !cat.subcategories)
 
     const handleOnSubmit = (state:any) => {
+        state = {
+            ...state,
+            subcategories: JSON.parse(state.subcategories)
+        }
         if(obj?.id){
             toast.promise(
             categoryService.updateObj(state)
@@ -53,8 +61,12 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
             <h3>{obj?'Edit Category':'New Category'}</h3>
             <Formik
                 initialValues={
-                    obj?obj:{
-                        name:""
+                    obj?
+                    {...obj,
+                        subcategories: JSON.stringify(obj.subcategories)
+                    }:{
+                        name:"",
+                        subcategories: ""
                     }
                 }
                   onSubmit={(state) => { handleOnSubmit(state) }}
@@ -66,17 +78,19 @@ const CategoryForm = ({obj: obj, open, onClose}:Props) => {
                               <Field name='name' type='text' className='input-text' />
                         </div>
 
-                        <div className="field">
+                        {/* <div className="field">
                               <label htmlFor='subcategories'>Subcategory</label>
                               <Field name='subcategories' type='text' className='input-text' />
-                        </div>
-                        {/* <div className="field">
-                            <label htmlFor='macrocategory'>Macrocategory</label>
-                            <Field name="macrocategory" as="select">
-                                <option value='1'>Comida</option>
-                                <option value='2'>Bebida</option>
-                            </Field>
                         </div> */}
+                        <div className="field">
+                            <label htmlFor='subcategories'>Subcategories</label>
+                            <Field name="subcategories" as="select">
+                                <option value="">Seleccionar categoria</option>
+                                {categoriesOptions.map((cat,index) => (
+                                    <option value={JSON.stringify(cat)} key={index}>{cat.name}</option>
+                                ))}
+                            </Field>
+                        </div>
                     </div>
                     <div className="buttons">
                         <button
