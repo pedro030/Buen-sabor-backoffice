@@ -34,15 +34,6 @@
         "id": 2
       },
       "id": 5
-    },
-    {
-      "name": "h",
-      "subcategories": {
-        "name": "Burgers",
-        "subcategories": null,
-        "id": 1
-      },
-      "id": 6
     }
   ],
   "measures": [
@@ -57,10 +48,6 @@
     {
       "name": "kg",
       "id": 6
-    },
-    {
-      "measure": "g",
-      "id": 7
     }
   ],
   "ingredients": [

@@ -8,22 +8,18 @@ interface Props {
 }
 
 const ComboBoxModel = ({ list, name, title, value }: Props) => {
-    
-
     return (
-
         <>
             <label htmlFor={name}>{title}</label>
             <Field name={name} as="select">
                 <option value="">Select {value}</option>
                 {
                     list.map((e, index) => (
-                        <option value={JSON.stringify(e)} key={index}>{!(e.name === "") ? e.name : e.mail }</option>
+                        <option value={JSON.stringify(e)} key={index}>{e.id}</option>
                     ))}
             </Field>
         </>
     )
-
 }
 
 

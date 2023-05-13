@@ -3,9 +3,11 @@ import { Bill } from '../../../models/Bill'
 import { Field, Form, Formik } from 'formik'
 import './BillForm.scss'
 import { BillService } from '../../../services/Bill'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadBills } from '../../../state/actions/billActions'
 import toast from 'react-hot-toast'
+import { orderSelector } from '../../../state/selectors'
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 
 
 interface Props{
@@ -19,6 +21,10 @@ const BillForm = ({obj: obj, open, onClose}:Props) => {
     const billService = new BillService();
 
     const handleOnSubmit = (state:any) => {
+        state = {
+            ...state,
+            order: JSON.parse(state.order)
+        }
         if(obj?.id){
             toast.promise(
             billService.updateObj(state)
@@ -65,10 +71,15 @@ const BillForm = ({obj: obj, open, onClose}:Props) => {
                               <label htmlFor='date'>Date</label>
                               <Field name='date' type='text' className='input-text' />
                         </div>
+
                         <div className="field">
-                              <label htmlFor='order'>Order</label>
-                              <Field name='order' type='text' className='input-text' />
-                        </div>
+                                <ComboBoxModel
+                                    list={useSelector(orderSelector)}
+                                    name='order'
+                                    title='Order'
+                                    value='order'
+                                />
+                            </div>
 
                     
                         {/* <div className="field">
