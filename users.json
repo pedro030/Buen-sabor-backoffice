@@ -38,37 +38,29 @@
   ],
   "measures": [
     {
-      "measure": "litro",
+      "name": "litro",
       "id": 4
     },
     {
-      "measure": "other",
+      "name": "other",
       "id": 5
     },
     {
-      "measure": "kg",
+      "name": "kg",
       "id": 6
     }
   ],
   "ingredients": [
     {
-      "id": 1,
+      "ingredient": "",
       "name": "Harina",
-      "cost": 1,
-      "stock": 20,
-      "measure": [
-        {
-          "measure": "kg",
-          "id": 6
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Harina",
-      "cost": 1,
-      "stock": 20,
-      "measure": []
+      "cost": "1",
+      "stock": "30",
+      "measure": {
+        "name": "kg",
+        "id": 6
+      },
+      "id": 1
     }
   ],
   "products": [
@@ -198,7 +190,7 @@
         "id": 1,
         "streat": "sin nombre",
         "number": 6,
-        "name": {
+        "location": {
           "id": 1,
           "name": "Guaymallen",
           "section": {

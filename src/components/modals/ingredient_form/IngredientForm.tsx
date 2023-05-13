@@ -3,8 +3,10 @@ import React from 'react'
 import { Field, Form, Formik } from 'formik'
 import { Ingredient } from '../../../models/Ingredient'
 import { IngredientService } from '../../../services/Ingredient'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { loadIngredients } from '../../../state/actions/ingredientActions'
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import { measureSelector } from '../../../state/selectors'
 
 interface Props {
     obj?: any,
@@ -17,7 +19,11 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
     const dispatch = useDispatch()
 
     // Crea o edita dependiendo si obj es pasado como prop
-    const handleSubmit = (state: Ingredient) => {
+    const handleSubmit = (state: any) => {
+        state = {
+            ...state,
+            measure: JSON.parse(state.measure)
+        }
         if(obj){
             ingredientService.updateObj(state)
             .then(() => {
@@ -68,6 +74,19 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                             <label htmlFor='ingredient3'>Stock</label>
                             <Field name='stock' type='text' className='input-text' />
                         </div>
+
+                        <div className="field">
+                                <ComboBoxModel
+                                    list={useSelector(measureSelector)}
+                                    name='measure'
+                                    title='Measure'
+                                    value='measure'
+                                />
+                            </div>
+
+
+
+
                     </div>
                     <div className="buttons">
                         <button

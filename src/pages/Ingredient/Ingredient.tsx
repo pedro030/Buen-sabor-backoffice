@@ -22,7 +22,9 @@ const Ingredient = () => {
           <div className="th-container">
               <span>Ingredient Name</span>
               <span>Stock</span>
+              <span></span>
               <span>Cost</span>
+              <span></span>
               <span>Measure</span>
           </div>
           {ingredients && ingredients[0] && ingredients.map((cat: Ingredient) => {

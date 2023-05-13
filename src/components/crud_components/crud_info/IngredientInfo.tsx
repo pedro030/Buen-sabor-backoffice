@@ -5,7 +5,7 @@ interface props {
       name: string;
       cost: number;
       stock: number;
-      measure?: Measure;
+      measure: Measure;
     }
 }
 const IngredientInfo = ({obj}: props) => {
@@ -14,7 +14,7 @@ const IngredientInfo = ({obj}: props) => {
         <span className='card-name'>{obj.name}</span>
         <span className='card-name'>{obj.cost}</span>
         <span className='card-name'>{obj.stock}</span>
-        <span className='card-name'>{obj.measure?.measure}</span>
+        <span className='card-name'>{obj.measure.name}</span>
         </>
   )
 }
