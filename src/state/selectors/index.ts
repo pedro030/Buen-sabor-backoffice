@@ -31,6 +31,9 @@ export const addressSelector = (state: any) => state.addresses.addresses
 // ROLS
 export const rolSelector = (state: any) => state.rols.rols
 
+// STATUES
+export const statusSelector = (state: any) => state.statuses.statuses
+
 
 // User Info
 export const userSessionSelector = (state: any) => state.userSession
