@@ -14,16 +14,6 @@ const Ingredient = () => {
     const ingredients = useSelector(ingredientSelector)
     const ingredientService = new IngredientService()
     // dispatch de redux para disparar acciones que modifican el estado
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        // hace llamado a la api y trae las unidades de medida
-        ingredientService.GetAll()
-            .then((ingredients) => {
-                // guarda lo que trae de la api en el estado de redux
-                dispatch(loadIngredients(ingredients))
-            })
-    }, [])
 
   return (
     <div>

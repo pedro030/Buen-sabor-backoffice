@@ -13,14 +13,6 @@ function Bill() {
 
   const bill = useSelector(billSelector)
   const billService = new BillService()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    billService.GetAll()
-    .then((bills) => {
-      dispatch(loadBills(bills))
-    })
-  }, [])
 
   return (
     <>

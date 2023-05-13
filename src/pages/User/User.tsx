@@ -18,19 +18,6 @@ function User() {
 
   const rolService = new RolService()
 
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    userService.GetAll()
-    .then((users) => {
-      dispatch(loadUsers(users))
-    });
-    rolService.GetAll()
-    .then((rols) => {
-      dispatch(loadRols(rols))
-    });
-  }, [])
-
   return (
     <>
           {/* <CrudHead/> */}

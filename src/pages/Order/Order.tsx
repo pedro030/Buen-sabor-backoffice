@@ -14,16 +14,6 @@ const Order = () => {
     const orders = useSelector(orderSelector)
     const orderService = new OrderService()
     // dispatch de redux para disparar acciones que modifican el estado
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        // hace llamado a la api y trae las unidades de medida
-        orderService.GetAll()
-            .then((orders) => {
-                // guarda lo que trae de la api en el estado de redux
-                dispatch(loadOrders(orders))
-            })
-    }, [])
 
   return (
     <div>

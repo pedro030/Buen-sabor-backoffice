@@ -13,17 +13,6 @@ const Product = () => {
     // selecciona el listados de products del reducer
     const products = useSelector(productSelector)
     const productService = new ProductService()
-    // dispatch de redux para disparar acciones que modifican el estado
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        // hace llamado a la api y trae las unidades de medida
-        productService.GetAll()
-            .then((products) => {
-                // guarda lo que trae de la api en el estado de redux
-                dispatch(loadProducts(products))
-            })
-    }, [])
 
   return (
     <div>

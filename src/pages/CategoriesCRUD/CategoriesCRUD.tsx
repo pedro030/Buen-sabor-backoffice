@@ -14,14 +14,6 @@ function CategoriesCRUD() {
 
   const category = useSelector(categoriesSelector)
   const categoryService = new CategoryService()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    categoryService.GetAll()
-    .then((categories) => {
-      dispatch(loadCategories(categories))
-    })
-  }, [])
 
   return (
     <>

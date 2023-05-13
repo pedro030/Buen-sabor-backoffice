@@ -14,16 +14,6 @@ const Measure = () => {
     const measures = useSelector(measureSelector)
     const measureService = new MeasureService()
     // dispatch de redux para disparar acciones que modifican el estado
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        // hace llamado a la api y trae las unidades de medida
-        measureService.GetAll()
-            .then((measures) => {
-                // guarda lo que trae de la api en el estado de redux
-                dispatch(loadMeasures(measures))
-            })
-    }, [])
 
   return (
     <div>

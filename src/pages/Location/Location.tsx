@@ -13,14 +13,6 @@ function Location() {
 
   const location = useSelector(locationSelector)
   const locationService = new LocationService()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    locationService.GetAll()
-    .then((locations) => {
-      dispatch(loadLocations(locations))
-    })
-  }, [])
 
   return (
     <>

@@ -13,14 +13,6 @@ function Section() {
 
   const section = useSelector(sectionSelector)
   const sectionService = new SectionService()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    sectionService.GetAll()
-    .then((sections) => {
-      dispatch(loadSections(sections))
-    })
-  }, [])
 
   return (
     <>

@@ -13,14 +13,6 @@ function Address() {
 
   const address = useSelector(addressSelector)
   const addressService = new AddressService()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    addressService.GetAll()
-    .then((addresss) => {
-      dispatch(loadAddresses(addresss))
-    })
-  }, [])
 
   return (
     <>
