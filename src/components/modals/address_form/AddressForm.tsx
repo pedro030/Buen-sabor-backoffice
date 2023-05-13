@@ -20,7 +20,6 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
     const dispatch = useDispatch()
     const addressService = new AddressService();
 
-    console.log(useSelector(userSelector))
     const handleOnSubmit = (state: any) => {
         state = {
             ...state,

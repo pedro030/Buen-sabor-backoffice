@@ -1,11 +1,11 @@
 interface props {
     obj: {
-        measure: string;
+        name: string;
     }
 }
 const MeasureInfo = ({obj}: props) => {
   return (
-        <span className='card-name'>{obj.measure}</span>
+        <span className='card-name'>{obj.name}</span>
   )
 }
 

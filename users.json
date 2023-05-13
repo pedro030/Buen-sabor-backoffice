@@ -47,15 +47,15 @@
   ],
   "measures": [
     {
-      "measure": "litro",
+      "name": "litro",
       "id": 4
     },
     {
-      "measure": "other",
+      "name": "other",
       "id": 5
     },
     {
-      "measure": "kg",
+      "name": "kg",
       "id": 6
     },
     {
@@ -65,23 +65,15 @@
   ],
   "ingredients": [
     {
-      "id": 1,
+      "ingredient": "",
       "name": "Harina",
-      "cost": 1,
-      "stock": 20,
-      "measure": [
-        {
-          "measure": "kg",
-          "id": 6
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Harina",
-      "cost": 1,
-      "stock": 20,
-      "measure": []
+      "cost": "1",
+      "stock": "30",
+      "measure": {
+        "name": "kg",
+        "id": 6
+      },
+      "id": 1
     }
   ],
   "products": [
@@ -117,19 +109,19 @@
   "statues": [
     {
       "id": 1,
-      "status": "DONE"
+      "name": "DONE"
     },
     {
       "id": 2,
-      "status": "PROCESS"
+      "name": "PROCESS"
     },
     {
       "id": 3,
-      "status": "DELIVERY"
+      "name": "DELIVERY"
     },
     {
       "id": 4,
-      "status": "COOKING"
+      "name": "COOKING"
     }
   ],
   "rols": [
@@ -211,7 +203,7 @@
         "id": 1,
         "streat": "sin nombre",
         "number": 6,
-        "name": {
+        "location": {
           "id": 1,
           "name": "Guaymallen",
           "section": {
@@ -271,6 +263,48 @@
           "type": "CLIENT"
         }
       }
+    },
+    {
+      "name": "",
+      "address": {
+        "id": 1,
+        "streat": "sin nombre",
+        "number": 6,
+        "location": {
+          "id": 1,
+          "name": "Guaymallen",
+          "section": {
+            "id": 1,
+            "type": "Buena nueva"
+          }
+        },
+        "user": {
+          "id": 1,
+          "first_name": "Alejo",
+          "last_name": "Araya",
+          "mail": "alejoaraya2000@gmail.com",
+          "password": "**********",
+          "rol": {
+            "id": 4,
+            "type": "CLIENT"
+          }
+        }
+      },
+      "user": {
+        "name": "",
+        "first_name": "alejo",
+        "last_name": "araya",
+        "mail": "alejoaraya2000@gmail.com",
+        "password": "******",
+        "rol": {
+          "id": 1,
+          "name": "ADMIN"
+        },
+        "id": 1
+      },
+      "date": "123",
+      "withdrawal_mode": "123",
+      "id": 3
     }
   ],
   "bills": [

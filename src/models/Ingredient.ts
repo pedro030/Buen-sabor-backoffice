@@ -5,5 +5,5 @@ export interface Ingredient{
     name: string;
     cost: number;
     stock: number;
-    measure?:Measure;
+    measure:Measure;
 }
