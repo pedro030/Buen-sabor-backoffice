@@ -3,23 +3,32 @@ import UserForm from "../../components/modals/user_form/UserForm"
 import { User } from "../../models/User"
 import { useDispatch, useSelector } from "react-redux"
 import { loadUsers } from "../../state/actions/userActions"
-import { userSelector } from "../../state/selectors"
+import { rolSelector, userSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
 import { UserService } from '../../services/User'
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
+import { RolService } from "../../services/Rol"
+import { loadRols } from "../../state/actions/rolActions"
 
 function User() {
 
   const user = useSelector(userSelector)
   const userService = new UserService()
+
+  const rolService = new RolService()
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     userService.GetAll()
     .then((users) => {
       dispatch(loadUsers(users))
-    })
+    });
+    rolService.GetAll()
+    .then((rols) => {
+      dispatch(loadRols(rols))
+    });
   }, [])
 
   return (

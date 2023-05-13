@@ -18,7 +18,7 @@ const UserInfo = ({ obj }: props) => {
       <span className='card-name'>{obj.last_name}</span>
       <span className='card-name'>{obj.mail}</span>
       <span className='card-name'>{obj.password}</span>
-      <span className='card-name'>{obj.rol.type}</span>
+      <span className='card-name'>{obj.rol.name}</span>
     </>
   )
 }

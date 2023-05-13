@@ -28,6 +28,9 @@ export const locationSelector = (state: any) => state.locations.locations
 // ADDRESS
 export const addressSelector = (state: any) => state.addresses.addresses
 
+// ROLS
+export const rolSelector = (state: any) => state.rols.rols
+
 
 // User Info
 export const userSessionSelector = (state: any) => state.userSession

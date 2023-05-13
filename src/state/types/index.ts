@@ -30,3 +30,6 @@ export const LOAD_LOCATION = "LOAD_LOCATION";
 
 // ADDRESSES
 export const LOAD_ADDRESSES = "LOAD_ADDRESSES";
+
+// ROLS
+export const LOAD_ROLS = "LOAD_ROLS";
