@@ -10,6 +10,8 @@ import Section from "../pages/Section/Section"
 import Location from "../pages/Location/Location"
 import Address from "../pages/Address/Address"
 
+
+
 const homeRoutes = () => {
   return (
       <Routes>
