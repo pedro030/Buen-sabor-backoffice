@@ -69,8 +69,8 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                     <div className="inputs-form">
                         
                         <div className="field">
-                              <label htmlFor='location'>Location</label>
-                              <Field name='location' type='text' className='input-text' />
+                              <label htmlFor='name'>Location</label>
+                              <Field name='name' type='text' className='input-text' />
                         </div>
 
 

@@ -63,8 +63,8 @@ const SectionForm = ({obj: obj, open, onClose}:Props) => {
                     <div className="inputs-form">
 
                         <div className="field">
-                              <label htmlFor='type'>Section</label>
-                              <Field name='type' type='text' className='input-text' />
+                              <label htmlFor='name'>Section</label>
+                              <Field name='name' type='text' className='input-text' />
                         </div>
 
                     

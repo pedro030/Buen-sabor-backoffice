@@ -15,7 +15,7 @@ const AddressInfo = ({ obj }: props) => {
     <>
       <span className='card-name'>{obj.streat}</span>
       <span className='card-name'>{obj.number}</span>
-      <span className='card-name'>{obj.location.location}</span>
+      <span className='card-name'>{obj.location.name}</span>
       <span className='card-name'>{obj.user.id}</span>
     </>
   )

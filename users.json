@@ -144,7 +144,7 @@
       "number": 6,
       "location": {
         "id": 1,
-        "location": "Guaymallen",
+        "name": "Guaymallen",
         "section": {
           "id": 1,
           "type": "Buena nueva"
@@ -161,6 +161,32 @@
           "type": "CLIENT"
         }
       }
+    },
+    {
+      "name": "",
+      "streat": "con nombre",
+      "number": "666",
+      "location": {
+        "name": "Maipu",
+        "section": {
+          "name": "Luzuriaga",
+          "id": 3
+        },
+        "id": 3
+      },
+      "user": {
+        "name": "",
+        "first_name": "matias",
+        "last_name": "federicci",
+        "mail": "matiasfedericci2000@gmail",
+        "password": "*****",
+        "rol": {
+          "id": 1,
+          "name": "ADMIN"
+        },
+        "id": 2
+      },
+      "id": 2
     }
   ],
   "orders": [
@@ -172,9 +198,9 @@
         "id": 1,
         "streat": "sin nombre",
         "number": 6,
-        "location": {
+        "name": {
           "id": 1,
-          "location": "Guaymallen",
+          "name": "Guaymallen",
           "section": {
             "id": 1,
             "type": "Buena nueva"
@@ -267,6 +293,18 @@
         "name": "ADMIN"
       },
       "id": 1
+    },
+    {
+      "name": "",
+      "first_name": "matias",
+      "last_name": "federicci",
+      "mail": "matiasfedericci2000@gmail",
+      "password": "*****",
+      "rol": {
+        "id": 1,
+        "name": "ADMIN"
+      },
+      "id": 2
     }
   ],
   "sections": [
@@ -277,12 +315,15 @@
     {
       "name": "Villa nueva",
       "id": 2
+    },
+    {
+      "name": "Luzuriaga",
+      "id": 3
     }
   ],
   "locations": [
     {
-      "name": "",
-      "location": "Guaymallen",
+      "name": "Guaymallen",
       "section": {
         "id": 1,
         "name": "Buena nueva"
@@ -290,13 +331,20 @@
       "id": 1
     },
     {
-      "name": "",
-      "location": "Guaymallen",
+      "name": "Guaymallen",
       "section": {
         "name": "Villa nueva",
         "id": 2
       },
       "id": 2
+    },
+    {
+      "name": "Maipu",
+      "section": {
+        "name": "Luzuriaga",
+        "id": 3
+      },
+      "id": 3
     }
   ]
 }
