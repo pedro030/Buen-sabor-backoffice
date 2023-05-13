@@ -1,7 +1,6 @@
-import { useEffect } from "react"
 import LocationForm from "../../components/modals/location_form/LocationForm"
 import { Location } from "../../models/Location"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { loadLocations } from "../../state/actions/locationActions"
 import { locationSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"

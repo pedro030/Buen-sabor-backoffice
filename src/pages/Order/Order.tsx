@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { orderSelector } from '../../state/selectors'
 import { OrderService } from '../../services/Order'
 import { loadOrders } from '../../state/actions/orderActions'
@@ -13,7 +12,6 @@ const Order = () => {
     // selecciona el listados de orders del reducer
     const orders = useSelector(orderSelector)
     const orderService = new OrderService()
-    // dispatch de redux para disparar acciones que modifican el estado
 
   return (
     <div>

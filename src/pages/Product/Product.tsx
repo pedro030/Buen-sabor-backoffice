@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { productSelector } from '../../state/selectors'
 import { ProductService } from '../../services/Product'
 import { loadProducts } from '../../state/actions/productActions'

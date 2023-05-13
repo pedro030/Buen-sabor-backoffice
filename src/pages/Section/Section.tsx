@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import SectionForm from "../../components/modals/section_form/SectionForm"
 import { Section } from "../../models/Section"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { loadSections } from "../../state/actions/sectionActions"
 import { sectionSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"

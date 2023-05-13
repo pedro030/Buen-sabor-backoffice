@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { measureSelector } from '../../state/selectors'
 import { MeasureService } from '../../services/Measure'
 import { loadMeasures } from '../../state/actions/measureActions'
@@ -13,7 +12,6 @@ const Measure = () => {
     // selecciona el listados de measures del reducer
     const measures = useSelector(measureSelector)
     const measureService = new MeasureService()
-    // dispatch de redux para disparar acciones que modifican el estado
 
   return (
     <div>

@@ -1,8 +1,7 @@
 import './categoriescrud.scss'
-import { useEffect } from "react"
 import CategoryForm from "../../components/modals/category_form/CategoryForm"
 import { Category } from "../../models/Category"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { loadCategories } from "../../state/actions/categoryActions"
 import { categoriesSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"

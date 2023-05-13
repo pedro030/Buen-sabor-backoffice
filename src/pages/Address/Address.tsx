@@ -1,7 +1,6 @@
-import { useEffect } from "react"
 import AddressForm from "../../components/modals/address_form/AddressForm"
 import { Address } from "../../models/Address"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { loadAddresses } from "../../state/actions/addressActions"
 import { addressSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
