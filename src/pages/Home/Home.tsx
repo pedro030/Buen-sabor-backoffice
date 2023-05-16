@@ -60,8 +60,6 @@ function Home() {
             }
         )   
         .then(data => {
-            console.log('token?')
-            console.log(data)
             dispatch(load_token(data))
         })
     },[])
