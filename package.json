@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": " json-server --watch users.json --port 7841"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",
