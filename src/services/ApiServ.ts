@@ -11,9 +11,9 @@ export class ApiServ<T extends {id: string}> {
 
 
     GetAll(): Promise<T[]>{
-        console.log('get all token')
-        console.log(this.token)
-        return fetch(`${this.apiURL}/${this.endpoint}`,{
+        // console.log('get all token')
+        // console.log(this.token)
+        return fetch(`${this.apiURL}/${this.endpoint}/getAll`,{
             headers:{
                 'Authorization': `Bearer ${this.token}`
             }
@@ -31,7 +31,7 @@ export class ApiServ<T extends {id: string}> {
     }
 
     GetOne(id: string): Promise<T>{
-        return fetch(`${this.apiURL}/${this.endpoint}/${id}`, {
+        return fetch(`${this.apiURL}/${this.endpoint}/get/${id}`, {
             headers: {
                 'Authorization': `Bearer ${this.token}`
             }
