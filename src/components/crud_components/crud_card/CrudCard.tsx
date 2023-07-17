@@ -49,7 +49,7 @@ const CrudCard = ({obj, EditModal, apiServ, loadAction, DeleteModal, modelo}:Pro
               {modelo === "Order" && <OrderInfo obj={obj}/>}
               {modelo === "Bill" && <BillInfo obj={obj}/>}
               {modelo === "User" && <UserInfo obj={obj}/>}
-              {modelo === "Section" && <SectionInfo obj={obj}/>}
+              {/* {modelo === "Section" && <SectionInfo obj={obj}/>} */}
               {modelo === "Location" && <LocationInfo obj={obj}/>}
               {modelo === "Address" && <AddressInfo obj={obj}/>}
           </div>

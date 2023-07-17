@@ -20,10 +20,14 @@ function Sidebar() {
         <div className='flex flex-col justify-between h-[75%]'>
           <div>
             <li>
-              <h2 >Home</h2>
+              <NavLink to="/" end>
+                <h2 >Home</h2>
+              </NavLink>
             </li>
             <li>
+            <NavLink to="/my-profile" end>
               <h2 >My profile</h2>
+              </NavLink>
             </li>
             <li>
               <details className="dropdown dropdown-end">
@@ -52,9 +56,9 @@ function Sidebar() {
                   <li>
                     <NavLink to="users"
                       className={({ isActive }) => isActive ? "active" : ""}>users</NavLink></li>
-                  <li>
+                  {/* <li>
                     <NavLink to="sections"
-                      className={({ isActive }) => isActive ? "active" : ""}>sections</NavLink></li>
+                      className={({ isActive }) => isActive ? "active" : ""}>sections</NavLink></li> */}
                   <li>
                     <NavLink to="locations"
                       className={({ isActive }) => isActive ? "active" : ""}>locations</NavLink></li>
@@ -65,13 +69,18 @@ function Sidebar() {
               </details>
             </li>
             <li>
+            <NavLink to="/stock" end>
               <h2 >Stock</h2>
+              </NavLink>
             </li>
-            <li>
+            <li><NavLink to="/rankings" end>
               <h2 >Rankings</h2>
+              </NavLink>
             </li>
             <li>
+            <NavLink to="/movements" end>
               <h2 >Movements</h2>
+              </NavLink>
             </li>
 
           </div>

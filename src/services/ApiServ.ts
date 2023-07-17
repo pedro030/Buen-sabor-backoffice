@@ -22,7 +22,9 @@ export class ApiServ<T extends {id: string}> {
             // TO DO: agregar notificación
             //toast.success("Success got data")
             console.log("Load success")
-            return res.json()
+            const resouls = res.json()
+            resouls.then(data => console.log(data))
+            return  resouls
         })
         .catch(err => {
             //toast.error("error getting data")

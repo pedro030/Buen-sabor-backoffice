@@ -4,9 +4,10 @@ import { Status } from "./Status";
 
 export interface Order{
     id: string;
-    date:string;
-    withdrawal_mode:string,
+    date: string;
+    withdrawalMode: string,
     address: Address,
-    status:Status,
-    user: User,
-    }
+    status: Status,
+    totalPrice: number,
+    user: User, 
+  }
