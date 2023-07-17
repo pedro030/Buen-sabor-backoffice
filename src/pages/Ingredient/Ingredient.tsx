@@ -11,15 +11,15 @@ import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Ingredient = () => {
-    // selecciona el listados de ingredients del reducer
-    const ingredients = useSelector(ingredientSelector)
-    const ingredientService = new IngredientService()
-    // dispatch de redux para disparar acciones que modifican el estado
+  // selecciona el listados de ingredients del reducer
+  const ingredients = useSelector(ingredientSelector)
+  const ingredientService = new IngredientService()
+  // dispatch de redux para disparar acciones que modifican el estado
 
   return (
     <div className="m-4">
-      <CrudCreateButton Modal={IngredientForm} Title='Category' />
-
+      <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
+      <h2 className='my-2 text-lg font-bold text-center stat-title'>Ingredients</h2>
       <div className="overflow-x-auto">
         <table className="table">
           <thead>
@@ -32,8 +32,8 @@ const Ingredient = () => {
             </tr>
           </thead>
           <tbody>
-            {ingredients.map((ingredient: Ingredient) => (
-              <tr>
+            {ingredients.map((ingredient: Ingredient, i:number) => (
+              <tr key={i}>
                 <td>{ingredient.name}</td>
                 <td>{ingredient.cost}</td>
                 <td>{ingredient.stock}</td>
@@ -41,19 +41,19 @@ const Ingredient = () => {
                 <td>
                   <div className='flex gap-2'>
                     <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon'  />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon'  />
+                    <FiEdit2 className='w-5 h-5 edit-icon' />
+                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
                   </div>
                 </td>
               </tr>))}
           </tbody>
         </table>
       </div>
-      </div>
+    </div>
     // <div>
     //       <CrudCreateButton Modal={IngredientForm} Title="Ingredient"/>
 
-          
+
     //       <div className="th-container">
     //           <span>Ingredient Name</span>
     //           <span>Stock</span>

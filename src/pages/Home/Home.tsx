@@ -66,9 +66,9 @@ function Home() {
     console.log(user)
 
     return (
-        <div className="container-crud">
+        <div className="flex">
             <Sidebar />
-            <div className="container-crud-right">
+            <div className="w-[85vw]">
                 <HomeRoutes/>
             </div>
         </div>

@@ -15,7 +15,7 @@ const CrudCreateButton = ({Modal, Title}:Props) => {
 
   return (
     <div>
-      <button className='btn btn-primary' onClick={() => setOpen(true)}>
+      <button className='btn btn-primary ' onClick={() => setOpen(true)}>
         <IoIosAddCircleOutline className="w-5 h-5" />Add {Title}
       </button>
         <Modal open={open} onClose={() => setOpen(false)} />

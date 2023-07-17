@@ -19,7 +19,7 @@ function CategoriesCRUD() {
   return (
     <div className="m-4">
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
-
+      <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
       <div className="overflow-x-auto">
         <table className="table">
           <thead>
@@ -30,8 +30,8 @@ function CategoriesCRUD() {
             </tr>
           </thead>
           <tbody>
-            {category.map((cat: Category) => (
-              <tr>
+            {category.map((cat: Category, i:number) => (
+              <tr key={i}>
                 <td>{cat.name}</td>
                 <td>{cat.parentCategory?.name}</td>
                 <td>
