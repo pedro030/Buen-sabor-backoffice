@@ -7,6 +7,8 @@ import { Ingredient } from '../../models/Ingredient'
 import IngredientForm from '../../components/modals/ingredient_form/IngredientForm'
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
+import { FiEdit2 } from 'react-icons/fi'
+import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Ingredient = () => {
     // selecciona el listados de ingredients del reducer
@@ -15,30 +17,63 @@ const Ingredient = () => {
     // dispatch de redux para disparar acciones que modifican el estado
 
   return (
-    <div>
-          <CrudCreateButton Modal={IngredientForm} Title="Ingredient"/>
+    <div className="m-4">
+      <CrudCreateButton Modal={IngredientForm} Title='Category' />
+
+      <div className="overflow-x-auto">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Cost</th>
+              <th>Stock</th>
+              <th>Measure</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {ingredients.map((ingredient: Ingredient) => (
+              <tr>
+                <td>{ingredient.name}</td>
+                <td>{ingredient.cost}</td>
+                <td>{ingredient.stock}</td>
+                <td>{ingredient.measure?.measure}</td>
+                <td>
+                  <div className='flex gap-2'>
+                    <RiEyeLine className='w-5 h-5 eye-icon' />
+                    <FiEdit2 className='w-5 h-5 edit-icon'  />
+                    <RiDeleteBin6Line className='w-5 h-5 delete-icon'  />
+                  </div>
+                </td>
+              </tr>))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    // <div>
+    //       <CrudCreateButton Modal={IngredientForm} Title="Ingredient"/>
 
           
-          <div className="th-container">
-              <span>Ingredient Name</span>
-              <span>Stock</span>
-              <span></span>
-              <span>Cost</span>
-              <span></span>
-              <span>Measure</span>
-          </div>
-          {ingredients && ingredients[0] && ingredients.map((cat: Ingredient) => {
-              return <CrudCard 
-              key={cat.id} 
-              obj={cat} 
-              EditModal={IngredientForm}
-              DeleteModal={CrudDeleteModal}
-              loadAction={loadIngredients}
-              apiServ={ingredientService}
-                modelo='Ingredient'
-              />
-          })}
-    </div>
+    //       <div className="th-container">
+    //           <span>Ingredient Name</span>
+    //           <span>Stock</span>
+    //           <span></span>
+    //           <span>Cost</span>
+    //           <span></span>
+    //           <span>Measure</span>
+    //       </div>
+    //       {ingredients && ingredients[0] && ingredients.map((cat: Ingredient) => {
+    //           return <CrudCard 
+    //           key={cat.id} 
+    //           obj={cat} 
+    //           EditModal={IngredientForm}
+    //           DeleteModal={CrudDeleteModal}
+    //           loadAction={loadIngredients}
+    //           apiServ={ingredientService}
+    //             modelo='Ingredient'
+    //           />
+    //       })}
+    // </div>
   )
 }
 
