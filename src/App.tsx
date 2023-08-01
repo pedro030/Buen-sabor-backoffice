@@ -9,6 +9,13 @@ import Header from './components/header/Header';
 import CategoriesCRUD from './pages/CategoriesCRUD/CategoriesCRUD';
 import Home from './pages/Home/Home';
 import {Toaster} from 'react-hot-toast'
+import WebFont from 'webfontloader';
+
+WebFont.load({
+   google: {
+     families: ['Poppins']
+   }
+});
 
 
 

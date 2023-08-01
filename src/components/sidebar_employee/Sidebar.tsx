@@ -8,15 +8,25 @@ function Sidebar() {
   const navigate = useNavigate()
   return (
 
-    <div className='grid grid-cols-[260px_1fr] h-[100vh] overflow-x-hidden overflow-y-auto gap-3'>
+    // STRUCTURE
+    <div className='grid grid-cols-[260px_1fr] h-[100vh] gap-3'>
 
-      <ul className="w-56 m-4 menu bg-secondary rounded-box">
+      {/* SIDEBAR */}
+      <div className="w-56 m-1 bg-white border shadow menu">
+        
+        {/* <h1 className='font-bold font-red-600'>Buen Sabor</h1> */}
+        
+        {/* AVATAR */}
         <div className="flex justify-center avatar">
           <div className="w-24 rounded-full">
             <img src={user?.picture} />
           </div>
         </div>
+        
+        {/* NAME EMPLOYEE */}
         <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
+        
+        {/* OPTIONS */}
         <div className='flex flex-col justify-between h-[75%]'>
           <div>
             <li>
@@ -25,8 +35,8 @@ function Sidebar() {
               </NavLink>
             </li>
             <li>
-            <NavLink to="/my-profile" end>
-              <h2 >My profile</h2>
+              <NavLink to="/my-profile" end>
+                <h2 >My profile</h2>
               </NavLink>
             </li>
             <li>
@@ -69,17 +79,17 @@ function Sidebar() {
               </details>
             </li>
             <li>
-            <NavLink to="/stock" end>
-              <h2 >Stock</h2>
+              <NavLink to="/stock" end>
+                <h2 >Stock</h2>
               </NavLink>
             </li>
             <li><NavLink to="/rankings" end>
               <h2 >Rankings</h2>
-              </NavLink>
+            </NavLink>
             </li>
             <li>
-            <NavLink to="/movements" end>
-              <h2 >Movements</h2>
+              <NavLink to="/movements" end>
+                <h2 >Movements</h2>
               </NavLink>
             </li>
 
@@ -93,7 +103,8 @@ function Sidebar() {
             </li>
           </ul>
         </div>
-      </ul>
+        
+      </div>
 
       <div className=''>
         {/* <Routes>
