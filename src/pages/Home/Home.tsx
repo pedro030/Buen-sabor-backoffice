@@ -1,4 +1,4 @@
-import { useDispatch} from "react-redux"
+import { useDispatch } from "react-redux"
 import Sidebar from "../../components/sidebar_employee/Sidebar"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useEffect } from "react"
@@ -32,44 +32,44 @@ import { loadSections } from "../../state/actions/sectionActions"
 
 function Home() {
 
-    const {user, getAccessTokenSilently} = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        new CategoryService().GetAll().then((categories) => {dispatch(loadCategories(categories))}),
-        new MeasureService().GetAll().then((measures) => {dispatch(loadMeasures(measures))}),
-        new IngredientService().GetAll().then((ingredients) => {dispatch(loadIngredients(ingredients))}),
-        new ProductService().GetAll().then((products) => {dispatch(loadProducts(products))}),
-        new StatusService().GetAll().then((statueses) => {dispatch(loadStatues(statueses))}),
-        new RolService().GetAll().then((rols) => {dispatch(loadRols(rols))}),
-        new AddressService().GetAll().then((addressess) => {dispatch(loadAddresses(addressess))}),
-        new OrderService().GetAll().then((orders) => {dispatch(loadOrders(orders))}),
-        new BillService().GetAll().then((bills) => {dispatch(loadBills(bills))}),
-        new UserService().GetAll().then((users) => {dispatch(loadUsers(users))}),
-        new SectionService().GetAll().then((sections) => {dispatch(loadSections(sections))}),
-        new LocationService().GetAll().then((locations) => {dispatch(loadLocations(locations))})
+        new CategoryService().GetAll().then((categories) => { dispatch(loadCategories(categories)) }),
+            new MeasureService().GetAll().then((measures) => { dispatch(loadMeasures(measures)) }),
+            new IngredientService().GetAll().then((ingredients) => { dispatch(loadIngredients(ingredients)) }),
+            new ProductService().GetAll().then((products) => { dispatch(loadProducts(products)) }),
+            new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) }),
+            new RolService().GetAll().then((rols) => { dispatch(loadRols(rols)) }),
+            new AddressService().GetAll().then((addressess) => { dispatch(loadAddresses(addressess)) }),
+            new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
+            new BillService().GetAll().then((bills) => { dispatch(loadBills(bills)) }),
+            new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
+            new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
+            new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) })
 
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         getAccessTokenSilently(
             {
                 authorizationParams: {
                     audience: import.meta.env.VITE_REACT_APP_AUDIENCE,
                 }
             }
-        )   
-        .then(data => {
-            dispatch(load_token(data))
-        })
-    },[])
-    console.log(user)
+        )
+            .then(data => {
+                dispatch(load_token(data))
+            })
+    }, [])
+    // console.log(user)
 
     return (
         <div className="flex">
             <Sidebar />
             <div className="w-[85vw]">
-                <HomeRoutes/>
+                <HomeRoutes />
             </div>
         </div>
     )

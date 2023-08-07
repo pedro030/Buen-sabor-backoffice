@@ -19,8 +19,8 @@ const Measure = () => {
     <div className="m-4">
       <CrudCreateButton Modal={MeasureForm} Title='Measures' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Measures</h2>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
               <th>Measure</th>

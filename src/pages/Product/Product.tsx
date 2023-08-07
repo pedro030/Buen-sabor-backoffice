@@ -19,8 +19,8 @@ const Product = () => {
     <div className="m-4">
       <CrudCreateButton Modal={ProductForm} Title='Products' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Products</h2>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
               <th>Name</th>

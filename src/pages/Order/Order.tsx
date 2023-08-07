@@ -19,8 +19,8 @@ const Order = () => {
     <div className="m-4">
       <CrudCreateButton Modal={OrderForm} Title='Orders' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
               <th>Date</th>
@@ -36,9 +36,9 @@ const Order = () => {
               <tr key={i}>
                 <td>{order.date}</td>
                 <td>{order.withdrawalMode}</td>
-                <td>{order.status?.name}</td>
+                <td>{order.statusOrder?.statusType}</td>
                 <td>{order.totalPrice}</td>
-                <td>{order.user?.name}</td>
+                <td>{order.user?.id}</td>
                 <td>
                   <div className='flex gap-2'>
                     <RiEyeLine className='w-5 h-5 eye-icon' />

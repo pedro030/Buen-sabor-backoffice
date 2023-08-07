@@ -9,10 +9,10 @@ function Sidebar() {
   return (
 
     // STRUCTURE
-    <div className='grid grid-cols-[260px_1fr] h-[100vh] gap-3'>
+    <>
 
       {/* SIDEBAR */}
-      <div className="w-56 m-1 bg-white border shadow menu">
+      <div className="w-[260px] bg-white h-[100vh] border shadow menu">
         
         {/* <h1 className='font-bold font-red-600'>Buen Sabor</h1> */}
         
@@ -106,15 +106,7 @@ function Sidebar() {
         
       </div>
 
-      <div className=''>
-        {/* <Routes>
-          <Route path="/" element={<UserDetails />} />
-          <Route path="/addresses" element={<Address />} />
-          <Route path="/password-form" element={<Change_password />} />
-          <Route path="/orders" element={<History_Order />} />
-        </Routes> */}
-      </div>
-    </div>
+    </>
 
   )
 }

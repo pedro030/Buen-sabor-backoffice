@@ -19,11 +19,11 @@ function Address() {
     <div className="m-4">
       <CrudCreateButton Modal={AddressForm} Title='Addresses' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Addresses</h2>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
-              <th>Streat</th>
+              <th>Street</th>
               <th>Number</th>
               <th>Location</th>
               <th>User ID</th>
@@ -33,9 +33,9 @@ function Address() {
           <tbody>
             {address.map((addressItem: Address, i:number) => (
               <tr key={i}>
-                <td>{addressItem.streat}</td>
+                <td>{addressItem.street}</td>
                 <td>{addressItem.number}</td>
-                <td>{addressItem.location.name}</td>
+                <td>{addressItem.location.location}</td>
                 <td>{addressItem.user.id}</td>
                 <td>
                   <div className='flex gap-2'>

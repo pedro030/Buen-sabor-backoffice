@@ -7,7 +7,7 @@ export interface Order{
     date: string;
     withdrawalMode: string,
     address: Address,
-    status: Status,
+    statusOrder: Status,
     totalPrice: number,
     user: User, 
   }

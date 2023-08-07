@@ -19,8 +19,8 @@ function User() {
     <div className="m-4">
       <CrudCreateButton Modal={UserForm} Title='Users' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Users</h2>
-      <div className="overflow-x-auto">
-        <table className="table">
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
               <th>First Name</th>
@@ -38,7 +38,7 @@ function User() {
                 <td>{userItem.lastName}</td>
                 <td>{userItem.mail}</td>
                 <td>{userItem.password}</td>
-                <td>{userItem.rol.rol}</td>
+                <td>{userItem.rol?.rol}</td>
                 <td>
                   <div className='flex gap-2'>
                     <RiEyeLine className='w-5 h-5 eye-icon' />
