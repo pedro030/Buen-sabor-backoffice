@@ -10,6 +10,8 @@ import Section from "../pages/Section/Section"
 import Location from "../pages/Location/Location"
 import Address from "../pages/Address/Address"
 import HomePage from "../pages/HomePage/HomePage"
+import PersonalInfo from "../pages/PersonalInfo/PersonalInfo"
+import ChangePassword from "../pages/ChangePassword/ChangePassword"
 
 
 
@@ -18,6 +20,10 @@ const homeRoutes = () => {
     <Routes>
       {/* HOME */}
       <Route path="/" element={<HomePage />} />
+
+      {/* PERSONAL INFO */}
+      <Route path="/personal_info" element={<PersonalInfo />} />
+      <Route path="/change_password" element={<ChangePassword />} />
 
       {/* CRUD */}
       <Route path="/categories" element={<CategoriesCRUD />} />

@@ -13,19 +13,19 @@ function Sidebar() {
 
       {/* SIDEBAR */}
       <div className="w-[260px] bg-white h-[100vh] border shadow menu">
-        
+
         {/* <h1 className='font-bold font-red-600'>Buen Sabor</h1> */}
-        
+
         {/* AVATAR */}
         <div className="flex justify-center avatar">
           <div className="w-24 rounded-full">
             <img src={user?.picture} />
           </div>
         </div>
-        
+
         {/* NAME EMPLOYEE */}
         <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
-        
+
         {/* OPTIONS */}
         <div className='flex flex-col justify-between h-[75%]'>
           <div>
@@ -34,11 +34,23 @@ function Sidebar() {
                 <h2 >Home</h2>
               </NavLink>
             </li>
+
             <li>
-              <NavLink to="/my-profile" end>
-                <h2 >My profile</h2>
-              </NavLink>
+              <details className="dropdown dropdown-end">
+                <summary>My profile</summary>
+                <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
+                  <li>
+                    <NavLink to="personal_info"
+                      end
+                      className={({ isActive }) => isActive ? "active" : ""}>personal info</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="change_password"
+                      className={({ isActive }) => isActive ? "active" : ""}>change password</NavLink></li>
+                </ul>
+              </details>
             </li>
+
             <li>
               <details className="dropdown dropdown-end">
                 <summary>Table</summary>
@@ -103,7 +115,7 @@ function Sidebar() {
             </li>
           </ul>
         </div>
-        
+
       </div>
 
     </>
