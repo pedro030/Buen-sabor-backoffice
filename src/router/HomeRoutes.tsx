@@ -12,6 +12,7 @@ import Address from "../pages/Address/Address"
 import HomePage from "../pages/HomePage/HomePage"
 import PersonalInfo from "../pages/PersonalInfo/PersonalInfo"
 import ChangePassword from "../pages/ChangePassword/ChangePassword"
+import Employees from "../pages/Employees/Employees"
 
 
 
@@ -27,6 +28,7 @@ const homeRoutes = () => {
 
       {/* CRUD */}
       <Route path="/categories" element={<CategoriesCRUD />} />
+      <Route path="/employees" element={<Employees />} />
       <Route path="/measures" element={<Measure />} />
       <Route path="/ingredients" element={<Ingredient />} />
       <Route path="/products" element={<Product />} />

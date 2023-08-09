@@ -1,4 +1,7 @@
+import { useAuth0 } from '@auth0/auth0-react'
+
 const PersonalInfo = () => {
+    const { user, logout } = useAuth0()
 
     return (
         <>
@@ -10,15 +13,7 @@ const PersonalInfo = () => {
                         <label className="label">
                             <span className="label-text">Full name</span>
                         </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
-                        <label className="label">
-                        </label>
-                    </div>
-                    <div className="w-full max-w-xs form-control">
-                        <label className="label">
-                            <span className="label-text">Age</span>
-                        </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
+                        <input type="text" placeholder={user?.name} className="w-full max-w-xs input input-bordered" />
                         <label className="label">
                         </label>
                     </div>
@@ -26,7 +21,7 @@ const PersonalInfo = () => {
                         <label className="label">
                             <span className="label-text">Email</span>
                         </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
+                        <input type="text" placeholder={user?.email} className="w-full max-w-xs input input-bordered" />
                         <label className="label">
                         </label>
                     </div>
@@ -34,7 +29,7 @@ const PersonalInfo = () => {
                         <label className="label">
                             <span className="label-text">Number cell phone</span>
                         </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
+                        <input type="text" placeholder={user?.phone_number} className="w-full max-w-xs input input-bordered" />
                         <label className="label">
                         </label>
                     </div>
@@ -42,7 +37,7 @@ const PersonalInfo = () => {
                         <label className="label">
                             <span className="label-text">Birthdate</span>
                         </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
+                        <input type="text" placeholder={user?.birthdate} className="w-full max-w-xs input input-bordered" />
                         <label className="label">
                         </label>
                     </div>
@@ -50,7 +45,7 @@ const PersonalInfo = () => {
                         <label className="label">
                             <span className="label-text">Address</span>
                         </label>
-                        <input type="text" placeholder="Type here" className="w-full max-w-xs input input-bordered" />
+                        <input type="text" placeholder={user?.address} className="w-full max-w-xs input input-bordered" />
                         <label className="label">
                         </label>
                     </div>

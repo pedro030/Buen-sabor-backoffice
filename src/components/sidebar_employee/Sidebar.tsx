@@ -78,9 +78,9 @@ function Sidebar() {
                   <li>
                     <NavLink to="users"
                       className={({ isActive }) => isActive ? "active" : ""}>users</NavLink></li>
-                  {/* <li>
-                    <NavLink to="sections"
-                      className={({ isActive }) => isActive ? "active" : ""}>sections</NavLink></li> */}
+                  <li>
+                    <NavLink to="employees"
+                      className={({ isActive }) => isActive ? "active" : ""}>employees</NavLink></li>
                   <li>
                     <NavLink to="locations"
                       className={({ isActive }) => isActive ? "active" : ""}>locations</NavLink></li>
