@@ -85,7 +85,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
                             <div className="field">
                                 <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='input-text' />
+                                <Field name='name' type='text' className='w-full max-w-xs input input-sm' />
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 

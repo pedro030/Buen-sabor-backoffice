@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-import './CrudCreateButton.scss'
+// import './CrudCreateButton.scss'
 
 interface PropsModal {
     open: boolean,

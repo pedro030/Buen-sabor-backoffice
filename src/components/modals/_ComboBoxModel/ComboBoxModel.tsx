@@ -11,7 +11,7 @@ const ComboBoxModel = ({ list, name, title, value }: Props) => {
     return (
         <>
             <label htmlFor={name}>{title}</label>
-            <Field name={name} as="select">
+            <Field name={name} as="select" className="input input-sm">
                 <option value="">Select {value}</option>
                 {
                     list.map((e, index) => (
