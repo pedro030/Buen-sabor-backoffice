@@ -40,14 +40,14 @@ function Home() {
             new MeasureService().GetAll().then((measures) => { dispatch(loadMeasures(measures)) }),
             new IngredientService().GetAll().then((ingredients) => { dispatch(loadIngredients(ingredients)) }),
             new ProductService().GetAll().then((products) => { dispatch(loadProducts(products)) }),
-            new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) }),
             new RolService().GetAll().then((rols) => { dispatch(loadRols(rols)) }),
             new AddressService().GetAll().then((addressess) => { dispatch(loadAddresses(addressess)) }),
             new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
             new BillService().GetAll().then((bills) => { dispatch(loadBills(bills)) }),
             new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
-            new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) })
+            // new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) }),
+            // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
 
     }, [])
 
