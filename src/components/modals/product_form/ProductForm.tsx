@@ -30,7 +30,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     })
 
     const categories = useSelector(categoriesSelector)
-    const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.subcategories)
+    const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
 
     const handleOnSubmit = (state: any) => {
         state = {
@@ -83,19 +83,19 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
                             <div className="field">
                                 <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='input-text' />
+                                <Field name='name' type='text' className='input input-sm' />
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='price'>Price</label>
-                                <Field name='price' type='text' className='input-text' />
+                                <Field name='price' type='text' className='input input-sm' />
                                 <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='active'>Status</label>
-                                <Field name='active' as='select'>
+                                <Field name='active' as='select' className="input input-sm">
                                     <option value="true">Active</option>
                                     <option value="false">Unactive</option>
                                 </Field>
@@ -115,7 +115,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
                             {/* <div className="field">
                               <label htmlFor='name'>Category</label>
-                              <Field name='subcategory' type='text' className='input-text' />
+                              <Field name='subcategory' type='text' className='input input-sm' />
                         </div> */}
 
                             {/* <div className="field">
@@ -126,12 +126,12 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             </Field>
                         </div> */}
                         </div>
-                        <div className="buttons">
+                        <div className="flex justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-principal"
+                                className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
-                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
                         </div>
                     </Form>
                 </Formik>

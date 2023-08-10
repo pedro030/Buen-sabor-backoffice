@@ -17,8 +17,8 @@ const ComboBoxModel = ({ list, name, title, value }: Props) => {
                     list.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>
                             {value == 'address' ?
-                            `${e.streat} ${e.number}`:
-                            e.name? e.name: e.email}
+                                `${e.street} ${e.number}` :
+                            e.firstName? e.firstName + '  ' + e.lastName: e.email?e.email: e.measure? e.measure: e.statusType? e.statusType : e.rol? e.rol: e.location ? e.location : e.id}
                         </option>
                     ))}
             </Field>

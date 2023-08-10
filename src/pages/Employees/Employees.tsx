@@ -19,7 +19,6 @@ const Employees = () => {
 
     return (
         <>
-            Employees tables
             <div className="m-4">
                 <CrudCreateButton Modal={UserForm} Title='Employee' />
                 <h2 className='my-2 text-lg font-bold text-center stat-title'>Employees</h2>

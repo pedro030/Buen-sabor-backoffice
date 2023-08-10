@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loadOrders } from '../../../state/actions/orderActions'
 import toast from 'react-hot-toast'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
-import { addressSelector, statusSelector, userSelector } from '../../../state/selectors'
+import { addressSelector, orderSelector, statusSelector, userSelector } from '../../../state/selectors'
 
 
 interface Props {
@@ -54,8 +54,9 @@ const OrderForm = ({ obj: obj, open, onClose }: Props) => {
 
     }
 
-    console.log(useSelector(statusSelector))
-
+    console.log(useSelector(orderSelector))
+    
+    
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
@@ -73,12 +74,12 @@ const OrderForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
                             <div className="field">
                                 <label htmlFor='date'>Date</label>
-                                <Field name='date' type='text' className='input-text' />
+                                <Field name='date' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='withdrawal_mode'>withdrawal_mode</label>
-                                <Field name='withdrawal_mode' type='text' className='input-text' />
+                                <Field name='withdrawal_mode' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
@@ -116,12 +117,12 @@ const OrderForm = ({ obj: obj, open, onClose }: Props) => {
                             </Field>
                         </div> */}
                         </div>
-                        <div className="buttons">
+                        <div className="flex justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-principal"
+                                className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
-                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
                         </div>
                     </Form>
                 </Formik>

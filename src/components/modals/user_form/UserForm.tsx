@@ -75,22 +75,22 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
 
                             <div className="field">
                                 <label htmlFor='first_name'>First Name</label>
-                                <Field name='first_name' type='text' className='input-text' />
+                                <Field name='first_name' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='last_name'>Last Name</label>
-                                <Field name='last_name' type='text' className='input-text' />
+                                <Field name='last_name' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='mail'>Mail</label>
-                                <Field name='mail' type='text' className='input-text' />
+                                <Field name='mail' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='password'>Password</label>
-                                <Field name='password' type='text' className='input-text' />
+                                <Field name='password' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
@@ -118,12 +118,12 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             </Field>
                         </div> */}
                         </div>
-                        <div className="buttons">
+                        <div className="flex justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-principal"
+                                className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
-                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
                         </div>
                     </Form>
                 </Formik>

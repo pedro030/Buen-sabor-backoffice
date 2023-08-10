@@ -115,12 +115,12 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                             </Field>
                         </div> */}
                         </div>
-                        <div className="buttons">
+                        <div className="flex items-baseline justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-principal"
+                                className="btn btn-primary btn-sm btn-wide "
                             >Save</button>
-                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-sm btn-wide ' onClick={() => onClose()}>Cancel</span>
                         </div>
                     </Form>
                 </Formik>

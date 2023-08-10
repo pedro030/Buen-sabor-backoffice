@@ -22,8 +22,8 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
     // configuracion de validacion
     const validationSchema = Yup.object({
         name: Yup.string()
-        .required("Ingredient name is required")
-        .max(30),
+            .required("Ingredient name is required")
+            .max(30),
         cost: Yup.number().required("Ingredient cost is required"),
         stock: Yup.number().required("Ingredient stock is required")
     })
@@ -34,64 +34,64 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
             ...state,
             measure: JSON.parse(state.measure)
         }
-        if(obj){
+        if (obj) {
             ingredientService.updateObj(state)
-            .then(() => {
-                ingredientService.GetAll()
-                .then(m => {
-                    dispatch(loadIngredients(m))
+                .then(() => {
+                    ingredientService.GetAll()
+                        .then(m => {
+                            dispatch(loadIngredients(m))
+                        })
                 })
-            })
-            .finally(() => onClose())
+                .finally(() => onClose())
         } else {
             ingredientService.newObj(state)
-            .then(() => {
-                ingredientService.GetAll()
-                    .then(m => {
-                        dispatch(loadIngredients(m))
-                    })
-            })
-            .finally(() => onClose())
+                .then(() => {
+                    ingredientService.GetAll()
+                        .then(m => {
+                            dispatch(loadIngredients(m))
+                        })
+                })
+                .finally(() => onClose())
         }
     }
 
-  return (
-      <div className='overlay' onClick={() => onClose()}>
-          <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-              <button onClick={onClose} className='exit-button'>X</button>
-              <h3>{obj?'Edit Ingredient': 'New Ingredient'}</h3>
-              <Formik
-                initialValues={
-                    obj || {
-                        name: "",
-                        cost: "",
-                        stock:""
+    return (
+        <div className='overlay' onClick={() => onClose()}>
+            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+                <button onClick={onClose} className='exit-button'>X</button>
+                <h3>{obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
+                <Formik
+                    initialValues={
+                        obj || {
+                            name: "",
+                            cost: "",
+                            stock: ""
+                        }
                     }
-                }
-                validationSchema={validationSchema}
-                onSubmit={(state) => handleSubmit(state)}
-              >
-                <Form>
-                    <div className="inputs-form">
-                        <div className="field">
-                            <label htmlFor='ingredient'>Ingredient Name</label>
-                            <Field name='name' type='text' className='input-text' />
-                            <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                        </div>
+                    validationSchema={validationSchema}
+                    onSubmit={(state) => handleSubmit(state)}
+                >
+                    <Form>
+                        <div className="gap-2 inputs-form">
+                            <div className="field">
+                                <label htmlFor='ingredient'>Ingredient Name</label>
+                                <Field name='name' type='text' className='input input-sm' />
+                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
 
-                        <div className="field">
-                            <label htmlFor='cost'>Cost</label>
-                            <Field name='cost' type='number' className='input-text' />
-                            <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                        </div>
+                            <div className="field">
+                                <label htmlFor='cost'>Cost</label>
+                                <Field name='cost' type='number' className='input input-sm' />
+                                <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
 
-                        <div className="field">
-                            <label htmlFor='stock'>Stock</label>
-                            <Field name='stock' type='number' className='input-text' />
-                            <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                        </div>
+                            <div className="field">
+                                <label htmlFor='stock'>Stock</label>
+                                <Field name='stock' type='number' className='input input-sm' />
+                                <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
 
-                        <div className="field">
+                            <div className="field">
                                 <ComboBoxModel
                                     list={useSelector(measureSelector)}
                                     name='measure'
@@ -103,19 +103,19 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
 
 
 
-                    </div>
-                    <div className="buttons">
-                        <button
-                            type="submit"
-                            className="btn btn-principal"
-                        >Save</button>
-                        <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
-                    </div>
-                </Form>
-              </Formik>
-          </div>
-      </div>
-  )
+                        </div>
+                        <div className="flex justify-around my-3">
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-wide btn-sm"
+                            >Save</button>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                        </div>
+                    </Form>
+                </Formik>
+            </div>
+        </div>
+    )
 }
 
 export default IngredientForm

@@ -71,12 +71,12 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
 
                             <div className="field">
                                 <label htmlFor='streat'>Streat</label>
-                                <Field name='streat' type='text' className='input-text' />
+                                <Field name='streat' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='number'>Number</label>
-                                <Field name='number' type='text' className='input-text' />
+                                <Field name='number' type='text' className='input input-sm' />
                             </div>
                     
 
@@ -118,12 +118,12 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                             </Field>
                         </div> */}
                         </div>
-                        <div className="buttons">
+                        <div className="flex justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-principal"
+                                className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
-                            <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
                         </div>
                     </Form>
                 </Formik>

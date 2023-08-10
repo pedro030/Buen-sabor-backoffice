@@ -61,6 +61,7 @@ body {
   height: 100vh;
 
   .modal-container {
+    gap: 2rem;
     position: relative;
     background-color: #ffffff;
     display: flex;
@@ -68,12 +69,13 @@ body {
     align-items: center;
     min-width: 40%;
     min-height: fit-content;
-    border-radius: 25px;
+    border-radius: 28px;
+    // padding: 5rem 3rem;
 
     .exit-button {
       position: absolute;
       top: 10px;
-      right: 10px;
+      right: 20px;
       background-color: transparent;
       border: none;
     }
@@ -109,6 +111,7 @@ Form {
         top: 100%;
         left: 0;
         width: 100%;
+        font-size: .8rem;
       }
 
       label {

@@ -45,8 +45,8 @@ function Home() {
             new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
             new BillService().GetAll().then((bills) => { dispatch(loadBills(bills)) }),
             new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
-            new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) })
-            // new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) }),
+            new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
+            new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) })
             // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
 
     }, [])

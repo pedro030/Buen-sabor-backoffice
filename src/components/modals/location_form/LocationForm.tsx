@@ -78,12 +78,12 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                         
                         <div className="field">
                               <label htmlFor='name'>Location</label>
-                              <Field name='name' type='text' className='input-text' />
+                              <Field name='name' type='text' className='input input-sm' />
                               <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
 
 
-                        <div className="field">
+                        {/* <div className="field">
                                 <ComboBoxModel
                                     list={useSelector(sectionSelector)}
                                     name='section'
@@ -91,10 +91,10 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                                     value='section'
                                 />
                                 <ErrorMessage name="section">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
+                            </div> */}
                         {/* <div className="field">
                               <label htmlFor='section'>Section</label>
-                              <Field name='section' type='text' className='input-text' />
+                              <Field name='section' type='text' className='input input-sm' />
                         </div> */}
 
                     
@@ -106,13 +106,13 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                             </Field>
                         </div> */}
                     </div>
-                    <div className="buttons">
-                        <button
-                            type="submit"
-                            className="btn btn-principal"
-                        >Save</button>
-                        <span className='btn btn-cancel' onClick={() => onClose()}>Cancel</span>
-                    </div>
+                    <div className="flex justify-around my-3">
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-wide btn-sm"
+                            >Save</button>
+                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                        </div>
                 </Form>
             </Formik>
         </div>
