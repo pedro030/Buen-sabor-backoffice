@@ -8,6 +8,7 @@ import { loadIngredients } from '../../../state/actions/ingredientActions'
 import * as Yup from 'yup'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import { measureSelector } from '../../../state/selectors'
+import Measure from '../../../pages/Measure/Measure'
 
 interface Props {
     obj?: any,
@@ -30,15 +31,10 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
 
     // Crea o edita dependiendo si obj es pasado como prop
     const handleSubmit = (state: any) => {
-        console.log(state)
-        
-        
         // state = {
         //     ...state,
         //     measure: JSON.parse(state.measure)
         // }
-
-
         if (state.id) {
             ingredientService.updateObj(state)
                 .then(() => {
@@ -49,6 +45,7 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                 })
                 .finally(() => onClose())
         } else {
+            state.measure = JSON.parse(state.measure)
             ingredientService.newObj(state)
                 .then(() => {
                     ingredientService.GetAll()
@@ -63,7 +60,7 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-            <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
                 <Formik
                     initialValues={
@@ -76,7 +73,7 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                     validationSchema={validationSchema}
                     onSubmit={(state) => handleSubmit(state)}
                 >
-                    
+
                     <Form>
                         <div className="gap-2 inputs-form">
                             <div className="field">

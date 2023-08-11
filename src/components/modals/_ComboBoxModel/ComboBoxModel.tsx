@@ -16,7 +16,7 @@ const handleSelect = (e:any) => {
     return (
         <>
             <label htmlFor={name}>{title}</label>
-            <Field onChange={handleSelect} name={name} as="select" className="input input-sm">
+            <Field name={name} as="select" className="input input-sm">
                 <option value="">Select {value}</option>
                 {
                     list.map((e, index) => (
