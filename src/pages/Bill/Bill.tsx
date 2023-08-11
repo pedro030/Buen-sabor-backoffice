@@ -12,7 +12,7 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 function Bill() {
 
-  const bill = useSelector(billSelector)
+  const bill: Bill[] = useSelector(billSelector)
   const billService = new BillService()
 
   return (

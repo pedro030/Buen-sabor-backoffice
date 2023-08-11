@@ -12,7 +12,7 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Order = () => {
     // selecciona el listados de orders del reducer
-    const orders = useSelector(orderSelector)
+    const orders: Order[] = useSelector(orderSelector)
     const orderService = new OrderService()
 
   return (

@@ -28,8 +28,8 @@ const Measure = () => {
             </tr>
           </thead>
           <tbody>
-            {measures.map((measure: Measure) => (
-              <tr>
+            {measures.map((measure: Measure, index:number) => (
+              <tr key={index}>
                 <td>{measure.measure}</td>
                 <td>
                   <div className='flex gap-2'>
@@ -43,23 +43,6 @@ const Measure = () => {
         </table>
       </div>
     </div>
-    // <div>
-    //       <CrudCreateButton Modal={MeasureForm} Title="Measure"/>
-    //       <div className="th-container">
-    //           <span>Measure Name</span>
-    //       </div>
-    //       {measures && measures[0] && measures.map((cat: Measure) => {
-    //           return <CrudCard 
-    //           key={cat.id} 
-    //           obj={cat} 
-    //           EditModal={MeasureForm}
-    //           DeleteModal={CrudDeleteModal}
-    //           loadAction={loadMeasures}
-    //           apiServ={measureService}
-    //             modelo='Measure'
-    //           />
-    //       })}
-    // </div>
   )
 }
 

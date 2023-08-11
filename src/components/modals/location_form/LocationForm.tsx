@@ -62,7 +62,7 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
   return (
     <div className='overlay' onClick={()=>onClose()}>
         <div className='modal-container' onClick={(e)=>{e.stopPropagation()}}>
-            <button onClick={onClose} className='exit-button'>X</button>
+        <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
             <h3>{obj?'Edit Location':'New Location'}</h3>
             <Formik
                 initialValues={
@@ -81,30 +81,6 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                               <Field name='name' type='text' className='input input-sm' />
                               <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
-
-
-                        {/* <div className="field">
-                                <ComboBoxModel
-                                    list={useSelector(sectionSelector)}
-                                    name='section'
-                                    title='Section'
-                                    value='section'
-                                />
-                                <ErrorMessage name="section">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div> */}
-                        {/* <div className="field">
-                              <label htmlFor='section'>Section</label>
-                              <Field name='section' type='text' className='input input-sm' />
-                        </div> */}
-
-                    
-                        {/* <div className="field">
-                            <label htmlFor='macrolocation'>Macrolocation</label>
-                            <Field name="macrolocation" as="select">
-                                <option value='1'>Comida</option>
-                                <option value='2'>Bebida</option>
-                            </Field>
-                        </div> */}
                     </div>
                     <div className="flex justify-around my-3">
                             <button

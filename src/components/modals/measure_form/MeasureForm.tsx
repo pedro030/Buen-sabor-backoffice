@@ -48,12 +48,12 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
         }
     }
 
-    console.log(measure)
+    // console.log(measure)
 
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-                <button onClick={onClose} className='exit-button'>X</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{obj ? 'Edit Measure' : 'New Measure'}</h3>
                 <Formik
                     initialValues={obj || {
@@ -63,25 +63,11 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
                     validationSchema={validationSchema}
                 >
                     <Form>
-                        <div className="inputs-form">
-
+                        <div className="gap-2 inputs-form">
                             <div className="field">
-                                {/* <label htmlFor='measure'>Measure Name</label> */}
-
-                                <ComboBoxModel
-                                    list={measure}
-                                    name='measures'
-                                    title='Measure'
-                                    value='measure'
-                                />
-
-                                {/* <Field
-                            name='measure'
-                            type='text'
-                            className={`select`}
-                            error="measure"
-                            />
-                            <ErrorMessage name="measure">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
+                                <label htmlFor='measure'>Measure Name</label>
+                                <Field name='name' type='text' className='input input-sm' />
+                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                         </div>
                         <div className="flex justify-around my-3">

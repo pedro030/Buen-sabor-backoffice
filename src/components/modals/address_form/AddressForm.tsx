@@ -56,7 +56,7 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-                <button onClick={onClose} className='exit-button'>X</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{obj ? 'Edit Address' : 'New Address'}</h3>
                 <Formik
                     initialValues={
@@ -70,7 +70,7 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
 
                             <div className="field">
-                                <label htmlFor='streat'>Streat</label>
+                                <label htmlFor='streat'>Street</label>
                                 <Field name='streat' type='text' className='input input-sm' />
                             </div>
 
