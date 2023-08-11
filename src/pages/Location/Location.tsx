@@ -33,9 +33,9 @@ function Location() {
                 <td>{locationItems.location}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                    <RiEyeLine className='w-5 h-5 eye-icon hover:cursor-pointer' />
+                    <FiEdit2 className='w-5 h-5 edit-icon hover:cursor-pointer' />
+                    <button onClick={() => console.log(locationItems.id)}><RiDeleteBin6Line className='w-5 h-5 delete-icon hover:cursor-pointer'/></button>
                   </div>
                 </td>
               </tr>))}

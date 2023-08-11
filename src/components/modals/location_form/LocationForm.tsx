@@ -1,4 +1,3 @@
-import React from 'react'
 import { Location } from '../../../models/Location'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './LocationForm.scss'
@@ -6,8 +5,6 @@ import { LocationService } from '../../../services/Location'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadLocations } from '../../../state/actions/locationActions'
 import toast from 'react-hot-toast'
-import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
-import { sectionSelector } from '../../../state/selectors'
 import * as Yup from 'yup';
 
 
@@ -16,23 +13,19 @@ interface Props{
     open: boolean,
     onClose: ()=>void
 }
-const LocationForm = ({obj: obj, open, onClose}:Props) => {
+const LocationForm = ({obj: state, open, onClose}:Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const locationService = new LocationService();
 
     // validation form
     const validationSchema = Yup.object({
-        name: Yup.string().required("Location name required"),
-        section: Yup.string().required("Location section is required")
+        location: Yup.string().required("Location name required"),
     })
 
     const handleOnSubmit = (state:any) => {
-        state = {
-            ...state,
-            section: JSON.parse(state.section)
-        }
-        if(obj?.id){
+        if(state?.id){
+            console.log('update')
             toast.promise(
             locationService.updateObj(state)
             .then(()=>{
@@ -63,11 +56,11 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
     <div className='overlay' onClick={()=>onClose()}>
         <div className='modal-container' onClick={(e)=>{e.stopPropagation()}}>
         <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
-            <h3>{obj?'Edit Location':'New Location'}</h3>
+            <h3>{state?'Edit Location':'New Location'}</h3>
             <Formik
                 initialValues={
-                    obj?obj:{
-                        name:""
+                    state?state:{
+                        location:""
                     }
                 }
                 validationSchema={validationSchema}
@@ -77,9 +70,9 @@ const LocationForm = ({obj: obj, open, onClose}:Props) => {
                     <div className="inputs-form">
                         
                         <div className="field">
-                              <label htmlFor='name'>Location</label>
-                              <Field name='name' type='text' className='input input-sm' />
-                              <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                              <label htmlFor='location'>Location</label>
+                              <Field name='location' type='text' className='input input-sm' />
+                              <ErrorMessage name="location">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
                     </div>
                     <div className="flex justify-around my-3">

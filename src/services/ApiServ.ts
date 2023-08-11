@@ -2,7 +2,7 @@ import toast from 'react-hot-toast'
 import { userSelector } from '../state/selectors';
 import store from '../state/store/store';
 
-export class ApiServ<T extends {id: string}> {
+export class ApiServ<T extends { id: string }> {
     endpoint: string = "";
     token = store.getState().userSession.token
 
@@ -10,29 +10,29 @@ export class ApiServ<T extends {id: string}> {
 
 
 
-    GetAll(): Promise<T[]>{
+    GetAll(): Promise<T[]> {
         // console.log('get all token')
         // console.log(this.token)
-        return fetch(`${this.apiURL}/${this.endpoint}/getAll`,{
-            headers:{
+        return fetch(`${this.apiURL}/${this.endpoint}/getAll`, {
+            headers: {
                 'Authorization': `Bearer ${this.token}`
             }
         })
-        .then(res => {
-            // TO DO: agregar notificación
-            //toast.success("Success got data")
-            // console.log("Load success")
-            const resouls = res.json()
-            // resouls.then(data => console.log(data))
-            return  resouls
-        })
-        .catch(err => {
-            //toast.error("error getting data")
-            console.log(err)
-        })
+            .then(res => {
+                // TO DO: agregar notificación
+                //toast.success("Success got data")
+                // console.log("Load success")
+                const resouls = res.json()
+                // resouls.then(data => console.log(data))
+                return resouls
+            })
+            .catch(err => {
+                //toast.error("error getting data")
+                console.log(err)
+            })
     }
 
-    GetOne(id: string): Promise<T>{
+    GetOne(id: string): Promise<T> {
         return fetch(`${this.apiURL}/${this.endpoint}/get/${id}`, {
             headers: {
                 'Authorization': `Bearer ${this.token}`
@@ -51,6 +51,7 @@ export class ApiServ<T extends {id: string}> {
     }
 
     async newObj(newObj: T) {
+
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
@@ -60,12 +61,13 @@ export class ApiServ<T extends {id: string}> {
             body: JSON.stringify(newObj)
         };
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}`, requestOptions)
+
+        const resp = await fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
         const data = await resp.json()
         return data
     }
 
-    async updateObj(updateObj: T){
+    async updateObj(updateObj: T) {
         const requestOptions: RequestInit = {
             method: 'PUT',
             headers: {
@@ -80,7 +82,7 @@ export class ApiServ<T extends {id: string}> {
         return data
     }
 
-    async deleteObj(deleteObj: T){
+    async deleteObj(deleteObj: T) {
         const requestOptions: RequestInit = {
             method: 'DELETE',
             headers: {
@@ -90,7 +92,7 @@ export class ApiServ<T extends {id: string}> {
             body: JSON.stringify(deleteObj)
         };
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}/${deleteObj.id}`, requestOptions)
+        const resp = await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
         const data = await resp.json()
         return data
     }

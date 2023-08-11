@@ -30,11 +30,16 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
 
     // Crea o edita dependiendo si obj es pasado como prop
     const handleSubmit = (state: any) => {
-        state = {
-            ...state,
-            measure: JSON.parse(state.measure)
-        }
-        if (obj) {
+        console.log(state)
+        
+        
+        // state = {
+        //     ...state,
+        //     measure: JSON.parse(state.measure)
+        // }
+
+
+        if (state.id) {
             ingredientService.updateObj(state)
                 .then(() => {
                     ingredientService.GetAll()
@@ -71,6 +76,7 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                     validationSchema={validationSchema}
                     onSubmit={(state) => handleSubmit(state)}
                 >
+                    
                     <Form>
                         <div className="gap-2 inputs-form">
                             <div className="field">

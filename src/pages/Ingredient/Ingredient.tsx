@@ -16,6 +16,8 @@ const Ingredient = () => {
   const ingredientService = new IngredientService()
   // dispatch de redux para disparar acciones que modifican el estado
 
+  console.log(ingredients)
+  
   return (
     <div className="m-4">
       <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />

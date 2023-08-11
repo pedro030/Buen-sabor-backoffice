@@ -48,7 +48,6 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
         }
     }
 
-    // console.log(measure)
 
     return (
         <div className='overlay' onClick={() => onClose()}>
@@ -66,8 +65,8 @@ const MeasureForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="gap-2 inputs-form">
                             <div className="field">
                                 <label htmlFor='measure'>Measure Name</label>
-                                <Field name='name' type='text' className='input input-sm' />
-                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                <Field name='measure' type='text' className='input input-sm' />
+                                <ErrorMessage name="measure">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                         </div>
                         <div className="flex justify-around my-3">

@@ -14,6 +14,7 @@ const Measure = () => {
     // selecciona el listados de measures del reducer
     const measures = useSelector(measureSelector)
     const measureService = new MeasureService()
+    console.log(measures)
 
   return (
     <div className="m-4">

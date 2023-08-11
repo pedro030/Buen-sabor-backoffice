@@ -8,10 +8,15 @@ interface Props {
 }
 
 const ComboBoxModel = ({ list, name, title, value }: Props) => {
+
+const handleSelect = (e:any) => {
+    console.log(e.target.value)
+}
+
     return (
         <>
             <label htmlFor={name}>{title}</label>
-            <Field name={name} as="select" className="input input-sm">
+            <Field onChange={handleSelect} name={name} as="select" className="input input-sm">
                 <option value="">Select {value}</option>
                 {
                     list.map((e, index) => (
