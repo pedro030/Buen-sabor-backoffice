@@ -33,11 +33,14 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
 
     const handleOnSubmit = (state: any) => {
-        state = {
-            ...state,
-            subcategory: JSON.parse(state.subcategory)
-        }
-        if (obj?.id) {
+        // state = {
+        //     ...state,
+        //     subcategory: JSON.parse(state.subcategory)
+        // }
+        state.subcategory = JSON.parse(state.subcategory)
+        state.active == 'true' ? state.active = true : state.active = false
+
+        if (state?.id) {
             toast.promise(
                 productService.updateObj(state)
                     .then(() => {
@@ -67,13 +70,17 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-            <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{obj ? 'Edit Product' : 'New Product'}</h3>
                 <Formik
                     initialValues={
                         obj ? obj : {
                             name: "",
-                            active: false
+                            active: false,
+                            cookingTime: 0,
+                            image: "",
+                            ingredients: [],
+                            price: 0
                         }
                     }
                     validationSchema={validationSchema}

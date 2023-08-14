@@ -13,6 +13,7 @@ import { useState } from 'react'
 
 const Measure = () => {
     // selecciona el listados de measures del reducer
+    const dispatch = useDispatch()
     const measures = useSelector(measureSelector)
     const measureService = new MeasureService()
     //modals states
@@ -25,8 +26,20 @@ const Measure = () => {
       setSelectedItem(m);
       setIsEditModalOpen(true)
     }
-
-  return (
+  
+    const handleDelete = (state: Measure) => {
+      if (confirm(`You want to delete this item?`)) {
+        measureService.deleteObj(state)
+          .then(() => {
+            measureService.GetAll()
+              .then((res: Measure[]) => {
+                dispatch(loadMeasures(res))
+              })
+          })
+      }
+    }
+  
+    return (
     <div className="m-4">
       <CrudCreateButton Modal={MeasureForm} Title='Measures' />
 
@@ -50,9 +63,9 @@ const Measure = () => {
                 <td>{measure.measure}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon'/>
-                    <FiEdit2 className='w-5 h-5 edit-icon cursor-pointer' onClick={() => openEditModal(measure)} />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon'/>
+                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button onClick={() => openEditModal(measure)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => handleDelete(measure)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}

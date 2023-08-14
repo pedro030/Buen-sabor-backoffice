@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { productSelector } from '../../state/selectors'
 import { ProductService } from '../../services/Product'
 import { loadProducts } from '../../state/actions/productActions'
@@ -11,9 +11,23 @@ import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Product = () => {
-    // selecciona el listados de products del reducer
-    const products = useSelector(productSelector)
-    const productService = new ProductService()
+  // selecciona el listados de products del reducer
+  const dispatch = useDispatch()
+  const products = useSelector(productSelector)
+  const productService = new ProductService()
+
+
+  const handleDelete = (state: Product) => {
+    if (confirm(`You want to delete this item?`)) {
+      productService.deleteObj(state)
+        .then(() => {
+          productService.GetAll()
+            .then((res: Product[]) => {
+              dispatch(loadProducts(res))
+            })
+        })
+    }
+  }
 
   return (
     <div className="m-4">
@@ -30,16 +44,16 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product: Product,i:number) => (
+            {products.map((product: Product, i: number) => (
               <tr key={i}>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.subcategory?.name}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => handleDelete(product)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}
@@ -47,28 +61,6 @@ const Product = () => {
         </table>
       </div>
     </div>
-    // <div>
-    //       <CrudCreateButton Modal={ProductForm} Title="Product"/>
-    //       <div className="th-container">
-    //           <span>Product Name</span>
-    //           <span>Price</span>
-    //           <span></span>
-    //           <span>Active</span>
-    //           <span></span>
-    //           <span>Category</span>
-    //       </div>
-    //       {products && products[0] && products.map((cat: Product) => {
-    //           return <CrudCard 
-    //           key={cat.id} 
-    //           obj={cat} 
-    //           EditModal={ProductForm}
-    //           DeleteModal={CrudDeleteModal}
-    //           loadAction={loadProducts}
-    //           apiServ={productService}
-    //             modelo='Product'
-    //           />
-    //       })}
-    // </div>
   )
 }
 

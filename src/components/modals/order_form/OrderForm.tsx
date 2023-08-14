@@ -8,6 +8,9 @@ import { loadOrders } from '../../../state/actions/orderActions'
 import toast from 'react-hot-toast'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import { addressSelector, orderSelector, statusSelector, userSelector } from '../../../state/selectors'
+import { User } from '@auth0/auth0-react'
+import Status from '../../../pages/Status/Status'
+import Address from '../../../pages/Address/Address'
 
 
 interface Props {
@@ -21,51 +24,60 @@ const OrderForm = ({ obj: obj, open, onClose }: Props) => {
     const orderService = new OrderService();
 
     const handleOnSubmit = (state: any) => {
-        state = {
-            ...state,
-            user: JSON.parse(state.user),
-            status: JSON.parse(state.status),
-            address: JSON.parse(state.address)
-        }
-        if (obj?.id) {
-            toast.promise(
-                orderService.updateObj(state)
-                    .then(() => {
-                        orderService.GetAll().then((res: Order[]) => {
-                            dispatch(loadOrders(res))
-                        })
-                    })
-                    .finally(() => onClose())
-                , {
-                    loading: 'Loading',
-                    success: 'Got the data',
-                    error: 'Error when fetching',
-                })
-        } else {
-            orderService.newObj(state)
-                .then(() => {
-                    orderService.GetAll()
-                        .then((res: Order[]) => {
-                            dispatch(loadOrders(res))
-                            onClose()
-                        })
-                })
-        }
+        // state = {
+        //     ...state,
+        //     user: JSON.parse(state.user),
+        //     status: JSON.parse(state.status),
+        //     address: JSON.parse(state.address)
+        // }
+
+        state.user = JSON.parse(state.user)
+        state.address = JSON.parse(state.address)
+        state.status = JSON.parse(state.status)
+        console.log(state)
+
+        // if (state?.id) {
+        //     toast.promise(
+        //         orderService.updateObj(state)
+        //             .then(() => {
+        //                 orderService.GetAll().then((res: Order[]) => {
+        //                     dispatch(loadOrders(res))
+        //                 })
+        //             })
+        //             .finally(() => onClose())
+        //         , {
+        //             loading: 'Loading',
+        //             success: 'Got the data',
+        //             error: 'Error when fetching',
+        //         })
+        // } else {
+        //     orderService.newObj(state)
+        //         .then(() => {
+        //             orderService.GetAll()
+        //                 .then((res: Order[]) => {
+        //                     dispatch(loadOrders(res))
+        //                     onClose()
+        //                 })
+        //         })
+        // }
 
     }
 
-    console.log(useSelector(orderSelector))
-    
-    
+
+
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-            <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{obj ? 'Edit Order' : 'New Order'}</h3>
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            name: ""
+                            date: "",
+                            withdrawal_mode: "",
+                            user: User,
+                            status: Status,
+                            address: Address
                         }
                     }
                     onSubmit={(state) => { handleOnSubmit(state) }}

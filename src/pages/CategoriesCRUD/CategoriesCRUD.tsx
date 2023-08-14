@@ -1,7 +1,7 @@
 // import './categoriescrud.scss'
 import CategoryForm from "../../components/modals/category_form/CategoryForm"
 import { Category } from "../../models/Category"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { loadCategories } from "../../state/actions/categoryActions"
 import { categoriesSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
@@ -11,10 +11,24 @@ import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
+
 function CategoriesCRUD() {
 
+  const dispatch = useDispatch()
   const category = useSelector(categoriesSelector)
   const categoryService = new CategoryService()
+  
+  const handleDelete = (state: Category) => {
+    if (confirm(`You want to delete this item?`)) {
+      categoryService.deleteObj(state)
+        .then(() => {
+          categoryService.GetAll()
+            .then((res: Category[]) => {
+              dispatch(loadCategories(res))
+            })
+        })
+    }
+  }
 
   return (
     <div className="m-4">
@@ -30,38 +44,21 @@ function CategoriesCRUD() {
             </tr>
           </thead>
           <tbody>
-            {category.map((cat: Category, i:number) => (
+            {category.map((cat: Category, i: number) => (
               <tr key={i}>
                 <td>{cat.name}</td>
                 <td>{cat.parentCategory?.name}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon'  />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon'  />
+                    <button className="cursor-pointer"><RiEyeLine className='w-5 h-5 eye-icon' /></button>
+                    <button className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
+                    <button onClick={() => handleDelete(cat)} className="cursor-pointer"><RiDeleteBin6Line className='w-5 h-5 delete-icon' /></button>
                   </div>
                 </td>
               </tr>))}
           </tbody>
         </table>
       </div>
-      {/* <CrudHead/> */}
-      {/* <CrudCreateButton Modal={CategoryForm} Title='Category' />
-      <div className="th-container">
-        <span>Category Name</span>
-        <span>Subcategory</span>
-      </div>
-      {category && category[0] && category.map((cat: Category) => {
-        return <CrudCard
-          key={cat.id}
-          obj={cat}
-          EditModal={CategoryForm}
-          loadAction={loadCategories}
-          apiServ={categoryService}
-          DeleteModal={CrudDeleteModal}
-          modelo='Category'
-        />
-      })} */}
     </div>
   )
 }

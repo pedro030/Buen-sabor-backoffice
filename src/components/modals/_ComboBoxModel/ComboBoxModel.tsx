@@ -17,13 +17,13 @@ const handleSelect = (e:any) => {
         <>
             <label htmlFor={name}>{title}</label>
             <Field name={name} as="select" className="input input-sm">
-                <option value="">Select {value}</option>
+                <option onChange={handleSelect} value="">Select {value}</option>
                 {
                     list.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>
                             {value == 'address' ?
                                 `${e.street} ${e.number}` :
-                            e.firstName? e.firstName + '  ' + e.lastName: e.email?e.email: e.measure? e.measure: e.statusType? e.statusType : e.rol? e.rol: e.location ? e.location : e.id}
+                            e.firstName? e.firstName + '  ' + e.lastName: e.email?e.email: e.measure? e.measure: e.statusType? e.statusType : e.rol? e.rol: e.location ? e.location : e.name? e.name: e.id}
                         </option>
                     ))}
             </Field>

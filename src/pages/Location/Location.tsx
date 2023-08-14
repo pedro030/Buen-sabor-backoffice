@@ -1,6 +1,6 @@
 import LocationForm from "../../components/modals/location_form/LocationForm"
 import { Location } from "../../models/Location"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { loadLocations } from "../../state/actions/locationActions"
 import { locationSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
@@ -12,8 +12,22 @@ import { FiEdit2 } from "react-icons/fi"
 
 function Location() {
 
+  const dispatch = useDispatch()
   const location = useSelector(locationSelector)
   const locationService = new LocationService()
+
+
+  const handleDelete = (state: Location) => {
+    if (confirm(`You want to delete this item?`)) {
+      locationService.deleteObj(state)
+        .then(() => {
+          locationService.GetAll()
+            .then((res: Location[]) => {
+              dispatch(loadLocations(res))
+            })
+        })
+    }
+  }
 
   return (
     <div className="m-4">
@@ -35,7 +49,7 @@ function Location() {
                   <div className='flex gap-2'>
                     <RiEyeLine className='w-5 h-5 eye-icon hover:cursor-pointer' />
                     <FiEdit2 className='w-5 h-5 edit-icon hover:cursor-pointer' />
-                    <button onClick={() => console.log(locationItems.id)}><RiDeleteBin6Line className='w-5 h-5 delete-icon hover:cursor-pointer'/></button>
+                    <button onClick={() => handleDelete(locationItems)}><RiDeleteBin6Line className='w-5 h-5 delete-icon hover:cursor-pointer'/></button>
                   </div>
                 </td>
               </tr>))}
