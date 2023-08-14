@@ -89,6 +89,8 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
 
 
                             <div className="field">
+                                <label htmlFor='location'>Location</label>
+
                                 <ComboBoxModel
                                     list={useSelector(locationSelector)}
                                     name='location'
@@ -98,6 +100,8 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                                <label htmlFor='user'>User</label>
+
                                 <ComboBoxModel
                                     list={useSelector(userSelector)}
                                     name='user'

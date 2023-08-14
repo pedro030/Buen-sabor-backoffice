@@ -37,7 +37,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
         //     subcategories: state.subcategories?JSON.parse(state.subcategories):""
         // }
         (state.parentCategory === "") ? state.parentCategory = null : state.parentCategory = JSON.parse(state.parentCategory)
-        
+
         if (state?.id) {
             toast.promise(
                 categoryService.updateObj(state)
@@ -69,15 +69,15 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
-            <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
+                <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
 
                 <h3>{obj ? 'Edit Category' : 'New Category'}</h3>
                 <Formik
                     initialValues={
                         obj ? obj : {
-                                name: "",
-                                parentCategory: ""
-                            }
+                            name: "",
+                            parentCategory: ""
+                        }
                     }
                     validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
@@ -96,12 +96,14 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                         </div> */}
 
                             <div className="field">
+                                <label htmlFor='category'>Category</label>
+
                                 <ComboBoxModel
-                                list={categoriesOptions.filter(item => item.parentCategory === null)}
-                                name='parentCategory'
-                                title='Subcategory'
-                                value='category'
-                            />
+                                    list={categoriesOptions.filter(item => item.parentCategory === null)}
+                                    name='parentCategory'
+                                    title='Subcategory'
+                                    value='category'
+                                />
                             </div>
 
 

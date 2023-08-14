@@ -15,7 +15,7 @@ const handleSelect = (e:any) => {
 
     return (
         <>
-            <label htmlFor={name}>{title}</label>
+            {/* <label htmlFor={name}>{title}</label> */}
             <Field name={name} as="select" className="input input-sm">
                 <option onChange={handleSelect} value="">Select {value}</option>
                 {

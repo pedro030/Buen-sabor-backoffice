@@ -72,6 +72,8 @@ const BillForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                            <label htmlFor='bill'>Bill</label>
+
                                 <ComboBoxModel
                                     list={useSelector(orderSelector)}
                                     name='order'

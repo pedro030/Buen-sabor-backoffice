@@ -6,10 +6,11 @@ import { ProductService } from '../../../services/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProducts } from '../../../state/actions/productActions'
 import toast from 'react-hot-toast'
-import { categoriesSelector } from '../../../state/selectors'
+import { categoriesSelector, ingredientSelector, measureSelector } from '../../../state/selectors'
 import { Category } from '../../../models/Category'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import * as Yup from 'yup';
+import { Ingredient } from '../../../models/Ingredient'
 
 
 interface Props {
@@ -31,6 +32,9 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
     const categories = useSelector(categoriesSelector)
     const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
+    const ingredients = useSelector(ingredientSelector)
+
+
 
     const handleOnSubmit = (state: any) => {
         // state = {
@@ -101,6 +105,19 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                                <label htmlFor='image'>Image</label>
+                                <Field name='image' type='text' className='input input-sm' />
+                                <ErrorMessage name="image">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor='cookingTime'>Cooking Time</label>
+                                <Field name='cookingTime' type='text' className='input input-sm' />
+                                <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
+
+
+                            <div className="field">
                                 <label htmlFor='active'>Status</label>
                                 <Field name='active' as='select' className="input input-sm">
                                     <option value="true">Active</option>
@@ -120,18 +137,87 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
 
-                            {/* <div className="field">
-                              <label htmlFor='name'>Category</label>
-                              <Field name='subcategory' type='text' className='input input-sm' />
-                        </div> */}
 
-                            {/* <div className="field">
-                            <label htmlFor='macroproduct'>Macroproduct</label>
-                            <Field name="macroproduct" as="select">
-                                <option value='1'>Comida</option>
-                                <option value='2'>Bebida</option>
-                            </Field>
-                        </div> */}
+                        </div>
+
+                        <div className='flex flex-row'>
+
+                            <button type='button' className='h-36 btn btn-primary btn-sm'>+</button>
+
+                            <div className='flex flex-row justify-center w-[50%] border h-36 overflow-y-auto'>
+
+                                <div className='flex flex-col gap-5 m-1'>
+                                    <div className='flex flex-row w-full gap-5'>
+                                        <div className='flex flex-col'>
+                                            <ComboBoxModel
+                                                list={categoriesOptions}
+                                                name='subcategory'
+                                                title='Subcategory'
+                                                value='category'
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col field">
+                                            {/* <label htmlFor='active'>Amount</label> */}
+                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
+                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-row w-full gap-5'>
+                                        <div className='flex flex-col'>
+                                            <ComboBoxModel
+                                                list={categoriesOptions}
+                                                name='subcategory'
+                                                title='Subcategory'
+                                                value='category'
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col field">
+                                            {/* <label htmlFor='active'>Amount</label> */}
+                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
+                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                        </div>
+                                    </div>
+
+                                    <div className='flex flex-row w-full gap-5'>
+                                        <div className='flex flex-col'>
+                                            <ComboBoxModel
+                                                list={categoriesOptions}
+                                                name='subcategory'
+                                                title='Subcategory'
+                                                value='category'
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col field">
+                                            {/* <label htmlFor='active'>Amount</label> */}
+                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
+                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                        </div>
+                                    </div>
+
+                                    <div className='flex flex-row w-full gap-5'>
+                                        <div className='flex flex-col'>
+                                            <ComboBoxModel
+                                                list={categoriesOptions}
+                                                name='subcategory'
+                                                title='Subcategory'
+                                                value='category'
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col field">
+                                            {/* <label htmlFor='active'>Amount</label> */}
+                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
+                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
                         </div>
                         <div className="flex justify-around my-3">
                             <button

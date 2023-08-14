@@ -95,6 +95,7 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                                <label htmlFor='measure'>Measure</label>
                                 <ComboBoxModel
                                     list={useSelector(measureSelector)}
                                     name='measure'

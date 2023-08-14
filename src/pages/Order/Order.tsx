@@ -55,8 +55,8 @@ const Order = () => {
                 <td>
                   <div className='flex gap-2'>
                   <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
-                    <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
+                    {/* <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button> */}
+                    {/* <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button> */}
                   </div>
                 </td>
               </tr>))}

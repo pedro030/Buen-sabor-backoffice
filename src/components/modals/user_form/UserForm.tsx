@@ -104,6 +104,8 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                            <label htmlFor='rol'>Rol</label>
+
                                 <ComboBoxModel
                                     list={rolsOptions}
                                     name='rol'

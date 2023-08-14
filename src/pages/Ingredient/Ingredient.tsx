@@ -29,6 +29,7 @@ const Ingredient = () => {
     }
   }
 
+
   return (
     <div className="m-4">
       <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
