@@ -77,7 +77,7 @@ export class ApiServ<T extends { id: string }> {
             body: JSON.stringify(updateObj)
         };
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}/${updateObj.id}`, requestOptions)
+        const resp = await fetch(`${this.apiURL}/${this.endpoint}/update/${updateObj.id}`, requestOptions)
         const data = await resp.json()
         return data
     }
@@ -93,7 +93,7 @@ export class ApiServ<T extends { id: string }> {
         };
 
         const resp = await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
-        const data = await resp.json()
+        const data = await resp.status
         return data
     }
 }
