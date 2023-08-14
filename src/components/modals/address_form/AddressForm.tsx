@@ -8,6 +8,7 @@ import { loadAddresses } from '../../../state/actions/addressActions'
 import toast from 'react-hot-toast'
 import { locationSelector, userSelector } from '../../../state/selectors'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import { User } from '@auth0/auth0-react'
 
 
 interface Props {
@@ -21,11 +22,15 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
     const addressService = new AddressService();
 
     const handleOnSubmit = (state: any) => {
-        state = {
-            ...state,
-            location: JSON.parse(state.location),
-            user: JSON.parse(state.user)
-        }
+        // state = {
+        //     ...state,
+        //     location: JSON.parse(state.location),
+        //     user: JSON.parse(state.user)
+        // }
+
+        state.location = JSON.parse(state.location)
+        state.user = JSON.parse(state.user)
+
         if (obj?.id) {
             toast.promise(
                 addressService.updateObj(state)
@@ -61,7 +66,10 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            name: ""
+                            street: String,
+                            number: Number,
+                            location: [],
+                            user: User
                         }
                     }
                     onSubmit={(state) => { handleOnSubmit(state) }}
@@ -70,15 +78,15 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
 
                             <div className="field">
-                                <label htmlFor='streat'>Street</label>
-                                <Field name='streat' type='text' className='input input-sm' />
+                                <label htmlFor='street'>Street</label>
+                                <Field name='street' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
                                 <label htmlFor='number'>Number</label>
                                 <Field name='number' type='text' className='input input-sm' />
                             </div>
-                    
+
 
                             <div className="field">
                                 <ComboBoxModel

@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { measureSelector } from '../../state/selectors'
 import { MeasureService } from '../../services/Measure'
 import { loadMeasures } from '../../state/actions/measureActions'
@@ -12,11 +12,23 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Measure = () => {
     // selecciona el listados de measures del reducer
+    const dispatch = useDispatch()
     const measures = useSelector(measureSelector)
     const measureService = new MeasureService()
-    console.log(measures)
-
-  return (
+  
+    const handleDelete = (state: Measure) => {
+      if (confirm(`You want to delete this item?`)) {
+        measureService.deleteObj(state)
+          .then(() => {
+            measureService.GetAll()
+              .then((res: Measure[]) => {
+                dispatch(loadMeasures(res))
+              })
+          })
+      }
+    }
+  
+    return (
     <div className="m-4">
       <CrudCreateButton Modal={MeasureForm} Title='Measures' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Measures</h2>
@@ -34,9 +46,9 @@ const Measure = () => {
                 <td>{measure.measure}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => handleDelete(measure)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}

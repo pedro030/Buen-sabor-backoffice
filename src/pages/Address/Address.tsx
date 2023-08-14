@@ -1,6 +1,6 @@
 import AddressForm from "../../components/modals/address_form/AddressForm"
 import { Address } from "../../models/Address"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { loadAddresses } from "../../state/actions/addressActions"
 import { addressSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
@@ -12,8 +12,21 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 function Address() {
 
+  const dispatch = useDispatch()
   const address = useSelector(addressSelector)
   const addressService = new AddressService()
+
+  const handleDelete = (state: Address) => {
+    if (confirm(`You want to delete this item?`)) {
+      addressService.deleteObj(state)
+        .then(() => {
+          addressService.GetAll()
+            .then((res: Address[]) => {
+              dispatch(loadAddresses(res))
+            })
+        })
+    }
+  }
 
   return (
     <div className="m-4">
@@ -39,9 +52,9 @@ function Address() {
                 <td>{addressItem.user.id}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => handleDelete(addressItem)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}

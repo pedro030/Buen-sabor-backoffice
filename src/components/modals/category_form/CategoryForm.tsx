@@ -22,7 +22,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
     // el warning es generado por el useSelector, por ahora no encuentro solucion 
     const categories = useSelector(categoriesSelector)
     const categoryService = new CategoryService();
-    const categoriesOptions: Category[] = categories.filter((cat: Category) => !cat.subcategories)
+    const categoriesOptions: Category[] = categories.filter((cat: Category) => !cat.parentCategory)
 
     const validationSchema = Yup.object({
         name: Yup.string()
@@ -30,14 +30,17 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
         subcategories: Yup.string()
     })
 
+
     const handleOnSubmit = (state: any) => {
-        let category = {
-            ...state,
-            subcategories: state.subcategories?JSON.parse(state.subcategories):""
-        }
-        if (obj?.id) {
+        // let category = {
+        //     ...state,
+        //     subcategories: state.subcategories?JSON.parse(state.subcategories):""
+        // }
+        (state.parentCategory === "") ? state.parentCategory = null : state.parentCategory = JSON.parse(state.parentCategory)
+        
+        if (state?.id) {
             toast.promise(
-                categoryService.updateObj(category)
+                categoryService.updateObj(state)
                     .then(() => {
                         categoryService.GetAll().then((res: Category[]) => {
                             dispatch(loadCategories(res))
@@ -50,7 +53,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                     error: 'Error when fetching',
                 })
         } else {
-            categoryService.newObj(category)
+            categoryService.newObj(state)
                 .then(() => {
                     categoryService.GetAll()
                         .then((res: Category[]) => {
@@ -62,6 +65,7 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
 
     }
 
+
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
@@ -70,13 +74,9 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                 <h3>{obj ? 'Edit Category' : 'New Category'}</h3>
                 <Formik
                     initialValues={
-                        obj ?
-                            {
-                                ...obj,
-                                subcategories: JSON.stringify(obj.subcategories)
-                            } : {
+                        obj ? obj : {
                                 name: "",
-                                subcategories: ""
+                                parentCategory: ""
                             }
                     }
                     validationSchema={validationSchema}
@@ -97,8 +97,8 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
 
                             <div className="field">
                                 <ComboBoxModel
-                                list={categoriesOptions}
-                                name='subcategories'
+                                list={categoriesOptions.filter(item => item.parentCategory === null)}
+                                name='parentCategory'
                                 title='Subcategory'
                                 value='category'
                             />

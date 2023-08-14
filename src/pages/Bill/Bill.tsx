@@ -1,6 +1,6 @@
 import BillForm from "../../components/modals/bill_form/BillForm"
 import { Bill } from "../../models/Bill"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { loadBills } from "../../state/actions/billActions"
 import { billSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
@@ -12,8 +12,21 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 function Bill() {
 
+  const dispatch = useDispatch()
   const bill: Bill[] = useSelector(billSelector)
   const billService = new BillService()
+
+  const handleDelete = (state: Bill) => {
+    if (confirm(`You want to delete this item?`)) {
+      billService.deleteObj(state)
+        .then(() => {
+          billService.GetAll()
+            .then((res: Bill[]) => {
+              dispatch(loadBills(res))
+            })
+        })
+    }
+  }
 
   return (
     <div className="m-4">
@@ -29,15 +42,15 @@ function Bill() {
             </tr>
           </thead>
           <tbody>
-            {bill.map((b: Bill, i: number) => (
+            {bill.map((item: Bill, i: number) => (
               <tr key={i}>
-                <td>{b.date}</td>
-                <td>{b.order.id}</td>
+                <td>{item.date}</td>
+                <td>{item.order.id}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => handleDelete(item)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}
@@ -45,26 +58,6 @@ function Bill() {
         </table>
       </div>
     </div>
-    // <>
-    //       {/* <CrudHead/> */}
-    //       <CrudCreateButton Modal={BillForm} Title='Bill'/>
-    //       <div className="th-container">
-    //         <span>Date</span>
-    //         <span></span>
-    //         <span>Order ID</span>
-    //       </div>
-    //       { bill && bill[0] && bill.map((cat:Bill) => {
-    //         return <CrudCard
-    //         key={cat.id}
-    //         obj={cat}
-    //         EditModal={BillForm}
-    //         loadAction={loadBills}
-    //         apiServ={billService}
-    //         DeleteModal={CrudDeleteModal}
-    //         modelo='Bill'
-    //         />
-    //       })}
-    // </>
   )
 }
 

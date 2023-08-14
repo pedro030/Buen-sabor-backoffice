@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { orderSelector } from '../../state/selectors'
 import { OrderService } from '../../services/Order'
 import { loadOrders } from '../../state/actions/orderActions'
@@ -12,12 +12,25 @@ import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 
 const Order = () => {
     // selecciona el listados de orders del reducer
+    const dispatch = useDispatch()
     const orders: Order[] = useSelector(orderSelector)
     const orderService = new OrderService()
 
+    const handleDelete = (state: Order) => {
+      if (confirm(`You want to delete this item?`)) {
+        orderService.deleteObj(state)
+          .then(() => {
+            orderService.GetAll()
+              .then((res: Order[]) => {
+                dispatch(loadOrders(res))
+              })
+          })
+      }
+    }
+
   return (
     <div className="m-4">
-      <CrudCreateButton Modal={OrderForm} Title='Orders' />
+      {/* <CrudCreateButton Modal={OrderForm} Title='Orders' /> */}
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -41,9 +54,9 @@ const Order = () => {
                 <td>{order.user?.id}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
-                    <FiEdit2 className='w-5 h-5 edit-icon' />
-                    <RiDeleteBin6Line className='w-5 h-5 delete-icon' />
+                  <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
               </tr>))}

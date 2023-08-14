@@ -25,11 +25,14 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
     const rolsOptions:Rol[] = useSelector(rolSelector) // traer los registros de "rols" del Redux
 
     const handleOnSubmit = (state: any) => {
-        state = {
-            ...state,
-            rol: JSON.parse(state.rol)
-        }
-        if (obj?.id) {
+        // state = {
+        //     ...state,
+        //     rol: JSON.parse(state.rol)
+        // }
+
+        state.rol = JSON.parse(state.rol)
+
+        if (state?.id) {
             toast.promise(
                 userService.updateObj(state)
                     .then(() => {
@@ -65,7 +68,14 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            name: ""
+                            firstName: "",
+                            lastName: "",
+                            mail: "",
+                            password: "",
+                            orders: [],
+                            telephone:0,
+                            addresses: [],
+                            blacklist: "Enabled"
                         }
                     }
                     onSubmit={(state) => { handleOnSubmit(state) }}
@@ -74,13 +84,13 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                         <div className="inputs-form">
 
                             <div className="field">
-                                <label htmlFor='first_name'>First Name</label>
-                                <Field name='first_name' type='text' className='input input-sm' />
+                                <label htmlFor='firstName'>First Name</label>
+                                <Field name='firstName' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">
-                                <label htmlFor='last_name'>Last Name</label>
-                                <Field name='last_name' type='text' className='input input-sm' />
+                                <label htmlFor='lastName'>Last Name</label>
+                                <Field name='lastName' type='text' className='input input-sm' />
                             </div>
 
                             <div className="field">

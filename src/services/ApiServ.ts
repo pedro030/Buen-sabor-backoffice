@@ -92,8 +92,8 @@ export class ApiServ<T extends { id: string }> {
             body: JSON.stringify(deleteObj)
         };
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
-        const data = await resp.json()
-        return data
+        await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
+        // const data = await resp.json()
+        // return data
     }
 }
