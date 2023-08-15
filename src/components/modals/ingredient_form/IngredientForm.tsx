@@ -11,7 +11,7 @@ import { measureSelector } from '../../../state/selectors'
 import Measure from '../../../pages/Measure/Measure'
 
 interface Props {
-    obj?: any,
+    obj?: Ingredient,
     open: boolean,
     onClose: () => void
 }
@@ -64,7 +64,12 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                 <h3>{obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
                 <Formik
                     initialValues={
-                        obj || {
+                        obj?
+                        {
+                            ...obj,
+                            measure: JSON.stringify(obj.measure)
+                        }
+                        : {
                             name: "",
                             cost: "",
                             stock: ""

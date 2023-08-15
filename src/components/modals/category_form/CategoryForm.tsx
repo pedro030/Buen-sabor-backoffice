@@ -12,7 +12,7 @@ import * as Yup from 'yup'
 
 
 interface Props {
-    obj?: any,
+    obj?: Category,
     open: boolean,
     onClose: () => void
 }
@@ -74,10 +74,14 @@ const CategoryForm = ({ obj: obj, open, onClose }: Props) => {
                 <h3>{obj ? 'Edit Category' : 'New Category'}</h3>
                 <Formik
                     initialValues={
-                        obj ? obj : {
-                                name: "",
-                                parentCategory: ""
-                            }
+                        obj ? {
+                            ...obj,
+                            parentCategory: JSON.stringify(obj.parentCategory)
+                        } :
+                        {
+                            name: "",
+                            parentCategory: ""
+                        }
                     }
                     validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
