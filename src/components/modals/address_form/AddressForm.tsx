@@ -89,6 +89,7 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
 
 
                             <div className="field">
+                                <label htmlFor='location'>Location</label>
                                 <ComboBoxModel
                                     list={useSelector(locationSelector)}
                                     name='location'
@@ -98,6 +99,7 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                                <label htmlFor='user'>User</label>
                                 <ComboBoxModel
                                     list={useSelector(userSelector)}
                                     name='user'
@@ -105,26 +107,6 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                                     value='user'
                                 />
                             </div>
-
-
-                            {/* <div className="field">
-                              <label htmlFor='location'>Location</label>
-                              <Field name='location' type='text' className='input-text' />
-                        </div> */}
-
-                            {/* <div className="field">
-                                <label htmlFor='user'>User</label>
-                                <Field name='user' type='text' className='input-text' />
-                            </div> */}
-
-
-                            {/* <div className="field">
-                            <label htmlFor='macroaddress'>Macroaddress</label>
-                            <Field name="macroaddress" as="select">
-                                <option value='1'>Comida</option>
-                                <option value='2'>Bebida</option>
-                            </Field>
-                        </div> */}
                         </div>
                         <div className="flex justify-around my-3">
                             <button

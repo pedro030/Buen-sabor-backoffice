@@ -68,12 +68,12 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            firstName: "",
-                            lastName: "",
-                            mail: "",
-                            password: "",
+                            firstName: String,
+                            lastName: String,
+                            mail: String,
+                            password: String,
                             orders: [],
-                            telephone:0,
+                            telephone:Number,
                             addresses: [],
                             blacklist: "Enabled"
                         }
@@ -94,6 +94,11 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                                <label htmlFor='telephone'>telephone</label>
+                                <Field name='telephone' type='number' className='input input-sm' />
+                            </div>
+
+                            <div className="field">
                                 <label htmlFor='mail'>Mail</label>
                                 <Field name='mail' type='text' className='input input-sm' />
                             </div>
@@ -104,6 +109,8 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
+                            <label htmlFor='rol'>Rol</label>
+
                                 <ComboBoxModel
                                     list={rolsOptions}
                                     name='rol'
