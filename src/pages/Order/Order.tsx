@@ -9,6 +9,7 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { NavLink } from 'react-router-dom'
 
 const Order = () => {
     // selecciona el listados de orders del reducer
@@ -54,7 +55,7 @@ const Order = () => {
                 <td>{order.user?.id}</td>
                 <td>
                   <div className='flex gap-2'>
-                  <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                  <NavLink to={`${order.id}`} ><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink>
                     {/* <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button> */}
                     {/* <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button> */}
                   </div>
@@ -64,31 +65,6 @@ const Order = () => {
         </table>
       </div>
     </div>
-    // <div>
-    //       <CrudCreateButton Modal={OrderForm} Title="Order"/>
-    //       <div className="th-container">
-    //           <span></span>
-    //           <span>Date</span>
-    //           <span></span>
-    //           <span>With...</span>
-    //           <span>Address</span>
-    //           <span>Status</span>
-    //           <span></span>
-    //           <span>User</span>
-              
-    //       </div>
-    //       {orders && orders[0] && orders.map((cat: Order) => {
-    //           return <CrudCard 
-    //           key={cat.id} 
-    //           obj={cat} 
-    //           EditModal={OrderForm}
-    //           DeleteModal={CrudDeleteModal}
-    //           loadAction={loadOrders}
-    //           apiServ={orderService}
-    //             modelo='Order'
-    //           />
-    //       })}
-    // </div>
   )
 }
 

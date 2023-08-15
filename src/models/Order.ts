@@ -1,13 +1,16 @@
 import { User } from "@auth0/auth0-react";
 import { Address } from "./Address";
 import { Status } from "./Status";
+import { Product } from "./Product";
 
 export interface Order{
-    id: string;
-    date: string;
+    id: string,
+    date: string,
+    paymode: any,
     withdrawalMode: string,
-    address: Address,
+    address: String,
     statusOrder: Status,
     totalPrice: number,
-    user: User, 
+    products: Product[],
+    user: User 
   }

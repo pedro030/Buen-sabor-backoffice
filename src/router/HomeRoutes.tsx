@@ -14,6 +14,7 @@ import PersonalInfo from "../pages/PersonalInfo/PersonalInfo"
 import ChangePassword from "../pages/ChangePassword/ChangePassword"
 import Employees from "../pages/Employees/Employees"
 import Status from "../pages/Status/Status"
+import OrderDetail from "../pages/OrderDetail/OrderDetail"
 
 
 
@@ -34,12 +35,15 @@ const homeRoutes = () => {
       <Route path="/measures" element={<Measure />} />
       <Route path="/ingredients" element={<Ingredient />} />
       <Route path="/products" element={<Product />} />
-      <Route path="/orders" element={<Order />} />
       <Route path="/bills" element={<Bill />} />
       <Route path="/users" element={<User />} />
       <Route path="/sections" element={<Section />} />
       <Route path="/locations" element={<Location />} />
       <Route path="/addresses" element={<Address />} />
+
+      {/* ORDER */}
+      <Route path="/orders" element={<Order />} />
+      <Route path="/orders/:idOrder" element={<OrderDetail />} />
     </Routes>
   )
 }
