@@ -9,13 +9,17 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { useState } from 'react'
 
 const Ingredient = () => {
   // selecciona el listados de ingredients del reducer
   const dispatch = useDispatch()
   const ingredients = useSelector(ingredientSelector)
   const ingredientService = new IngredientService()
-  // dispatch de redux para disparar acciones que modifican el estado
+  
+  //modals states
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Ingredient>();
  
   const handleDelete = (state: Ingredient) => {
     if (confirm(`You want to delete this item?`)) {
@@ -29,10 +33,19 @@ const Ingredient = () => {
     }
   }
 
+  const openEditModal = (i: Ingredient) => {
+    setSelectedItem(i);
+    setEditModalOpen(true)
+  }
 
   return (
     <div className="m-4">
       <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
+      <IngredientForm
+        obj={selectedItem}
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+      />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Ingredients</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -55,7 +68,7 @@ const Ingredient = () => {
                 <td>
                   <div className='flex gap-2'>
                     <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => openEditModal(ingredient)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
                     <button onClick={() => handleDelete(ingredient)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>

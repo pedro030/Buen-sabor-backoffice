@@ -10,6 +10,7 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { useState } from "react"
 
 
 function CategoriesCRUD() {
@@ -17,6 +18,9 @@ function CategoriesCRUD() {
   const dispatch = useDispatch()
   const category = useSelector(categoriesSelector)
   const categoryService = new CategoryService()
+
+  const [selectedItem, setSelectedItem] = useState<Category>()
+  const [editModalOpen, setEditModalOpen] = useState(false)
   
   const handleDelete = (state: Category) => {
     if (confirm(`You want to delete this item?`)) {
@@ -30,9 +34,19 @@ function CategoriesCRUD() {
     }
   }
 
+  const handleEdit = (c: Category) => {
+    setSelectedItem(c);
+    setEditModalOpen(true);
+  }
+
   return (
     <div className="m-4">
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
+      <CategoryForm
+          obj={selectedItem}
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+      />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -51,7 +65,7 @@ function CategoriesCRUD() {
                 <td>
                   <div className='flex gap-2'>
                     <button className="cursor-pointer"><RiEyeLine className='w-5 h-5 eye-icon' /></button>
-                    <button className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
+                    <button onClick={()=> handleEdit(cat)} className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
                     <button onClick={() => handleDelete(cat)} className="cursor-pointer"><RiDeleteBin6Line className='w-5 h-5 delete-icon' /></button>
                   </div>
                 </td>
