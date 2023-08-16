@@ -26,22 +26,21 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     const validationSchema = Yup.object({
         name: Yup.string().max(30).required("Product name is required"),
         price: Yup.number().required("Product price is required"),
-        subcategory: Yup.string().required("Category is required"),
+        //subcategory: Yup.string().required("Category is required"),
         active: Yup.bool().required("Product status is required")
     })
 
     const categories = useSelector(categoriesSelector)
+    console.log(categories)
     const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
-    const ingredients = useSelector(ingredientSelector)
-
-
+    const ingredientsOptions = useSelector(ingredientSelector)
 
     const handleOnSubmit = (state: any) => {
         // state = {
         //     ...state,
         //     subcategory: JSON.parse(state.subcategory)
         // }
-        state.subcategory = JSON.parse(state.subcategory)
+        //state.subcategory = JSON.parse(state.subcategory)
         state.active == 'true' ? state.active = true : state.active = false
 
         if (state?.id) {
@@ -71,6 +70,25 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
     }
 
+    const handleSelect = (event:any, index: number, values:any, setFieldValue: any) => {
+        const selectedIngredient = JSON.parse(event.target.value);
+        console.log(selectedIngredient);
+        const updatedIngredients = values.ingredients.map((ingredient:any, i:any) =>
+            i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
+        console.log(updatedIngredients);
+        setFieldValue('ingredients', updatedIngredients);
+    }
+
+    const handleAddIngredient = (values:any, setFieldValue: any) => {
+        const newIngredient = { ingredient: {}, cant: 0 }; // Nuevo objeto de ingrediente vacío
+        setFieldValue('ingredients', [...values.ingredients, newIngredient]);
+    }
+
+    const handleRemoveIngredient = (index:number, values: any, setFieldValue: any) => {
+        const updatedIngredients = values.ingredients.filter((i:any, ind:any) => ind !== index);
+        setFieldValue('ingredients', updatedIngredients);
+    }
+
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
@@ -83,6 +101,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             active: false,
                             cookingTime: 0,
                             image: "",
+                            subcategory: {},
                             ingredients: [],
                             price: 0
                         }
@@ -90,6 +109,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                     validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
+                    {({ values, setFieldValue }) => (
                     <Form>
                         <div className="inputs-form">
                             <div className="field">
@@ -127,12 +147,15 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             </div>
 
                             <div className="field">
-                                <ComboBoxModel
-                                    list={categoriesOptions}
-                                    name='subcategory'
-                                    title='Subcategory'
-                                    value='category'
-                                />
+                                <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e:any) => {
+                                    const selectedCategory = JSON.parse(e.target.value);
+                                    setFieldValue('subcategory', selectedCategory);
+                                }}>
+                                    <option value='' label='Select Category'/>
+                                    { categories.map((cat:any, ind:number) => {
+                                        return <option key={ind} value={JSON.stringify(cat)} label={cat.name}/>
+                                    }) }
+                                </Field>
                                 <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
@@ -140,81 +163,37 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
                         </div>
 
+                        { /* INGREDIENTS */ }
                         <div className='flex flex-row'>
 
-                            <button type='button' className='h-36 btn btn-primary btn-sm'>+</button>
+                            <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)}>+</button>
 
                             <div className='flex flex-row justify-center w-[50%] border h-36 overflow-y-auto'>
 
                                 <div className='flex flex-col gap-5 m-1'>
-                                    <div className='flex flex-row w-full gap-5'>
-                                        <div className='flex flex-col'>
-                                            <ComboBoxModel
-                                                list={categoriesOptions}
-                                                name='subcategory'
-                                                title='Subcategory'
-                                                value='category'
-                                            />
-                                        </div>
+                                    { values.ingredients.map((e:any, index: any) => {
+                                        return <>
+                                        <div className='flex flex-row w-full gap-5'>
+                                            <div className='flex flex-col'>
+                                                <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e:any) => handleSelect(e, index, values, setFieldValue)}>
+                                                    <option value='' label='Select Ingredient'/>
+                                                    { ingredientsOptions.map((i:any, ind:any) => {
+                                                        return <option key={ind} value={JSON.stringify(i)} label={i.name}/>
+                                                    })}
+                                                </Field>
+                                            </div>
 
-                                        <div className="flex flex-col field">
-                                            {/* <label htmlFor='active'>Amount</label> */}
-                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
-                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                        </div>
-                                    </div>
-                                    <div className='flex flex-row w-full gap-5'>
-                                        <div className='flex flex-col'>
-                                            <ComboBoxModel
-                                                list={categoriesOptions}
-                                                name='subcategory'
-                                                title='Subcategory'
-                                                value='category'
-                                            />
-                                        </div>
+                                            <div className="flex flex-col field">
+                                                <Field name={`ingredients[${index}].cant`} type='number' className=' w-50 input input-sm' value={e.cant}/>
+                                                {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
+                                            </div>
 
-                                        <div className="flex flex-col field">
-                                            {/* <label htmlFor='active'>Amount</label> */}
-                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
-                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex flex-row w-full gap-5'>
-                                        <div className='flex flex-col'>
-                                            <ComboBoxModel
-                                                list={categoriesOptions}
-                                                name='subcategory'
-                                                title='Subcategory'
-                                                value='category'
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col field">
-                                            {/* <label htmlFor='active'>Amount</label> */}
-                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
-                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex flex-row w-full gap-5'>
-                                        <div className='flex flex-col'>
-                                            <ComboBoxModel
-                                                list={categoriesOptions}
-                                                name='subcategory'
-                                                title='Subcategory'
-                                                value='category'
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col field">
-                                            {/* <label htmlFor='active'>Amount</label> */}
-                                            <Field name='cookingTime' type='number' className=' w-50 input input-sm' />
-                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                        </div>
-                                    </div>
+                                            <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
+                                            </div>
+                                        </>
+                                    })}
+                                        
                                 </div>
-
                             </div>
 
 
@@ -226,7 +205,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             >Save</button>
                             <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
                         </div>
-                    </Form>
+                    </Form> )}
                 </Formik>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import { useState } from 'react'
 import { productSelector } from '../../state/selectors'
 import { ProductService } from '../../services/Product'
 import { loadProducts } from '../../state/actions/productActions'
@@ -15,6 +16,14 @@ const Product = () => {
   const dispatch = useDispatch()
   const products = useSelector(productSelector)
   const productService = new ProductService()
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Product>();
+
+  const openEditModal = (p: Product) => {
+    setSelectedItem(p);
+    setIsEditModalOpen(true)
+  }
 
 
   const handleDelete = (state: Product) => {
@@ -33,6 +42,13 @@ const Product = () => {
   return (
     <div className="m-4">
       <CrudCreateButton Modal={ProductForm} Title='Products' />
+
+      <ProductForm
+        obj={selectedItem}
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
+      
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Products</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -53,7 +69,7 @@ const Product = () => {
                 <td>
                   <div className='flex gap-2'>
                     <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => openEditModal(product)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
                     <button onClick={() => handleDelete(product)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>
