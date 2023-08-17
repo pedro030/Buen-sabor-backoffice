@@ -9,12 +9,21 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { useState } from "react"
 
 function Address() {
 
   const dispatch = useDispatch()
   const address = useSelector(addressSelector)
   const addressService = new AddressService()
+
+  // edit modal config
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [selectedAddress, setSelectedAddress] = useState<Address>()
+  const openEditModal = (l: Address) => {
+    setSelectedAddress(l);
+    setEditModalOpen(true)
+  }
 
   const handleDelete = (state: Address) => {
     if (confirm(`You want to delete this item?`)) {
@@ -31,6 +40,11 @@ function Address() {
   return (
     <div className="m-4">
       <CrudCreateButton Modal={AddressForm} Title='Addresses' />
+      <AddressForm
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        obj={selectedAddress}
+      />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Addresses</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -53,7 +67,7 @@ function Address() {
                 <td>
                   <div className='flex gap-2'>
                     <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                    <button onClick={() => openEditModal(addressItem)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
                     <button onClick={() => handleDelete(addressItem)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>
                 </td>

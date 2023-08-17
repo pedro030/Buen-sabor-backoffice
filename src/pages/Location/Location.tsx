@@ -9,12 +9,21 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri"
 import { FiEdit2 } from "react-icons/fi"
+import { useState } from "react"
 
 function Location() {
 
   const dispatch = useDispatch()
   const location = useSelector(locationSelector)
   const locationService = new LocationService()
+
+  // edit modal config
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [selectedLoc, setSelectedLoc] = useState<Location>()
+  const openEditModal = (l: Location) => {
+    setSelectedLoc(l);
+    setEditModalOpen(true)
+  }
 
 
   const handleDelete = (state: Location) => {
@@ -32,6 +41,11 @@ function Location() {
   return (
     <div className="m-4">
       <CrudCreateButton Modal={LocationForm} Title='Locations' />
+      <LocationForm
+        open={editModalOpen}
+        obj={selectedLoc}
+        onClose={()=> setEditModalOpen(false)}
+      />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Locations</h2>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -48,7 +62,7 @@ function Location() {
                 <td>
                   <div className='flex gap-2'>
                     <RiEyeLine className='w-5 h-5 eye-icon hover:cursor-pointer' />
-                    <FiEdit2 className='w-5 h-5 edit-icon hover:cursor-pointer' />
+                    <button onClick={() => openEditModal(locationItems)}><FiEdit2 className='w-5 h-5 edit-icon hover:cursor-pointer' /></button>
                     <button onClick={() => handleDelete(locationItems)}><RiDeleteBin6Line className='w-5 h-5 delete-icon hover:cursor-pointer'/></button>
                   </div>
                 </td>
