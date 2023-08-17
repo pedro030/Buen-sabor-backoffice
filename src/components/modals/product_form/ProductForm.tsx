@@ -1,4 +1,3 @@
-import React from 'react'
 import { Product } from '../../../models/Product'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './ProductForm.scss'
@@ -6,11 +5,9 @@ import { ProductService } from '../../../services/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadProducts } from '../../../state/actions/productActions'
 import toast from 'react-hot-toast'
-import { categoriesSelector, ingredientSelector, measureSelector } from '../../../state/selectors'
+import { categoriesSelector, ingredientSelector } from '../../../state/selectors'
 import { Category } from '../../../models/Category'
-import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import * as Yup from 'yup';
-import { Ingredient } from '../../../models/Ingredient'
 
 
 interface Props {
@@ -31,10 +28,8 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     })
 
     const categories = useSelector(categoriesSelector)
-    // console.log(categories)
-    const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
+    //const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
     const ingredientsOptions = useSelector(ingredientSelector)
-    const measuresOptions = useSelector(measureSelector)
 
     const handleOnSubmit = (state: any) => {
         // state = {
@@ -73,15 +68,13 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
     const handleSelect = (event: any, index: number, values: any, setFieldValue: any) => {
         const selectedIngredient = JSON.parse(event.target.value);
-        // console.log(selectedIngredient);
         const updatedIngredients = values.ingredients.map((ingredient: any, i: any) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
-        // console.log(updatedIngredients);
         setFieldValue('ingredients', updatedIngredients);
     }
 
     const handleAddIngredient = (values: any, setFieldValue: any) => {
-        const newIngredient = { ingredient: {}, cant: 0 }; // Nuevo objeto de ingrediente vacío
+        const newIngredient = { ingredient: { measure: { measure: '' }}, cant: 0 }; // Nuevo objeto de ingrediente vacío
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
@@ -192,12 +185,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                         </div>
 
                                                         <div className='flex flex-col'>
-                                                            <Field name={`measures[${index}].measure`} as='select' className="input input-sm" value={JSON.stringify(e.measure)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
-                                                                <option value='' label='Select Measure' />
-                                                                {measuresOptions.map((measure: any, index: any) => {
-                                                                    return <option key={index} value={JSON.stringify(measure)} label={measure.measure} />
-                                                                })}
-                                                            </Field>
+                                                            <label>{ values.ingredients[index].ingredient.measure.measure }</label>
                                                         </div>
 
                                                         <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
