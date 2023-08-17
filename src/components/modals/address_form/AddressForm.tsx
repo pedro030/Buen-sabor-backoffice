@@ -12,7 +12,7 @@ import { User } from '@auth0/auth0-react'
 
 
 interface Props {
-    obj?: any,
+    obj?: Address,
     open: boolean,
     onClose: () => void
 }
@@ -65,7 +65,10 @@ const AddressForm = ({ obj: obj, open, onClose }: Props) => {
                 <h3>{obj ? 'Edit Address' : 'New Address'}</h3>
                 <Formik
                     initialValues={
-                        obj ? obj : {
+                        obj ? {
+                            ...obj,
+                            location: JSON.stringify(obj.location)
+                        } : {
                             street: String,
                             number: Number,
                             location: [],
