@@ -16,11 +16,11 @@ const Ingredient = () => {
   const dispatch = useDispatch()
   const ingredients = useSelector(ingredientSelector)
   const ingredientService = new IngredientService()
-  
+
   //modals states
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Ingredient>();
- 
+
   const handleDelete = (state: Ingredient) => {
     if (confirm(`You want to delete this item?`)) {
       ingredientService.deleteObj(state)
@@ -37,6 +37,8 @@ const Ingredient = () => {
     setSelectedItem(i);
     setEditModalOpen(true)
   }
+
+  // console.log(ingredients)
 
   return (
     <div className="m-4">
@@ -59,7 +61,7 @@ const Ingredient = () => {
             </tr>
           </thead>
           <tbody>
-            {ingredients.map((ingredient: Ingredient, i:number) => (
+            {ingredients.map((ingredient: Ingredient, i: number) => (
               <tr key={i}>
                 <td>{ingredient.name}</td>
                 <td>{ingredient.cost}</td>

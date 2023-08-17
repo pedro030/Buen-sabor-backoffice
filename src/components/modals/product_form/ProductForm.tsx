@@ -31,9 +31,10 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     })
 
     const categories = useSelector(categoriesSelector)
-    console.log(categories)
+    // console.log(categories)
     const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
     const ingredientsOptions = useSelector(ingredientSelector)
+    const measuresOptions = useSelector(measureSelector)
 
     const handleOnSubmit = (state: any) => {
         // state = {
@@ -70,22 +71,22 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
     }
 
-    const handleSelect = (event:any, index: number, values:any, setFieldValue: any) => {
+    const handleSelect = (event: any, index: number, values: any, setFieldValue: any) => {
         const selectedIngredient = JSON.parse(event.target.value);
-        console.log(selectedIngredient);
-        const updatedIngredients = values.ingredients.map((ingredient:any, i:any) =>
+        // console.log(selectedIngredient);
+        const updatedIngredients = values.ingredients.map((ingredient: any, i: any) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
-        console.log(updatedIngredients);
+        // console.log(updatedIngredients);
         setFieldValue('ingredients', updatedIngredients);
     }
 
-    const handleAddIngredient = (values:any, setFieldValue: any) => {
+    const handleAddIngredient = (values: any, setFieldValue: any) => {
         const newIngredient = { ingredient: {}, cant: 0 }; // Nuevo objeto de ingrediente vacío
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
-    const handleRemoveIngredient = (index:number, values: any, setFieldValue: any) => {
-        const updatedIngredients = values.ingredients.filter((i:any, ind:any) => ind !== index);
+    const handleRemoveIngredient = (index: number, values: any, setFieldValue: any) => {
+        const updatedIngredients = values.ingredients.filter((i: any, ind: any) => ind !== index);
         setFieldValue('ingredients', updatedIngredients);
     }
 
@@ -110,102 +111,115 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     {({ values, setFieldValue }) => (
-                    <Form>
-                        <div className="inputs-form">
-                            <div className="field">
-                                <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='input input-sm' />
-                                <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor='price'>Price</label>
-                                <Field name='price' type='text' className='input input-sm' />
-                                <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor='image'>Image</label>
-                                <Field name='image' type='text' className='input input-sm' />
-                                <ErrorMessage name="image">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor='cookingTime'>Cooking Time</label>
-                                <Field name='cookingTime' type='text' className='input input-sm' />
-                                <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-
-                            <div className="field">
-                                <label htmlFor='active'>Status</label>
-                                <Field name='active' as='select' className="input input-sm">
-                                    <option value="true">Active</option>
-                                    <option value="false">Unactive</option>
-                                </Field>
-                                <ErrorMessage name="active">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-                            <div className="field">
-                                <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e:any) => {
-                                    const selectedCategory = JSON.parse(e.target.value);
-                                    setFieldValue('subcategory', selectedCategory);
-                                }}>
-                                    <option value='' label='Select Category'/>
-                                    { categories.map((cat:any, ind:number) => {
-                                        return <option key={ind} value={JSON.stringify(cat)} label={cat.name}/>
-                                    }) }
-                                </Field>
-                                <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                            </div>
-
-
-
-                        </div>
-
-                        { /* INGREDIENTS */ }
-                        <div className='flex flex-row'>
-
-                            <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)}>+</button>
-
-                            <div className='flex flex-row justify-center w-[50%] border h-36 overflow-y-auto'>
-
-                                <div className='flex flex-col gap-5 m-1'>
-                                    { values.ingredients.map((e:any, index: any) => {
-                                        return <>
-                                        <div className='flex flex-row w-full gap-5'>
-                                            <div className='flex flex-col'>
-                                                <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e:any) => handleSelect(e, index, values, setFieldValue)}>
-                                                    <option value='' label='Select Ingredient'/>
-                                                    { ingredientsOptions.map((i:any, ind:any) => {
-                                                        return <option key={ind} value={JSON.stringify(i)} label={i.name}/>
-                                                    })}
-                                                </Field>
-                                            </div>
-
-                                            <div className="flex flex-col field">
-                                                <Field name={`ingredients[${index}].cant`} type='number' className=' w-50 input input-sm' value={e.cant}/>
-                                                {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
-                                            </div>
-
-                                            <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
-                                            </div>
-                                        </>
-                                    })}
-                                        
+                        <Form>
+                            <div className="inputs-form">
+                                <div className="field">
+                                    <label htmlFor='name'>Name</label>
+                                    <Field name='name' type='text' className='input input-sm' />
+                                    <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
+
+                                <div className="field">
+                                    <label htmlFor='price'>Price</label>
+                                    <Field name='price' type='text' className='input input-sm' />
+                                    <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                </div>
+
+                                <div className="field">
+                                    <label htmlFor='image'>Image</label>
+                                    <Field name='image' type='text' className='input input-sm' />
+                                    <ErrorMessage name="image">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                </div>
+
+                                <div className="field">
+                                    <label htmlFor='cookingTime'>Cooking Time</label>
+                                    <Field name='cookingTime' type='text' className='input input-sm' />
+                                    <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                </div>
+
+
+                                <div className="field">
+                                    <label htmlFor='active'>Status</label>
+                                    <Field name='active' as='select' className="input input-sm">
+                                        <option value="true">Active</option>
+                                        <option value="false">Unactive</option>
+                                    </Field>
+                                    <ErrorMessage name="active">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                </div>
+
+                                <div className="field">
+                                    <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: any) => {
+                                        const selectedCategory = JSON.parse(e.target.value);
+                                        setFieldValue('subcategory', selectedCategory);
+                                    }}>
+                                        <option value='' label='Select Category' />
+                                        {categories.map((cat: any, ind: number) => {
+                                            return <option key={ind} value={JSON.stringify(cat)} label={cat.name} />
+                                        })}
+                                    </Field>
+                                    <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                </div>
+
+
+
                             </div>
 
 
-                        </div>
-                        <div className="flex justify-around my-3">
-                            <button
-                                type="submit"
-                                className="btn btn-primary btn-wide btn-sm"
-                            >Save</button>
-                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
-                        </div>
-                    </Form> )}
+                            { /* INGREDIENTS */}
+                            <div className='flex flex-col '>
+                                <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
+                                <div className='flex flex-row'>
+
+                                    <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)}>+</button>
+
+                                    <div className='flex flex-row ml-5 w-[70%]  h-36 overflow-y-auto'>
+                                        <div className='flex flex-col gap-5 m-1'>
+                                            {values.ingredients.map((e: any, index: any) => {
+                                                return <>
+                                                    <div className='flex flex-row w-full gap-5'>
+                                                        <div className='flex flex-col'>
+                                                            <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
+                                                                <option value='' label='Select Ingredient' />
+                                                                {ingredientsOptions.map((i: any, ind: any) => {
+                                                                    return <option key={ind} value={JSON.stringify(i)} label={i.name} />
+                                                                })}
+                                                            </Field>
+                                                        </div>
+
+                                                        <div className="flex flex-col field">
+                                                            <Field name={`ingredients[${index}].cant`} type='number' max="99" className='w-16 input input-sm' value={e.cant} />
+                                                            {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
+                                                        </div>
+
+                                                        <div className='flex flex-col'>
+                                                            <Field name={`measures[${index}].measure`} as='select' className="input input-sm" value={JSON.stringify(e.measure)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
+                                                                <option value='' label='Select Measure' />
+                                                                {measuresOptions.map((measure: any, index: any) => {
+                                                                    return <option key={index} value={JSON.stringify(measure)} label={measure.measure} />
+                                                                })}
+                                                            </Field>
+                                                        </div>
+
+                                                        <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
+                                                    </div>
+                                                </>
+                                            })}
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div className="flex justify-around my-3">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary btn-wide btn-sm"
+                                >Save</button>
+                                <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                            </div>
+                        </Form>)}
                 </Formik>
             </div>
         </div>

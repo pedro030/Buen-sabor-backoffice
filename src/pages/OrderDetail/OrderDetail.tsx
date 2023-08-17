@@ -12,7 +12,7 @@ const OrderDetail = () => {
     orders = orders.filter(item => item.id == idOrder)
     const { address, date, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode } = orders[0]
 
-    console.log(orders)
+    // console.log(orders)
 
     return (
         <div className="m-5 h-[94.6vh] overflow-y-auto">
