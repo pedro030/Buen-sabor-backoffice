@@ -22,6 +22,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "redux": "^4.2.1",
+    "sockjs": "^0.3.24",
     "webfontloader": "^1.6.28",
     "yup": "^1.1.1"
   },
