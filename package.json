@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",
     "@reduxjs/toolkit": "^1.9.3",
+    "@types/stompjs": "^2.3.5",
     "dotenv": "^16.0.3",
     "formik": "^2.2.9",
     "normalize.css": "^8.0.1",
@@ -22,7 +23,8 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "redux": "^4.2.1",
-    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "webfontloader": "^1.6.28",
     "yup": "^1.1.1"
   },
@@ -32,6 +34,7 @@
     "@types/node": "^18.15.12",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/sockjs-client": "^1.5.1",
     "@types/webfontloader": "^1.6.35",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "autoprefixer": "^10.4.14",

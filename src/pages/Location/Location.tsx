@@ -47,6 +47,9 @@ function Location() {
         onClose={()=> setEditModalOpen(false)}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Locations</h2>
+      <div className="flex items-center justify-center w-full gap-5 my-5">
+        <input type="text" placeholder='LOCATION'  className=" input w-[60%] input-sm input-disabled" />
+      </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
           <thead>

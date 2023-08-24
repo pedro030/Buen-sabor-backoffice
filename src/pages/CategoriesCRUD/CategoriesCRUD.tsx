@@ -21,7 +21,7 @@ function CategoriesCRUD() {
 
   const [selectedItem, setSelectedItem] = useState<Category>()
   const [editModalOpen, setEditModalOpen] = useState(false)
-  
+
   const handleDelete = (state: Category) => {
     if (confirm(`You want to delete this item?`)) {
       categoryService.deleteObj(state)
@@ -43,11 +43,21 @@ function CategoriesCRUD() {
     <div className="m-4">
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
       <CategoryForm
-          obj={selectedItem}
-          open={editModalOpen}
-          onClose={() => setEditModalOpen(false)}
+        obj={selectedItem}
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
+      <div className="flex items-center justify-center w-full gap-5 my-2">
+        <input type="text" placeholder='NAME'  className=" input w-[60%] input-sm input-disabled" />
+        <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
+                                    <option selected value={1}>SORT BY: FEATURED</option>
+                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
+                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
+                                    <option value={4}>SORT BY NAME: A - Z</option>
+                                    <option value={5}>SORT BY NAME: Z - A</option>
+                                </select>
+      </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
           <thead>
@@ -65,7 +75,7 @@ function CategoriesCRUD() {
                 <td>
                   <div className='flex gap-2'>
                     <button className="cursor-pointer"><RiEyeLine className='w-5 h-5 eye-icon' /></button>
-                    <button onClick={()=> handleEdit(cat)} className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
+                    <button onClick={() => handleEdit(cat)} className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
                     <button onClick={() => handleDelete(cat)} className="cursor-pointer"><RiDeleteBin6Line className='w-5 h-5 delete-icon' /></button>
                   </div>
                 </td>
