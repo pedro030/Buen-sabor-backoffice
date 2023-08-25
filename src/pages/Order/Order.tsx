@@ -42,18 +42,28 @@ const Order = () => {
   const onConnected = async () => {
     // SUBSCRIBE
     await stompClient.subscribe('/topic/orderslist', onMessageReceived)
-    await stompClient.send("/app/rols", {}, JSON.stringify({ "id": 4, "rol": "Chef" }));
-    // console.log(stompClient)
+    // await stompClient.send("/app/rols", {}, JSON.stringify({ "id": 3, "rol": "Cashier" }));
   }
 
-  const userJoin = async () => {
-    //  Envio de datos al web socket
-    var rol = { id: 3, rol: 'Cashier' }
+  /** Envio de datos al web socket */  
+  const userJoin = async (e:any) => {
+    let value:number = e.target.value
+    let rols = [{ "id": 1, "rol": "SuperAdmin" },
+    { "id": 2, "rol": "Admin" },
+    { "id": 3, "rol": "Cashier" },
+    { "id": 4, "rol": "Chef" },
+    { "id": 5, "rol": "Delivery" },
+    { "id": 6, "rol": "Client" }]
 
-    await stompClient.send("/app/rols", {}, JSON.stringify(rol));
+    await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
+    .catch((error:Error) => {
+      console.error(error);
+    });
     // console.log(stompClient)
 
   }
+
+  // const handleEmployee = (e:any) => (e.target.value)
 
   const onMessageReceived = (payload: { body: string; }) => {
     var payloadData: Order[] = JSON.parse(payload.body);
@@ -79,15 +89,25 @@ const Order = () => {
       {/* <CrudCreateButton Modal={OrderForm} Title='Orders' /> */}
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
-        <input type="date" placeholder='DATE'  className=" input input-sm input-disabled" />
+        <input type="date" placeholder='DATE' className=" input input-sm input-disabled" />
         <input type="number" placeholder='TOTAL' className='input input-sm input-disabled' />
         <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
-                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-                                    <option value={4}>SORT BY NAME: A - Z</option>
-                                    <option value={5}>SORT BY NAME: Z - A</option>
-                                </select>
+          <option selected value={1}>SORT BY: FEATURED</option>
+          <option value={2}>SORT BY PRICE: LOW to HIGH</option>
+          <option value={3}>SORT BY PRICE: HIGH to LOW</option>
+          <option value={4}>SORT BY NAME: A - Z</option>
+          <option value={5}>SORT BY NAME: Z - A</option>
+        </select>
+
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={userJoin} >
+          <option selected value={0}>Super Admin</option>
+          <option value={1}>Admin</option>
+          <option value={2}>Casher</option>
+          <option value={3}>Chef</option>
+          <option value={4}>Delivery</option>
+          <option value={5}>Client</option>
+        </select>
+
       </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -102,7 +122,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {/*orderslist.map*/ orders.map((order: Order, i: number) => (
+            {orderslist.map((order: Order, i: number) => (
               <tr key={i}>
                 <td>{order.date}</td>
                 <td>{order.withdrawalMode}</td>
