@@ -7,7 +7,7 @@ import { Order as Order } from '../../models/Order'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom'
 import SockJS from 'sockjs-client'
-import Stomp, { over } from 'stompjs';
+import Stomp, { Client, over } from 'stompjs';
 
 
 const Order = () => {
@@ -28,15 +28,13 @@ const Order = () => {
     }
   }
 
-  let stompClient: any = null;
+  //let stompClient: any = null;
   const [orderslist, setOrdersList] = useState<Order[]>([]);
+  const [stompClient, setStompClient] = useState<any>(over(new SockJS('https://buen-sabor-backend-production.up.railway.app/ws')))
 
   // // CONNECTION
   const conn = () => {
-    let Sock = new SockJS('https://buen-sabor-backend-production.up.railway.app/ws');
-    stompClient = over(Sock);
-
-    stompClient.connect({}, onConnected, onError);
+    stompClient.connect({}, onConnected, onError)
   }
 
   const onConnected = async () => {
@@ -55,17 +53,26 @@ const Order = () => {
     { "id": 5, "rol": "Delivery" },
     { "id": 6, "rol": "Client" }]
 
-    await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
-    .catch((error:Error) => {
-      console.error(error);
-    });
-    // console.log(stompClient)
+    if(stompClient && stompClient.connected ) {
+      try {
+        console.log(stompClient)
+        console.log("WS is connected. Sending msg...")
+        await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
+        console.log("SENT")
+      } catch(error) {
+        console.log(error)
+      } 
+    } else {
+      console.log("WS is not connected")
+      console.log(stompClient)
+    }
 
   }
 
   // const handleEmployee = (e:any) => (e.target.value)
 
   const onMessageReceived = (payload: { body: string; }) => {
+    console.log(stompClient)
     var payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
     // console.log(payloadData)
