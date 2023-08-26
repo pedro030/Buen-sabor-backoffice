@@ -55,16 +55,12 @@ const Order = () => {
 
     if(stompClient && stompClient.connected ) {
       try {
-        console.log(stompClient)
-        console.log("WS is connected. Sending msg...")
         await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
-        console.log("SENT")
       } catch(error) {
         console.log(error)
       } 
     } else {
       console.log("WS is not connected")
-      console.log(stompClient)
     }
 
   }
@@ -72,7 +68,6 @@ const Order = () => {
   // const handleEmployee = (e:any) => (e.target.value)
 
   const onMessageReceived = (payload: { body: string; }) => {
-    console.log(stompClient)
     var payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
     // console.log(payloadData)
@@ -99,7 +94,7 @@ const Order = () => {
         <input type="date" placeholder='DATE' className=" input input-sm input-disabled" />
         <input type="number" placeholder='TOTAL' className='input input-sm input-disabled' />
         <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
-          <option selected value={1}>SORT BY: FEATURED</option>
+          <option defaultValue={1}>SORT BY: FEATURED</option>
           <option value={2}>SORT BY PRICE: LOW to HIGH</option>
           <option value={3}>SORT BY PRICE: HIGH to LOW</option>
           <option value={4}>SORT BY NAME: A - Z</option>
@@ -107,7 +102,7 @@ const Order = () => {
         </select>
 
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={userJoin} >
-          <option selected value={0}>Super Admin</option>
+          <option defaultValue={0}>Super Admin</option>
           <option value={1}>Admin</option>
           <option value={2}>Casher</option>
           <option value={3}>Chef</option>
