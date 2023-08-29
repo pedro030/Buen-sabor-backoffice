@@ -39,18 +39,18 @@ function CategoriesCRUD() {
   //Search
   const [search, setSearch] = useState('')
 
-  const handleChangeSearch = (e:any) => {
+  const handleChangeSearch = (e: any) => {
     const s = e.target.value
     setSearch(s)
 
-    if(s == '') setFilters((prevState: any) => ({
+    if (s == '') setFilters((prevState: any) => ({
       ...prevState,
       search: ''
     }))
   }
-  
-  const searchOnEnter = (e : any) => {
-    if(e.key === 'Enter') {
+
+  const searchOnEnter = (e: any) => {
+    if (e.key === 'Enter') {
       setFilters((prevState: any) => ({
         ...prevState,
         search: search
@@ -63,22 +63,22 @@ function CategoriesCRUD() {
   const [currentSorting, setCurrentSorting] = useState(1);
 
   const sortCategories = (categories: any, sortOp: number) => {
-      switch (sortOp) {
-          case 1: setSortedCategories(categories);
-              break;
+    switch (sortOp) {
+      case 1: setSortedCategories(categories);
+        break;
 
-          case 2: setSortedCategories(categories.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
-              break;
+      case 2: setSortedCategories(categories.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
+        break;
 
-          case 3: setSortedCategories(categories.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
-              break;
-      }
+      case 3: setSortedCategories(categories.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
+        break;
+    }
   }
 
   const handleChangeSorting = (e: any) => {
-      const sortOp = +e.target.value;
-      setCurrentSorting(sortOp);
-      sortCategories(categories, sortOp);
+    const sortOp = +e.target.value;
+    setCurrentSorting(sortOp);
+    sortCategories(categories, sortOp);
   }
 
   //Pagination
@@ -118,12 +118,17 @@ function CategoriesCRUD() {
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
       <div className="flex items-center justify-center w-full gap-5 my-2">
-        <input type="text" placeholder='NAME'  className=" input w-[60%] input-sm" onChange={handleChangeSearch} value={search} onKeyDown={searchOnEnter}/>
+        <input type="text" placeholder='NAME' className=" input w-[60%] input-sm" onChange={handleChangeSearch} value={search} onKeyDown={searchOnEnter} />
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
-                                    <option value={2}>SORT BY NAME: A - Z</option>
-                                    <option value={3}>SORT BY NAME: Z - A</option>
-                                </select>
+          <option selected value={1}>SORT BY: FEATURED</option>
+          <option value={2}>SORT BY NAME: A - Z</option>
+          <option value={3}>SORT BY NAME: Z - A</option>
+        </select>
+        
+        <select className="w-full max-w-xs select select-bordered select-sm">
+          <option selected value={1}>SUBCATEGORY: STANDARD</option>
+          <option value={2}>SUBCATEGORY: EMPTY</option>
+        </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">

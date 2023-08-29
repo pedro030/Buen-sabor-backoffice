@@ -39,6 +39,29 @@ const Ingredient = () => {
   }
 
   // console.log(ingredients)
+  const [queryName, setQueryName] = useState<string>('')
+  const [queryCost, setQueryCost] = useState<string>('')
+  const [filter, setFilter] = useState(ingredients)
+
+  const handleKeyPressName = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setFilter(ingredients.filter((item: any) => (queryName === ('').trim() ? item : ((item.name).toLowerCase()).includes((queryName).toLowerCase())) ))
+    }
+  };
+  const handleInputChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryName(event.target.value);
+  };
+
+  /** FIXED  no puedo hacer busquedas en simultaneo*/
+  
+  const handleKeyPressCost = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setFilter(ingredients.filter((item: any) => item.stock > queryCost))
+    }
+  };
+  const handleInputChangeCost = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryCost(event.target.value);
+  };
 
   return (
     <div className="m-4">
@@ -50,15 +73,15 @@ const Ingredient = () => {
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Ingredients</h2>
       <div className="flex items-center justify-center w-full gap-5 my-2">
-        <input type="text" placeholder='NAME'  className=" input w-[60%] input-sm input-disabled" />
-        <input type="number" placeholder='COST' className='input input-sm input-disabled' />
+        <input type="text" placeholder='NAME' className=" input w-[60%] input-sm" value={queryName} onKeyDown={handleKeyPressName} onChange={handleInputChangeName} />
+        <input type="number" placeholder='COST' className='input input-sm ' value={queryCost} onKeyDown={handleKeyPressCost} onChange={handleInputChangeCost}/>
         <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
-                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-                                    <option value={4}>SORT BY NAME: A - Z</option>
-                                    <option value={5}>SORT BY NAME: Z - A</option>
-                                </select>
+          <option selected defaultValue={1}>SORT BY: FEATURED</option>
+          <option value={2}>SORT BY PRICE: LOW to HIGH</option>
+          <option value={3}>SORT BY PRICE: HIGH to LOW</option>
+          <option value={4}>SORT BY NAME: A - Z</option>
+          <option value={5}>SORT BY NAME: Z - A</option>
+        </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -72,7 +95,7 @@ const Ingredient = () => {
             </tr>
           </thead>
           <tbody>
-            {ingredients.map((ingredient: Ingredient, i: number) => (
+            {filter.map((ingredient: Ingredient, i: number) => (
               <tr key={i}>
                 <td>{ingredient.name}</td>
                 <td>{ingredient.cost}</td>
