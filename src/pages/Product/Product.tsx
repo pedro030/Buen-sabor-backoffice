@@ -10,6 +10,7 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { usePagination } from '../../hooks/usePagination'
 
 const Product = () => {
   // selecciona el listados de products del reducer
@@ -19,6 +20,67 @@ const Product = () => {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product>();
+
+  //Filters
+  const [filters, setFilters] = useState({
+    category: "all",
+    minPrice: 0,
+    maxPrice: 20000,
+    search: ""
+  })
+
+  const filterProducts = (products: any) => {
+    return products.filter((p: any) => {
+      return (
+        (
+          p.price >= filters.minPrice &&
+          p.price <= filters.maxPrice
+        )
+        &&
+        (
+          filters.category === "all" ||
+          p.subcategory.parentCategory.name == filters.category
+        )
+        &&
+        (
+          p.name.toLowerCase().includes(filters.search.toLowerCase())
+        )
+      )
+    })
+  }
+
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [currentSorting, setCurrentSorting] = useState(1);
+
+  const sortProducts = (products: any, sortOp: number) => {
+      switch (sortOp) {
+          case 1: setSortedProducts(products);
+              break;
+
+          case 2: setSortedProducts(products.sort((a: any, b: any) => a.price > b.price ? 1 : -1))
+              break;
+
+          case 3: setSortedProducts(products.sort((a: any, b: any) => a.price < b.price ? 1 : -1))
+              break;
+
+          case 4: setSortedProducts(products.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
+              break;
+
+          case 5: setSortedProducts(products.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
+              break;
+      }
+  }
+
+
+  const handleChangeSorting = (e: any) => {
+      const sortOp = +e.target.value;
+      console.log(sortOp);
+      setCurrentSorting(sortOp);
+      sortProducts(products, sortOp);
+      console.log(products);
+  }
+
+  const [currentObjects, currentPage, objetsPerPage, pages, setCurrentPage] = usePagination(products)
 
   const openEditModal = (p: Product) => {
     setSelectedItem(p);
@@ -74,7 +136,7 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product: Product, i: number) => (
+            {currentObjects.map((product: Product, i: number) => (
               <tr key={i}>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
@@ -88,6 +150,17 @@ const Product = () => {
                 </td>
               </tr>))}
           </tbody>
+          <tfoot>
+            {
+              (products.length > 0) && <div className='mt-5 join'>
+                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
+                {pages.map((page: any, index: any) => {
+                  return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
+                })}
+                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / objetsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
+              </div>
+            }
+          </tfoot>
         </table>
       </div>
     </div>

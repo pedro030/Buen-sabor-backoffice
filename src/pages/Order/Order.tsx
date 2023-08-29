@@ -68,6 +68,7 @@ const Order = () => {
   // const handleEmployee = (e:any) => (e.target.value)
 
   const onMessageReceived = (payload: { body: string; }) => {
+    console.log(stompClient)
     var payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
     // console.log(payloadData)
