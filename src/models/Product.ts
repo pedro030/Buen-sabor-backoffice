@@ -5,4 +5,5 @@ export interface Product{
     name: string,
     price: number,
     subcategory: Category
+    active: boolean
 }

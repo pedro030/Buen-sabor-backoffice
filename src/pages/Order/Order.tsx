@@ -86,20 +86,118 @@ const Order = () => {
     };
   }, []);
 
+    // Format Date. Example: 2023-6-2 to 2023-06-02
+    const formatToConsistentDate = (inputDate: string) => {
+      const parts = inputDate.split("-");
+      const year = parts[0];
+      const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
+      const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
+      
+      return `${year}-${month}-${day}`;
+    }
+  
+    //Filters
+    const [filters, setFilters] = useState({
+      date: '',
+      total: 0
+    })
+  
+  
+    const filterOrder = (orders: any) => {
+      return orders.filter((o: any) => {
+        return (
+          (filters.date === '' || formatToConsistentDate(o.date) === filters.date)
+          &&
+          (o.totalPrice >= filters.total)
+          )
+      })
+    }
+    
+    const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const d = e.target.value
+      setFilters((prevState: any) => ({
+        ...prevState,
+        date: d
+      }))
+  
+      if(d == '') setFilters((prevState: any) => ({
+        ...prevState,
+        date: ''
+      }))
+    }
+  
+    const ordersFilter = filterOrder(orderslist)
+
+    //Search
+    const [totalPrice, setTotalPrice] = useState(0)
+
+    const handleChangeTotalPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const tp = +e.target.value
+      setTotalPrice(tp)
+
+      if(e.target.value == '') setFilters((prevState: any) => ({
+        ...prevState,
+        total: 0
+      }))
+    }
+
+    const searchTotalPriceOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if(e.key === 'Enter') {
+        setFilters((prevState: any) => ({
+          ...prevState,
+          total: totalPrice
+        }))
+      }
+    }
+  
+    //Sorting
+      const [sortedOrders, setSortedOrders] = useState([]);
+      const [currentSorting, setCurrentSorting] = useState(1);
+    
+      const sortOrders = (orders: any, sortOp: number) => {
+          switch (sortOp) {
+              case 1: setSortedOrders(orders);
+                  break;
+    
+              case 2: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice > b.totalPrice ? 1 : -1))
+                  break;
+    
+              case 3: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice < b.totalPrice ? 1 : -1))
+                  break;
+
+              case 4: setSortedOrders(orders.sort((a: any, b: any) => a.date > b.date ? 1 : -1))
+                  break;
+    
+              case 5: setSortedOrders(orders.sort((a: any, b: any) => a.date < b.date ? 1 : -1))
+                  break;
+          }
+      }
+    
+      const handleChangeSorting = (e: any) => {
+          const sortOp = +e.target.value;
+          setCurrentSorting(sortOp);
+          sortOrders(ordersFilter, sortOp);
+      }
+    
+    
+      useEffect(() => {
+        sortOrders(ordersFilter, currentSorting);
+      }, [filters])
+
 
   return (
     <div className="m-4">
       {/* <CrudCreateButton Modal={OrderForm} Title='Orders' /> */}
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
-        <input type="date" placeholder='DATE' className=" input input-sm input-disabled" />
-        <input type="number" placeholder='TOTAL' className='input input-sm input-disabled' />
-        <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
+        <input type="date" placeholder='DATE' className=" input input-sm" onChange={handleChangeDate}/>
+        <input type="number" placeholder='TOTAL MIN.' className='input input-sm' onChange={handleChangeTotalPrice} onKeyDown={searchTotalPriceOnEnter}/>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
           <option defaultValue={1}>SORT BY: FEATURED</option>
           <option value={2}>SORT BY PRICE: LOW to HIGH</option>
           <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-          <option value={4}>SORT BY NAME: A - Z</option>
-          <option value={5}>SORT BY NAME: Z - A</option>
+          <option value={4}>SORT BY DATE: ASC.</option>
+          <option value={5}>SORT BY DATE: DESC.</option>
         </select>
 
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={userJoin} >
@@ -125,7 +223,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {orderslist.map((order: Order, i: number) => (
+            {sortedOrders.map((order: Order, i: number) => (
               <tr key={i}>
                 <td>{order.date}</td>
                 <td>{order.withdrawalMode}</td>

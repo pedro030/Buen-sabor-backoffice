@@ -9,6 +9,7 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
+import { useState, useEffect } from 'react'
 
 function Bill() {
 
@@ -28,18 +29,75 @@ function Bill() {
     }
   }
 
+  // Format Date. Example: 2023-6-2 to 2023-06-02
+  const formatToConsistentDate = (inputDate: string) => {
+    const parts = inputDate.split("-");
+    const year = parts[0];
+    const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
+    const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
+    
+    return `${year}-${month}-${day}`;
+  }
+
+  //Filters
+  const [filters, setFilters] = useState({
+    date: ''
+  })
+
+
+  const filterBill = (bills: any) => {
+    return bills.filter((b: any) => {
+      return ( filters.date === '' || formatToConsistentDate(b.order.date) === filters.date)
+    })
+  }
+  
+  const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const d = e.target.value
+    setFilters({ date: d })
+
+    if(d == '') setFilters({ date: '' })
+  }
+
+  const billsFilter = filterBill(bill)
+
+  //Sorting
+    const [sortedBills, setSortedBills] = useState([]);
+    const [currentSorting, setCurrentSorting] = useState(1);
+  
+    const sortBills = (bills: any, sortOp: number) => {
+        switch (sortOp) {
+            case 1: setSortedBills(bills);
+                break;
+  
+            case 2: setSortedBills(bills.sort((a: any, b: any) => a.order.date > b.order.date ? 1 : -1))
+                break;
+  
+            case 3: setSortedBills(bills.sort((a: any, b: any) => a.order.date < b.order.date ? 1 : -1))
+                break;
+        }
+    }
+  
+    const handleChangeSorting = (e: any) => {
+        const sortOp = +e.target.value;
+        setCurrentSorting(sortOp);
+        sortBills(billsFilter, sortOp);
+    }
+  
+  
+    useEffect(() => {
+      sortBills(billsFilter, currentSorting);
+    }, [filters])
+
   return (
     <div className="m-4">
       <CrudCreateButton Modal={BillForm} Title='Bills' />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Bills</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
-        <input type="date" placeholder='DATE'  className=" input input-sm input-disabled" />
-        <select className="w-full max-w-xs select select-bordered select-sm input-disabled" /*onChange={handleChangeSorting}*/>
+        <input type="date" placeholder='DATE'  className=" input input-sm" onChange={handleChangeDate}/>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
                                     <option selected value={1}>SORT BY: FEATURED</option>
-                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-                                    <option value={4}>SORT BY NAME: A - Z</option>
-                                    <option value={5}>SORT BY NAME: Z - A</option>
+                                    <option value={2}>SORT BY DATE: ASC.</option>
+                                    <option value={3}>SORT BY DATE: DESC.</option>
                                 </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
@@ -52,7 +110,7 @@ function Bill() {
             </tr>
           </thead>
           <tbody>
-            {bill.map((item: Bill, i: number) => (
+            {sortedBills.map((item: Bill, i: number) => (
               <tr key={i}>
                 <td>{item.date}</td>
                 <td>{item.order.id}</td>

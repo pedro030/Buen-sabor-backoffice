@@ -9,7 +9,7 @@ import CrudCreateButton from '../../components/crud_components/crud_create_butto
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri"
 import { FiEdit2 } from "react-icons/fi"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function Location() {
 
@@ -38,6 +38,71 @@ function Location() {
     }
   }
 
+  //Filters
+  const [filters, setFilters] = useState({
+    location: ""
+  })
+
+  const filterLocation = (locations: any) => {
+    return locations.filter((l: any) => {
+      return (
+        (l.location.toLowerCase().includes(filters.location.toLowerCase()))
+        )
+    })
+  }
+
+  const locationsFilter = filterLocation(location)
+
+  //Search
+  const [locationSearch, setLocationSearch] = useState<string>('')
+
+  const handleChangeLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const l = e.target.value
+    setLocationSearch(l)
+
+    if(e.target.value == '') setFilters((prevState: any) => ({
+      ...prevState,
+      location: ''
+    }))
+  }
+
+  const searchLocationOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter') {
+      setFilters((prevState: any) => ({
+        ...prevState,
+        location: locationSearch
+      }))
+    }
+  }
+
+  //Sorting
+  const [sortedLocations, setSortedLocations] = useState([]);
+  const [currentSorting, setCurrentSorting] = useState(1);
+
+  const sortLocations = (locations: any, sortOp: number) => {
+      switch (sortOp) {
+          case 1: setSortedLocations(locations);
+              break;
+          
+          case 2: setSortedLocations(locations.sort((a: any, b: any) => a.location > b.location ? 1 : -1))
+              break;
+          
+          case 3: setSortedLocations(locations.sort((a: any, b: any) => a.location < b.location ? 1 : -1))
+              break;
+      }
+  }
+
+  const handleChangeSorting = (e: any) => {
+      const sortOp = +e.target.value;
+      setCurrentSorting(sortOp);
+      sortLocations(locationsFilter, sortOp);
+  }
+
+
+  useEffect(() => {
+    sortLocations(locationsFilter, currentSorting);
+  }, [filters])
+
   return (
     <div className="m-4">
       <CrudCreateButton Modal={LocationForm} Title='Locations' />
@@ -48,7 +113,12 @@ function Location() {
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Locations</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
-        <input type="text" placeholder='LOCATION'  className=" input w-[60%] input-sm input-disabled" />
+        <input type="text" placeholder='LOCATION'  className=" input w-[60%] input-sm" onChange={handleChangeLocation} onKeyDown={searchLocationOnEnter}/>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+          <option selected value={1}>SORT BY: FEATURED</option>
+          <option value={2}>SORT BY NAME: A - Z</option>
+          <option value={3}>SORT BY NAME: Z - A</option>
+        </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
         <table className="table table-xs table-pin-rows ">
@@ -59,7 +129,7 @@ function Location() {
             </tr>
           </thead>
           <tbody>
-            {location.map((locationItems: Location, i: number) => (
+            {sortedLocations.map((locationItems: Location, i: number) => (
               <tr key={i}>
                 <td>{locationItems.location}</td>
                 <td>

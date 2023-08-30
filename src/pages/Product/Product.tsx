@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
-import { productSelector } from '../../state/selectors'
+import { useState, useEffect } from 'react'
+import { categoriesSelector, productSelector } from '../../state/selectors'
 import { ProductService } from '../../services/Product'
 import { loadProducts } from '../../state/actions/productActions'
 import CrudCard from '../../components/crud_components/crud_card/CrudCard'
@@ -16,6 +16,7 @@ const Product = () => {
   // selecciona el listados de products del reducer
   const dispatch = useDispatch()
   const products = useSelector(productSelector)
+  const categories = useSelector(categoriesSelector)
   const productService = new ProductService()
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -23,32 +24,111 @@ const Product = () => {
 
   //Filters
   const [filters, setFilters] = useState({
-    category: "all",
-    minPrice: 0,
-    maxPrice: 20000,
-    search: ""
+    category: 0,
+    price: 0,
+    search: "",
+    status: ''
   })
 
   const filterProducts = (products: any) => {
     return products.filter((p: any) => {
       return (
         (
-          p.price >= filters.minPrice &&
-          p.price <= filters.maxPrice
+          p.price >= filters.price
         )
         &&
         (
-          filters.category === "all" ||
-          p.subcategory.parentCategory.name == filters.category
+          filters.category === 0 ||
+          p.subcategory.id === filters.category
         )
         &&
         (
           p.name.toLowerCase().includes(filters.search.toLowerCase())
         )
+        &&
+        (
+          filters.status === '' ||
+          p.active === filters.status
+        )
       )
     })
   }
 
+  const handleChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const op = +e.target.value
+
+    if(op === 1) {
+      setFilters((prevState: any) => ({
+      ...prevState,
+      status: ''
+      })) 
+    } else if (op === 2){
+      setFilters((prevState: any) => ({
+        ...prevState,
+        status: true
+      })) 
+    } else if (op === 3){
+      setFilters((prevState: any) => ({
+        ...prevState,
+        status: false
+      }))
+    }
+  }
+
+  const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const op = +e.target.value
+
+    setFilters((prevState: any) => ({
+      ...prevState,
+      category: op
+    }))
+  }
+
+  const productsFilter = filterProducts(products)
+
+  //Search
+  const [search, setSearch] = useState<string>('')
+  const [price, setPrice] = useState<number>(0)
+
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const s = e.target.value
+    setSearch(s)
+
+    if(s == '') setFilters((prevState: any) => ({
+      ...prevState,
+      search: ''
+    }))
+  }
+  
+  const searchOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter') {
+      setFilters((prevState: any) => ({
+        ...prevState,
+        search: search
+      }))
+    }
+  }
+
+  const handleChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const s = +e.target.value
+    setPrice(s)
+
+    if(e.target.value == '') setFilters((prevState: any) => ({
+      ...prevState,
+      price: 0
+    }))
+  }
+
+  const searchPriceOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter') {
+      setFilters((prevState: any) => ({
+        ...prevState,
+        price: price
+      }))
+    }
+  }
+
+  //Sorting
   const [sortedProducts, setSortedProducts] = useState([]);
   const [currentSorting, setCurrentSorting] = useState(1);
 
@@ -74,11 +154,13 @@ const Product = () => {
 
   const handleChangeSorting = (e: any) => {
       const sortOp = +e.target.value;
-      console.log(sortOp);
       setCurrentSorting(sortOp);
-      sortProducts(products, sortOp);
-      console.log(products);
+      sortProducts(productsFilter, sortOp);
   }
+
+  useEffect(() => {
+    sortProducts(productsFilter, currentSorting);
+  }, [filters])
 
   const [currentObjects, currentPage, objetsPerPage, pages, setCurrentPage] = usePagination(products)
 
@@ -114,15 +196,26 @@ const Product = () => {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Products</h2>
 
       <div className="flex items-center justify-center w-full gap-5 my-2">
-        <input type="text" placeholder='NAME'  className=" input w-[60%] input-sm input-disabled" />
-        <input type="number" placeholder='PRICE' className='input input-sm input-disabled' />
-        <select className="w-full max-w-xs select select-bordered select-sm" /*onChange={handleChangeSorting}*/>
-                                    <option selected value={1}>SORT BY: FEATURED</option>
-                                    <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-                                    <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-                                    <option value={4}>SORT BY NAME: A - Z</option>
-                                    <option value={5}>SORT BY NAME: Z - A</option>
-                                </select>
+        <input type="text" placeholder='NAME'  className=" input w-[60%] input-sm" onChange={handleChangeSearch} onKeyDown={searchOnEnter}/>
+        <input type="number" placeholder='PRICE MIN' className='input input-sm' onChange={handleChangePrice} onKeyDown={searchPriceOnEnter}/>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeStatus}>
+          <option selected value={1}>STATUS: ALL</option>
+          <option value={2}>STATUS: ACTIVE</option>
+          <option value={3}>STATUS: NO ACTIVE</option>
+        </select>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeCategory}>
+          <option selected value={0}>CATEGORY: ALL</option>
+          {categories.map((c: any) => {
+            return <option value={c.id}>CATEGORY: {c.name.toUpperCase()}</option>
+          })}
+        </select>
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+          <option selected value={1}>SORT BY: FEATURED</option>
+          <option value={2}>SORT BY PRICE: LOW to HIGH</option>
+          <option value={3}>SORT BY PRICE: HIGH to LOW</option>
+          <option value={4}>SORT BY NAME: A - Z</option>
+          <option value={5}>SORT BY NAME: Z - A</option>
+        </select>
       </div>
       
       <div className="overflow-x-auto h-[35rem]">
@@ -132,15 +225,17 @@ const Product = () => {
               <th>Name</th>
               <th>Price</th>
               <th>Category</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {currentObjects.map((product: Product, i: number) => (
+            {sortedProducts.map((product: Product, i: number) => (
               <tr key={i}>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.subcategory?.name}</td>
+                <td>{product.active ? "Active" : "No Active"}</td>
                 <td>
                   <div className='flex gap-2'>
                     <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
@@ -150,17 +245,6 @@ const Product = () => {
                 </td>
               </tr>))}
           </tbody>
-          <tfoot>
-            {
-              (products.length > 0) && <div className='mt-5 join'>
-                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
-                {pages.map((page: any, index: any) => {
-                  return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
-                })}
-                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(products.length / objetsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
-              </div>
-            }
-          </tfoot>
         </table>
       </div>
     </div>

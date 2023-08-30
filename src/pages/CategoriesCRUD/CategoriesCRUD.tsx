@@ -25,13 +25,33 @@ function CategoriesCRUD() {
 
   //Filters
   const [filters, setFilters] = useState({
-    search: ""
+    search: "",
+    parentCategory: ''
   })
 
   const filterCategories = (categories: any) => {
     return categories.filter((c: any) => {
-      return (c.name.toLowerCase().includes(filters.search.toLowerCase()))
+      return (
+        (c.name.toLowerCase().includes(filters.search.toLowerCase()))
+        &&
+        (filters.parentCategory === '' || c.parentCategory === filters.parentCategory)
+        )
     })
+  }
+
+  const handleChangeSubcategory = (e: any) => {
+    const subcatOpc = +e.target.value;
+    if (subcatOpc === 1) {
+      setFilters((prevState: any) => ({
+        ...prevState,
+        parentCategory: ''
+      }));
+    } else if (subcatOpc === 2) {
+      setFilters((prevState: any) => ({
+        ...prevState,
+        parentCategory: null
+      }))
+    }
   }
 
   const categories = filterCategories(category)
@@ -125,7 +145,7 @@ function CategoriesCRUD() {
           <option value={3}>SORT BY NAME: Z - A</option>
         </select>
         
-        <select className="w-full max-w-xs select select-bordered select-sm">
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSubcategory}>
           <option selected value={1}>SUBCATEGORY: STANDARD</option>
           <option value={2}>SUBCATEGORY: EMPTY</option>
         </select>
