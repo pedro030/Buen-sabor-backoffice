@@ -141,6 +141,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                 </div>
 
                                 <div className="field">
+                                <label htmlFor='active'>Category</label>
                                     <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: any) => {
                                         const selectedCategory = JSON.parse(e.target.value);
                                         setFieldValue('subcategory', selectedCategory);
