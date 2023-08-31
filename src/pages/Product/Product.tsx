@@ -235,7 +235,7 @@ const Product = () => {
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.subcategory?.name}</td>
-                <td>{product.active ? "Active" : "No Active"}</td>
+                <td><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></td>
                 <td>
                   <div className='flex gap-2'>
                     <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>

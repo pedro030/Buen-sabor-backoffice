@@ -10,22 +10,22 @@ const OrderDetail = () => {
     let { idOrder } = useParams()
     let orders: Order[] = useSelector(orderSelector)
     orders = orders.filter(item => item.id == idOrder)
+
     const { address, date, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode } = orders[0]
-    const listStatus = ['In_Queue',"In_Preparation","Ready","Out_for_Delivery","Delivered","Not_Delivered","Cancelled"]
+
+    const listStatus = ['In_Queue', "In_Preparation", "Ready", "Out_for_Delivery", "Delivered", "Not_Delivered", "Cancelled"]
+
     const valueTypeStatus = listStatus.indexOf(statusOrder.statusType)
 
-    const validation = async (type: string) => {
+    const changeStatus = async (type: string, obj: any) => {
         if (confirm(`You sure of change the status to ${type} ?`)) {
             const requestOptions = {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(
-                    {
-                        "id": valueTypeStatus,
-                        "statusType": listStatus[valueTypeStatus]
-                    })
+                body: JSON.stringify(obj)
             };
-            await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/changeStatus/${id}`, requestOptions);
+            const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/changeStatus/${id}`, requestOptions)
+                .catch((e) => console.error(e));
             // location.assign('/orders')
         }
     }
@@ -129,14 +129,15 @@ const OrderDetail = () => {
                     </div>
                 </div>
 
-                <div className="h-64 p-5 bg-white rounded-3xl">
+                <div className={`h-64 p-5 bg-white rounded-3xl ${(withdrawalMode === 'Delivery') && 'h-80'}`}>
                     <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300"> Statues</h1>
 
                     <div className="flex flex-col gap-5">
-                        <button onClick={() => validation('in queue')} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 0 && 'btn-disabled'}`}>In Queue</button>
-                        <button onClick={() => validation('in preparation')} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 1 && 'btn-disabled'}`}>In Preparation</button>
-                        <button onClick={() => validation('ready')} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 2 && 'btn-disabled'}`}>Ready</button>
-                        <button onClick={() => validation('delivery')} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 4 && 'btn-disabled'}`}>Delivery</button>
+                        <button onClick={() => changeStatus('in queue', { "id": 1, "statusType": 'In_Queue' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 0 && 'btn-disabled'}`}>In Queue</button>
+                        <button onClick={() => changeStatus('in preparation', { "id": 2, "statusType": 'In_Preparation' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 1 && 'btn-disabled'}`}>In Preparation</button>
+                        <button onClick={() => changeStatus('ready', { "id": 3, "statusType": 'Ready' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 2 && 'btn-disabled'}`}>Ready</button>
+                       {(withdrawalMode === 'Delivery') && <button onClick={() => changeStatus('delivery', { "id": 4, "statusType": 'Out_for_Delivery' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 4 && 'btn-disabled'}`}>delivery</button>}
+                        <button onClick={() => changeStatus('delivery', { "id": 5, "statusType": 'Delivered' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 4 && 'btn-disabled'}`}>done !</button>
                     </div>
 
                 </div>

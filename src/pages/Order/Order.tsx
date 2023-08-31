@@ -37,39 +37,63 @@ const Order = () => {
     stompClient.connect({}, onConnected, onError)
   }
 
-  const onConnected = async () => {
-    // SUBSCRIBE
-    await stompClient.subscribe('/topic/orderslist', onMessageReceived)
-    // await stompClient.send("/app/rols", {}, JSON.stringify({ "id": 3, "rol": "Cashier" }));
-  }
 
-  /** Envio de datos al web socket */  
-  const userJoin = async (e:any) => {
-    let value:number = e.target.value
-    let rols = [{ "id": 1, "rol": "SuperAdmin" },
-    { "id": 2, "rol": "Admin" },
-    { "id": 3, "rol": "Cashier" },
-    { "id": 4, "rol": "Chef" },
-    { "id": 5, "rol": "Delivery" },
-    { "id": 6, "rol": "Client" }]
+  const onConnected = async (e: any) => {
 
-    if(stompClient && stompClient.connected ) {
+    let value: number = e.target.value
+
+    let rols = [{ "id": 1, "rol": "SuperAdmin", "topic": "" },
+    { "id": 2, "rol": "Admin", "topic": "" },
+    { "id": 3, "rol": "Cashier", "topic": "cashiers" },
+    { "id": 4, "rol": "Chef", "topic": "chefs" },
+    { "id": 5, "rol": "Delivery", "topic": "deliveries" },
+    { "id": 6, "rol": "Client", "topic": "" }]
+
+    await stompClient.subscribe(`/topic/${rols[value].topic}`, onMessageReceived)
+
+    if (stompClient && stompClient.connected) {
       try {
-        await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
-      } catch(error) {
+        await stompClient.send(`/app/${rols[value].topic}`, {})
+      } catch (error) {
         console.log(error)
-      } 
+      }
     } else {
       console.log("WS is not connected")
     }
 
   }
 
-  // const handleEmployee = (e:any) => (e.target.value)
+  // const onConnected = async () => {
+  //   // SUBSCRIBE
+  //   await stompClient.subscribe('/topic/orderslist', onMessageReceived)
+  //   // await stompClient.send("/app/rols", {}, JSON.stringify({ "id": 3, "rol": "Cashier" }));
+  // }
+
+  /** Envio de datos al web socket */
+  // const userJoin = async (e:any) => {
+  //   let value:number = e.target.value
+  //   let rols = [{ "id": 1, "rol": "SuperAdmin" },
+  //   { "id": 2, "rol": "Admin" },
+  //   { "id": 3, "rol": "Cashier" },
+  //   { "id": 4, "rol": "Chef" },
+  //   { "id": 5, "rol": "Delivery" },
+  //   { "id": 6, "rol": "Client" }]
+
+  //   if(stompClient && stompClient.connected ) {
+  //     try {
+  //       await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
+  //     } catch(error) {
+  //       console.log(error)
+  //     } 
+  //   } else {
+  //     console.log("WS is not connected")
+  //   }
+
+  // }
 
   const onMessageReceived = (payload: { body: string; }) => {
-    console.log(stompClient)
-    console.log(JSON.parse(payload.body))
+    // console.log(stompClient)
+    // console.log(JSON.parse(payload.body))
     const payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
   }
@@ -86,103 +110,103 @@ const Order = () => {
     };
   }, []);
 
-    // Format Date. Example: 2023-6-2 to 2023-06-02
-    const formatToConsistentDate = (inputDate: string) => {
-      const parts = inputDate.split("-");
-      const year = parts[0];
-      const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
-      const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
-      
-      return `${year}-${month}-${day}`;
-    }
-  
-    //Filters
-    const [filters, setFilters] = useState({
-      date: '',
-      total: 0
+  // Format Date. Example: 2023-6-2 to 2023-06-02
+  const formatToConsistentDate = (inputDate: string) => {
+    const parts = inputDate.split("-");
+    const year = parts[0];
+    const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
+    const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
+
+    return `${year}-${month}-${day}`;
+  }
+
+  //Filters
+  const [filters, setFilters] = useState({
+    date: '',
+    total: 0
+  })
+
+
+  const filterOrder = (orders: any) => {
+    return orders.filter((o: any) => {
+      return (
+        (filters.date === '' || formatToConsistentDate(o.date) === filters.date)
+        &&
+        (o.totalPrice >= filters.total)
+      )
     })
-  
-  
-    const filterOrder = (orders: any) => {
-      return orders.filter((o: any) => {
-        return (
-          (filters.date === '' || formatToConsistentDate(o.date) === filters.date)
-          &&
-          (o.totalPrice >= filters.total)
-          )
-      })
-    }
-    
-    const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const d = e.target.value
+  }
+
+  const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const d = e.target.value
+    setFilters((prevState: any) => ({
+      ...prevState,
+      date: d
+    }))
+
+    if (d == '') setFilters((prevState: any) => ({
+      ...prevState,
+      date: ''
+    }))
+  }
+
+  const ordersFilter = filterOrder(orderslist)
+
+  //Search
+  const [totalPrice, setTotalPrice] = useState(0)
+
+  const handleChangeTotalPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tp = +e.target.value
+    setTotalPrice(tp)
+
+    if (e.target.value == '') setFilters((prevState: any) => ({
+      ...prevState,
+      total: 0
+    }))
+  }
+
+  const searchTotalPriceOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
       setFilters((prevState: any) => ({
         ...prevState,
-        date: d
-      }))
-  
-      if(d == '') setFilters((prevState: any) => ({
-        ...prevState,
-        date: ''
+        total: totalPrice
       }))
     }
-  
-    const ordersFilter = filterOrder(orderslist)
+  }
 
-    //Search
-    const [totalPrice, setTotalPrice] = useState(0)
+  //Sorting
+  const [sortedOrders, setSortedOrders] = useState([]);
+  const [currentSorting, setCurrentSorting] = useState(1);
 
-    const handleChangeTotalPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const tp = +e.target.value
-      setTotalPrice(tp)
+  const sortOrders = (orders: any, sortOp: number) => {
+    switch (sortOp) {
+      case 1: setSortedOrders(orders);
+        break;
 
-      if(e.target.value == '') setFilters((prevState: any) => ({
-        ...prevState,
-        total: 0
-      }))
+      case 2: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice > b.totalPrice ? 1 : -1))
+        break;
+
+      case 3: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice < b.totalPrice ? 1 : -1))
+        break;
+
+      case 4: setSortedOrders(orders.sort((a: any, b: any) => a.date > b.date ? 1 : -1))
+        break;
+
+      case 5: setSortedOrders(orders.sort((a: any, b: any) => a.date < b.date ? 1 : -1))
+        break;
     }
+  }
 
-    const searchTotalPriceOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if(e.key === 'Enter') {
-        setFilters((prevState: any) => ({
-          ...prevState,
-          total: totalPrice
-        }))
-      }
-    }
-  
-    //Sorting
-      const [sortedOrders, setSortedOrders] = useState([]);
-      const [currentSorting, setCurrentSorting] = useState(1);
-    
-      const sortOrders = (orders: any, sortOp: number) => {
-          switch (sortOp) {
-              case 1: setSortedOrders(orders);
-                  break;
-    
-              case 2: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice > b.totalPrice ? 1 : -1))
-                  break;
-    
-              case 3: setSortedOrders(orders.sort((a: any, b: any) => a.totalPrice < b.totalPrice ? 1 : -1))
-                  break;
+  const handleChangeSorting = (e: any) => {
+    const sortOp = +e.target.value;
+    setCurrentSorting(sortOp);
+    sortOrders(ordersFilter, sortOp);
+  }
 
-              case 4: setSortedOrders(orders.sort((a: any, b: any) => a.date > b.date ? 1 : -1))
-                  break;
-    
-              case 5: setSortedOrders(orders.sort((a: any, b: any) => a.date < b.date ? 1 : -1))
-                  break;
-          }
-      }
-    
-      const handleChangeSorting = (e: any) => {
-          const sortOp = +e.target.value;
-          setCurrentSorting(sortOp);
-          sortOrders(ordersFilter, sortOp);
-      }
-    
-    
-      useEffect(() => {
-        sortOrders(ordersFilter, currentSorting);
-      }, [filters])
+
+  useEffect(() => {
+    sortOrders(ordersFilter, currentSorting);
+  }, [filters])
 
 
   return (
@@ -190,8 +214,8 @@ const Order = () => {
       {/* <CrudCreateButton Modal={OrderForm} Title='Orders' /> */}
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
-        <input type="date" placeholder='DATE' className=" input input-sm" onChange={handleChangeDate}/>
-        <input type="number" placeholder='TOTAL MIN.' className='input input-sm' onChange={handleChangeTotalPrice} onKeyDown={searchTotalPriceOnEnter}/>
+        <input type="date" placeholder='DATE' className=" input input-sm" onChange={handleChangeDate} />
+        <input type="number" placeholder='TOTAL MIN.' className='input input-sm' onChange={handleChangeTotalPrice} onKeyDown={searchTotalPriceOnEnter} />
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
           <option defaultValue={1}>SORT BY: FEATURED</option>
           <option value={2}>SORT BY PRICE: LOW to HIGH</option>
@@ -200,7 +224,7 @@ const Order = () => {
           <option value={5}>SORT BY DATE: DESC.</option>
         </select>
 
-        <select className="w-full max-w-xs select select-bordered select-sm" onChange={userJoin} >
+        <select className="w-full max-w-xs select select-bordered select-sm" onChange={onConnected} >
           <option defaultValue={0}>Super Admin</option>
           <option value={1}>Admin</option>
           <option value={2}>Casher</option>
@@ -223,7 +247,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedOrders.map((order: Order, i: number) => (
+            {orderslist.map((order: Order, i: number) => (
               <tr key={i}>
                 <td>{order.date}</td>
                 <td>{order.withdrawalMode}</td>
