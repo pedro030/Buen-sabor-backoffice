@@ -63,37 +63,7 @@ const Order = () => {
 
   }
 
-  // const onConnected = async () => {
-  //   // SUBSCRIBE
-  //   await stompClient.subscribe('/topic/orderslist', onMessageReceived)
-  //   // await stompClient.send("/app/rols", {}, JSON.stringify({ "id": 3, "rol": "Cashier" }));
-  // }
-
-  /** Envio de datos al web socket */
-  // const userJoin = async (e:any) => {
-  //   let value:number = e.target.value
-  //   let rols = [{ "id": 1, "rol": "SuperAdmin" },
-  //   { "id": 2, "rol": "Admin" },
-  //   { "id": 3, "rol": "Cashier" },
-  //   { "id": 4, "rol": "Chef" },
-  //   { "id": 5, "rol": "Delivery" },
-  //   { "id": 6, "rol": "Client" }]
-
-  //   if(stompClient && stompClient.connected ) {
-  //     try {
-  //       await stompClient.send("/app/rols", {}, JSON.stringify(rols[value != null? value : 0]))
-  //     } catch(error) {
-  //       console.log(error)
-  //     } 
-  //   } else {
-  //     console.log("WS is not connected")
-  //   }
-
-  // }
-
   const onMessageReceived = (payload: { body: string; }) => {
-    // console.log(stompClient)
-    // console.log(JSON.parse(payload.body))
     const payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
   }
@@ -104,7 +74,7 @@ const Order = () => {
 
   useEffect(() => {
     conn()
-    // console.log(orderslist)
+
     return () => {
       stompClient?.disconnect();
     };
