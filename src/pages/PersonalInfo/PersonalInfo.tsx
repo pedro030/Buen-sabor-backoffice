@@ -1,7 +1,11 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { userSessionSelector } from '../../state/selectors'
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 const PersonalInfo = () => {
     const { user, logout } = useAuth0()
+    const userSession = useSelector(userSessionSelector);
 
     return (
         <>

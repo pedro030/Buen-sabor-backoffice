@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux"
 import Sidebar from "../../components/sidebar_employee/Sidebar"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useEffect } from "react"
-import { load_token } from "../../state/actions/userSessionAction"
+import { load_token, sign_in } from "../../state/actions/userSessionAction"
 import HomeRoutes from "../../router/HomeRoutes"
 import { LocationService } from "../../services/Location"
 import { loadLocations } from "../../state/actions/locationActions"
@@ -32,7 +32,7 @@ import { loadSections } from "../../state/actions/sectionActions"
 
 function Home() {
 
-    const { user, getAccessTokenSilently } = useAuth0();
+    const { user, getAccessTokenSilently, logout } = useAuth0();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -60,6 +60,16 @@ function Home() {
             }
         )
             .then(data => {
+                new UserService().GetAll()
+                .then(users => {
+                    let userLoged = users.find(u => u.mail == user?.email);
+                    if(userLoged?.rol.id == "6") return logout({
+                        logoutParams:{
+                            returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
+                        }
+                    })
+                    if(userLoged) dispatch(sign_in(userLoged))
+                })
                 dispatch(load_token(data))
             })
     }, [])

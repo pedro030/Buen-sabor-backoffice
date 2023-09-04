@@ -1,6 +1,11 @@
-import { LOAD_TOKEN } from "../types";
+import { User } from "../../models/User";
+import { LOAD_TOKEN, SIGN_IN } from "../types";
 
-const initialState = {
+interface userSession {
+    token: string,
+    user?: User
+}
+const initialState:userSession = {
     token: ""
 }
 
@@ -10,6 +15,11 @@ export default function userSessionReducer(state = initialState, action: any){
             return{
                 ...state,
                 token: action.payload.token
+            }
+        case SIGN_IN:
+            return{
+                ...state,
+                user: action.payload.user
             }
         default:
             return state;
