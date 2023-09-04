@@ -7,12 +7,6 @@ const PersonalInfo = () => {
     const { user, logout } = useAuth0()
     const userSession = useSelector(userSessionSelector);
 
-    useEffect(() => {
-        console.log("User session")
-        console.log(userSession)
-    }, [])
-    
-
     return (
         <>
             <h1 className="m-5 mb-10 text-xl tracking-widest text-center">PERSONAL INFO</h1>
