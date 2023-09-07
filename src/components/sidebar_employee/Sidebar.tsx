@@ -98,15 +98,27 @@ function Sidebar() {
                 <h2 >Stock</h2>
               </NavLink>
             </li>
-            <li><NavLink to="/rankings" end>
-              <h2 >Rankings</h2>
-            </NavLink>
-            </li>
-            <li>
-              <NavLink to="/movements" end>
-                <h2 >Movements</h2>
-              </NavLink>
-            </li>
+            <ul className=" menu">
+              <li>
+                <h2 className="menu-title">Rankings</h2>
+                <ul>
+                  <li><NavLink to="/statistics/products" end>
+                    <h2 >Products</h2>
+                  </NavLink>
+                  </li>
+                  <li><NavLink to="/statistics/client" end>
+                    <h2 >Clients</h2>
+                  </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/statistics/movements" end>
+                      <h2 >Movements</h2>
+                    </NavLink>
+                  </li>
+
+                </ul>
+              </li>
+            </ul>
 
           </div>
           <ul>

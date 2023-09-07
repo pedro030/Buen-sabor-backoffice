@@ -15,6 +15,9 @@ import ChangePassword from "../pages/ChangePassword/ChangePassword"
 import Employees from "../pages/Employees/Employees"
 import Status from "../pages/Status/Status"
 import OrderDetail from "../pages/OrderDetail/OrderDetail"
+import RankingsProducts from "../pages/Rankings/RankingsProducts/RankingsProducts"
+import RankingsClients from "../pages/Rankings/RankingsClients/RankingsClients"
+import Movements from "../pages/Rankings/Movements/Movements"
 
 
 
@@ -44,6 +47,10 @@ const homeRoutes = () => {
       {/* ORDER */}
       <Route path="/orders" element={<Order />} />
       <Route path="/orders/:idOrder" element={<OrderDetail />} />
+
+      <Route path="/statistics/products" element={<RankingsProducts  />} />
+      <Route path="/statistics/client" element={<RankingsClients  />} />
+      <Route path="/statistics/movements" element={<Movements  />} />
     </Routes>
   )
 }
