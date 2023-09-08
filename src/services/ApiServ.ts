@@ -1,5 +1,5 @@
-import toast from 'react-hot-toast'
-import { userSelector } from '../state/selectors';
+// import toast from 'react-hot-toast'
+// import { userSelector } from '../state/selectors';
 import store from '../state/store/store';
 
 export class ApiServ<T extends { id: string }> {
@@ -8,14 +8,13 @@ export class ApiServ<T extends { id: string }> {
 
     apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
-
-
     GetAll(): Promise<T[]> {
+        // console.log(this.token)
         // console.log('get all token')
         // console.log(this.token)
         return fetch(`${this.apiURL}/${this.endpoint}/getAll`, {
             headers: {
-                'Authorization': `Bearer ${this.token}`
+                Authorization: `Bearer ${(this.token).trim()}`
             }
         })
             .then(res => {

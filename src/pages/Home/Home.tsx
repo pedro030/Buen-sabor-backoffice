@@ -36,22 +36,6 @@ function Home() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        new CategoryService().GetAll().then((categories) => { dispatch(loadCategories(categories)) }),
-            new MeasureService().GetAll().then((measures) => { dispatch(loadMeasures(measures)) }),
-            new IngredientService().GetAll().then((ingredients) => { dispatch(loadIngredients(ingredients)) }),
-            new ProductService().GetAll().then((products) => { dispatch(loadProducts(products)) }),
-            new RolService().GetAll().then((rols) => { dispatch(loadRols(rols)) }),
-            new AddressService().GetAll().then((addressess) => { dispatch(loadAddresses(addressess)) }),
-            new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
-            new BillService().GetAll().then((bills) => { dispatch(loadBills(bills)) }),
-            new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
-            new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
-            new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) })
-            // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
-
-    }, [])
-
-    useEffect(() => {
         getAccessTokenSilently(
             {
                 authorizationParams: {
@@ -61,18 +45,36 @@ function Home() {
         )
             .then(data => {
                 new UserService().GetAll()
-                .then(users => {
-                    let userLoged = users.find(u => u.mail == user?.email);
-                    if(userLoged?.rol.id == "6") return logout({
-                        logoutParams:{
-                            returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
-                        }
+                    .then(users => {
+                        let userLoged = users.find(u => u.mail == user?.email);
+                        if (userLoged?.rol.id == "6") return logout({
+                            logoutParams: {
+                                returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
+                            }
+                        })
+                        if (userLoged) dispatch(sign_in(userLoged))
                     })
-                    if(userLoged) dispatch(sign_in(userLoged))
-                })
                 dispatch(load_token(data))
+                new CategoryService().GetAll().then((categories) => { dispatch(loadCategories(categories)) }),
+                    new MeasureService().GetAll().then((measures) => { dispatch(loadMeasures(measures)) }),
+                    new IngredientService().GetAll().then((ingredients) => { dispatch(loadIngredients(ingredients)) }),
+                    new ProductService().GetAll().then((products) => { dispatch(loadProducts(products)) }),
+                    new RolService().GetAll().then((rols) => { dispatch(loadRols(rols)) }),
+                    new AddressService().GetAll().then((addressess) => { dispatch(loadAddresses(addressess)) }),
+                    new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
+                    new BillService().GetAll().then((bills) => { dispatch(loadBills(bills)) }),
+                    new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
+                    new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
+                    new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) })
+                // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             })
     }, [])
+
+    // useEffect(() => {
+
+
+    // }, [])
+
     // console.log(user)
 
     return (
