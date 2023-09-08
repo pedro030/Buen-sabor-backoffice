@@ -2,8 +2,11 @@ import './sidebar.scss'
 import { useAuth0 } from '@auth0/auth0-react'
 import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
 import loguot_icon from '../../assets/logout_icon.svg'
+import store from '../../state/store/store'
 
 function Sidebar() {
+
+    
   const { user, logout } = useAuth0()
   const navigate = useNavigate()
   return (
@@ -100,7 +103,7 @@ function Sidebar() {
             </li>
             <ul className=" menu">
               <li>
-                <h2 className="menu-title">Rankings</h2>
+                <h2 >Rankings</h2>
                 <ul>
                   <li><NavLink to="/statistics/products" end>
                     <h2 >Products</h2>
