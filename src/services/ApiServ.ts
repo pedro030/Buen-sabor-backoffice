@@ -66,6 +66,44 @@ export class ApiServ<T extends { id: string }> {
         return data
     }
 
+    async newProduct(product: T, imagen: File | null) {
+
+
+        try {
+            let formData = new FormData();
+            formData.append(
+                'product',
+                new Blob([JSON.stringify(product)], {
+                    type: 'application/json',
+                })
+            );
+
+            imagen !== null && formData.append('image', imagen);
+
+
+            // List key/value pairs
+            for (let [product, image] of formData) {
+                console.log(product)
+                console.log(image)
+            }
+            // const requestOptions: RequestInit = {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data',
+            //         'Authorization': `Bearer ${this.token}`
+            //     },
+            //     body: JSON.stringify(formData)
+            // };
+
+
+            // const resp = await fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
+            // const data = await resp.json()
+            // return data
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     async updateObj(updateObj: T) {
         const requestOptions: RequestInit = {
             method: 'PUT',

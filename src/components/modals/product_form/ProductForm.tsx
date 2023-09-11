@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import { categoriesSelector, ingredientSelector } from '../../../state/selectors'
 import { Category } from '../../../models/Category'
 import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
 
 
 interface Props {
@@ -19,6 +20,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const productService = new ProductService();
+    const [imagen, setImagen] = useState<File | null>(null);
 
     const validationSchema = Yup.object({
         name: Yup.string().max(30).required("Product name is required"),
@@ -31,12 +33,21 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     //const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
     const ingredientsOptions = useSelector(ingredientSelector)
 
+    const handleImageChange = (e:any) => {
+        setImagen(e.target.files[0])
+    }
+
     const handleOnSubmit = (state: any) => {
+        // console.log(state)
+        // console.log(imagen)
+
+
         // state = {
         //     ...state,
         //     subcategory: JSON.parse(state.subcategory)
         // }
         //state.subcategory = JSON.parse(state.subcategory)
+       
         state.active == 'true' ? state.active = true : state.active = false
 
         if (state?.id) {
@@ -54,7 +65,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                     error: 'Error when fetching',
                 })
         } else {
-            productService.newObj(state)
+            productService.newProduct(state,imagen)
                 .then(() => {
                     productService.GetAll()
                         .then((res: Product[]) => {
@@ -74,7 +85,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     }
 
     const handleAddIngredient = (values: any, setFieldValue: any) => {
-        const newIngredient = { ingredient: { measure: { measure: '' }}, cant: 0 }; // Nuevo objeto de ingrediente vacío
+        const newIngredient = { ingredient: { measure: { measure: '' } }, cant: 0 }; // Nuevo objeto de ingrediente vacío
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
@@ -94,8 +105,8 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             name: "",
                             active: false,
                             cookingTime: 0,
-                            image: "",
                             subcategory: {},
+                            image: '',
                             ingredients: [],
                             price: 0
                         }
@@ -120,8 +131,8 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
                                 <div className="field">
                                     <label htmlFor='image'>Image</label>
-                                    <Field name='image' type='text' className='input input-sm' />
-                                    <ErrorMessage name="image">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e:any) => handleImageChange(e)} />
+                                    <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
@@ -141,7 +152,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                 </div>
 
                                 <div className="field">
-                                <label htmlFor='active'>Category</label>
+                                    <label htmlFor='active'>Category</label>
                                     <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: any) => {
                                         const selectedCategory = JSON.parse(e.target.value);
                                         setFieldValue('subcategory', selectedCategory);
@@ -186,7 +197,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                         </div>
 
                                                         <div className='flex flex-col'>
-                                                            <label>{ values.ingredients[index].ingredient.measure.measure }</label>
+                                                            <label>{values.ingredients[index].ingredient.measure.measure}</label>
                                                         </div>
 
                                                         <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
