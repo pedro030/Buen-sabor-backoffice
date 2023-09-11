@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react"
 import store from "../../../state/store/store";
 import { RiFileExcel2Line } from 'react-icons/ri';
+import { orderSelector } from "../../../state/selectors";
+import { useSelector } from "react-redux";
+import { Order } from "../../../models/Order";
 
 const Movements = () => {
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
+  const orders: Order[] = useSelector(orderSelector)
+  let totalIncome = 0;
+  let totalEgress = 0;
+  const totalIncomeF = (n: number) => {
+    totalIncome += n
+    return (n)
+  }
+  const totalEgressF = (n: number) => {
+    totalEgress += n
+    return (n)
+  }
   // const [clients, setClients] = useState<Array<User>>([])
 
   useEffect(() => {
@@ -24,7 +38,7 @@ const Movements = () => {
       <hr />
 
       <div className="flex justify-center">
-        <div className="w-[50vw]">
+        <div className="">
 
           <div className="flex justify-center gap-5 my-2">
             <div>
@@ -40,47 +54,33 @@ const Movements = () => {
               <input className="input input-sm input-bordered" type="date" />
             </div>
           </div>
-
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="text-center">INGRESO</th>
-                <th className="text-center">EGRESO</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th className="text-center text-green-500">+500</th>
-                <th className="text-center text-red-500">-300</th>
-              </tr>
-              <tr>
-                <th className="text-center text-green-500">+1500</th>
-                <th className="text-center text-red-500">-700</th>
-              </tr>
-              <tr>
-                <th className="text-center text-green-500">+2500</th>
-                <th className="text-center text-red-500">-1400</th>
-              </tr>
-              {
-                // clients.filter((item: Product) => item.subcategory?.name !== "Gaseosas").map((product: Product, index: number) => (
-                //   <tr key={index}>
-                //     <th >{product.name}</th>
-                //     <th className="text-center">{product.quantitySold}</th>
-                //     <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
-                //     <th className="text-center">{product.price}</th>
-                //     <th >{product.subcategory?.name}</th>
-                //   </tr>
-                // ))
-              }
-            </tbody>
-            <tfoot>
-              <tr>
-                <th className="text-center">4500</th>
-                <th className="text-center">2400</th>
-              </tr>
-            </tfoot>
-          </table>
-          <div className="flex justify-end mr-10"><h1>TOTAL: 2100</h1></div>
+          <div className="w-[50vw] h-[60vh] overflow-y-auto">
+            <table className="table table-pin-rows">
+              <thead>
+                <tr>
+                  <th className="text-center">INCOME</th>
+                  <th className="text-center">EGRESS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  orders.filter((f: Order) => (f.totalPrice > 0)).map((order: Order) => (
+                    <tr>
+                      <th className="text-center text-green-500">+{totalIncomeF(order.totalPrice)}</th>
+                      <th className="text-center text-red-500">-{totalEgressF(Math.trunc(order.totalPrice * 0.4))}</th>
+                    </tr>
+                  ))
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th className="text-center">{totalIncome}</th>
+                  <th className="text-center">{totalEgress}</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome > totalEgress) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome - totalEgress}</span></div>
         </div>
       </div>
 
