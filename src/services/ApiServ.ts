@@ -1,6 +1,8 @@
 // import toast from 'react-hot-toast'
 // import { userSelector } from '../state/selectors';
+import axios from 'axios';
 import store from '../state/store/store';
+// const axios = require('axios/dist/browser/axios.cjs');
 
 export class ApiServ<T extends { id: string }> {
     endpoint: string = "";
@@ -68,11 +70,11 @@ export class ApiServ<T extends { id: string }> {
 
     async newProduct(product: T, imagen: File | null) {
 
-
         try {
             let formData = new FormData();
+
             formData.append(
-                'product',
+                'productDto',
                 new Blob([JSON.stringify(product)], {
                     type: 'application/json',
                 })
@@ -80,25 +82,38 @@ export class ApiServ<T extends { id: string }> {
 
             imagen !== null && formData.append('image', imagen);
 
+            const data = await axios.post(`${this.apiURL}/${this.endpoint}/save`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + this.token,
+                },
+            });
+            return data
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    async updateProduct(product: T, imagen: File | null) {
 
-            // List key/value pairs
-            for (let [product, image] of formData) {
-                console.log(product)
-                console.log(image)
-            }
-            // const requestOptions: RequestInit = {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data',
-            //         'Authorization': `Bearer ${this.token}`
-            //     },
-            //     body: JSON.stringify(formData)
-            // };
+        try {
+            let formData = new FormData();
 
+            formData.append(
+                'productDto',
+                new Blob([JSON.stringify(product)], {
+                    type: 'application/json',
+                })
+            );
 
-            // const resp = await fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
-            // const data = await resp.json()
-            // return data
+            imagen !== null && formData.append('image', imagen);
+
+            const data = await axios.put(`${this.apiURL}/${this.endpoint}/update/${product.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + this.token,
+                },
+            });
+            return data
         } catch (error) {
             console.error(error)
         }

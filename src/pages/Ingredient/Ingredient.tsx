@@ -8,6 +8,7 @@ import IngredientForm from '../../components/modals/ingredient_form/IngredientFo
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
+import { AiOutlineReload } from 'react-icons/ai'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { useState, useEffect } from 'react'
 
@@ -54,7 +55,7 @@ const Ingredient = () => {
         (i.stock >= filters.stock)
         &&
         (filters.measure === 0 || i.measure.id === filters.measure)
-        )
+      )
     })
   }
 
@@ -77,14 +78,14 @@ const Ingredient = () => {
     const s = e.target.value
     setSearch(s)
 
-    if(s == '') setFilters((prevState: any) => ({
+    if (s == '') setFilters((prevState: any) => ({
       ...prevState,
       search: ''
     }))
   }
-  
+
   const searchOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       setFilters((prevState: any) => ({
         ...prevState,
         search: search
@@ -96,14 +97,14 @@ const Ingredient = () => {
     const s = +e.target.value
     setStock(s)
 
-    if(e.target.value == '') setFilters((prevState: any) => ({
+    if (e.target.value == '') setFilters((prevState: any) => ({
       ...prevState,
       stock: 0
     }))
   }
 
   const searchStockOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       setFilters((prevState: any) => ({
         ...prevState,
         stock: stock
@@ -116,34 +117,34 @@ const Ingredient = () => {
   const [currentSorting, setCurrentSorting] = useState(1);
 
   const sortIngredients = (ingredients: any, sortOp: number) => {
-      switch (sortOp) {
-          case 1: setSortedIngredients(ingredients);
-              break;
+    switch (sortOp) {
+      case 1: setSortedIngredients(ingredients);
+        break;
 
-          case 2: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock > b.stock ? 1 : -1))
-              break;
+      case 2: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock > b.stock ? 1 : -1))
+        break;
 
-          case 3: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock < b.stock ? 1 : -1))
-              break;
-          
-          case 4: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost > b.cost ? 1 : -1))
-              break;
-          
-          case 5: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost < b.cost ? 1 : -1))
-              break;
-          
-          case 6: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
-              break;
-          
-          case 7: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
-              break;
-      }
+      case 3: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock < b.stock ? 1 : -1))
+        break;
+
+      case 4: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost > b.cost ? 1 : -1))
+        break;
+
+      case 5: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost < b.cost ? 1 : -1))
+        break;
+
+      case 6: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
+        break;
+
+      case 7: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
+        break;
+    }
   }
 
   const handleChangeSorting = (e: any) => {
-      const sortOp = +e.target.value;
-      setCurrentSorting(sortOp);
-      sortIngredients(ingredientsFilter, sortOp);
+    const sortOp = +e.target.value;
+    setCurrentSorting(sortOp);
+    sortIngredients(ingredientsFilter, sortOp);
   }
 
 
@@ -153,7 +154,10 @@ const Ingredient = () => {
 
   return (
     <div className="m-4">
-      <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
+      <div className='flex gap-5'>
+        <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
+        <button className='btn btn-secondary'><AiOutlineReload/> Recargar Stock</button>
+      </div>
       <IngredientForm
         obj={selectedItem}
         open={editModalOpen}
@@ -162,7 +166,7 @@ const Ingredient = () => {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Ingredients</h2>
       <div className="flex items-center justify-center w-full gap-5 my-2">
         <input type="text" placeholder='NAME' className=" input w-[60%] input-sm" value={search} onKeyDown={searchOnEnter} onChange={handleChangeSearch} />
-        <input type="number" placeholder='STOCK MIN.' className='input input-sm ' onKeyDown={searchStockOnEnter} onChange={handleChangeStock}/>
+        <input type="number" placeholder='STOCK MIN.' className='input input-sm ' onKeyDown={searchStockOnEnter} onChange={handleChangeStock} />
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeMeasure}>
           <option selected value={0}>MEASURE: ALL</option>
           {

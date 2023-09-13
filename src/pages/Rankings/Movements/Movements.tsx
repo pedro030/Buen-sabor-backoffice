@@ -32,6 +32,9 @@ const Movements = () => {
     //   .catch(error => console.error(error))
   }, [])
 
+
+  console.log(orders)
+  
   return (
     <div className="h-[100vh] overflow-y-auto">
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Movements</h1>
@@ -64,8 +67,8 @@ const Movements = () => {
               </thead>
               <tbody>
                 {
-                  orders.filter((f: Order) => (f.totalPrice > 0)).map((order: Order) => (
-                    <tr>
+                  orders.filter((f: Order) => (f.totalPrice > 0)).map((order: Order, index: number) => (
+                    <tr key={index}>
                       <th className="text-center text-green-500">+{totalIncomeF(order.totalPrice)}</th>
                       <th className="text-center text-red-500">-{totalEgressF(Math.trunc(order.totalPrice * 0.4))}</th>
                     </tr>

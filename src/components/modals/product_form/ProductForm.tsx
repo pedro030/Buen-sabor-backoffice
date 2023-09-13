@@ -48,11 +48,13 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
         // }
         //state.subcategory = JSON.parse(state.subcategory)
        
+        // console.log(imagen)
+
         state.active == 'true' ? state.active = true : state.active = false
 
         if (state?.id) {
             toast.promise(
-                productService.updateObj(state)
+                productService.updateProduct(state,imagen)
                     .then(() => {
                         productService.GetAll().then((res: Product[]) => {
                             dispatch(loadProducts(res))

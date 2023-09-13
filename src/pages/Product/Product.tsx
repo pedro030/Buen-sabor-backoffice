@@ -184,7 +184,7 @@ const Product = () => {
 
 
   return (
-    <div className="m-4">
+    <div className="m-4 h-[90vh]">
       <CrudCreateButton Modal={ProductForm} Title='Products' />
 
       <ProductForm
