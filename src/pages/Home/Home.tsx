@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Sidebar from "../../components/sidebar_employee/Sidebar"
 import { useAuth0 } from "@auth0/auth0-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { load_token, sign_in } from "../../state/actions/userSessionAction"
 import HomeRoutes from "../../router/HomeRoutes"
 import { LocationService } from "../../services/Location"
@@ -16,7 +16,7 @@ import { loadIngredients } from "../../state/actions/ingredientActions"
 import { IngredientService } from "../../services/Ingredient"
 import { ProductService } from "../../services/Product"
 import { loadProducts } from "../../state/actions/productActions"
-import { userSelector } from "../../state/selectors"
+import { userSelector, userSessionSelector } from "../../state/selectors"
 import { StatusService } from "../../services/Status"
 import { loadStatues } from "../../state/actions/statusActions"
 import { RolService } from "../../services/Rol"
@@ -27,13 +27,14 @@ import { BillService } from "../../services/Bill"
 import { loadBills } from "../../state/actions/billActions"
 import { UserService } from "../../services/User"
 import { loadUsers } from "../../state/actions/userActions"
-import { SectionService } from "../../services/Section"
-import { loadSections } from "../../state/actions/sectionActions"
 
 function Home() {
 
     const { user, getAccessTokenSilently, logout } = useAuth0();
     const dispatch = useDispatch();
+    const userSession = useSelector(userSessionSelector);
+    console.log(userSession);
+
 
     useEffect(() => {
         getAccessTokenSilently(
@@ -52,7 +53,10 @@ function Home() {
                                 returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
                             }
                         })
-                        if (userLoged) dispatch(sign_in(userLoged))
+                        if (userLoged) {
+                            dispatch(sign_in(userLoged));
+                            console.log(userLoged.rol);
+                        }
                     })
                 dispatch(load_token(data))
                 new CategoryService().GetAll().then((categories) => { dispatch(loadCategories(categories)) }),
@@ -69,13 +73,6 @@ function Home() {
                 // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             })
     }, [])
-
-    // useEffect(() => {
-
-
-    // }, [])
-
-    // console.log(user)
 
     return (
         <div className="flex">

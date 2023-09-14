@@ -3,12 +3,29 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
 import loguot_icon from '../../assets/logout_icon.svg'
 import store from '../../state/store/store'
+import { useSelector } from 'react-redux'
+import { userSessionSelector } from '../../state/selectors'
+import { Rol } from '../../models/Rol'
+import { useState } from 'react'
+
 
 function Sidebar() {
 
     
   const { user, logout } = useAuth0()
   const navigate = useNavigate()
+
+  const [rol, setRol] = useState('SuperAdmin')
+
+  const crud: any = {
+    'SuperAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
+    'Admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
+    'Cashier': ['orders', 'bills'],
+    'Chef': ['categories', 'ingredients', 'products', 'orders'],
+    'Delivery': ['orders']
+  }
+
+
   return (
 
     // STRUCTURE
@@ -45,11 +62,11 @@ function Sidebar() {
                   <li>
                     <NavLink to="personal_info"
                       end
-                      className={({ isActive }) => isActive ? "active" : ""}>personal info</NavLink>
+                      className={({ isActive }) => isActive ? "active" : ""}>Personal Info</NavLink>
                   </li>
                   <li>
                     <NavLink to="change_password"
-                      className={({ isActive }) => isActive ? "active" : ""}>change password</NavLink></li>
+                      className={({ isActive }) => isActive ? "active" : ""}>Change Password</NavLink></li>
                 </ul>
               </details>
             </li>
@@ -58,71 +75,41 @@ function Sidebar() {
               <details className="dropdown dropdown-end">
                 <summary>Table</summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
-                  <li>
-                    <NavLink to="categories"
-                      end
-                      className={({ isActive }) => isActive ? "active" : ""}>categories</NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="measures"
-                      className={({ isActive }) => isActive ? "active" : ""}>measures</NavLink></li>
-                  <li>
-                    <NavLink to="ingredients"
-                      className={({ isActive }) => isActive ? "active" : ""}>ingredients</NavLink></li>
-                  <li>
-                    <NavLink to="products"
-                      className={({ isActive }) => isActive ? "active" : ""}>products</NavLink></li>
-                  <li>
-                    <NavLink to="orders"
-                      className={({ isActive }) => isActive ? "active" : ""}>orders</NavLink></li>
-                  <li>
-                    <NavLink to="bills"
-                      className={({ isActive }) => isActive ? "active" : ""}>bills</NavLink></li>
-                  <li>
-                    <NavLink to="users"
-                      className={({ isActive }) => isActive ? "active" : ""}>users</NavLink></li>
-                  <li>
-                    <NavLink to="employees"
-                      className={({ isActive }) => isActive ? "active" : ""}>employees</NavLink></li>
-                  <li>
-                    <NavLink to="status"
-                      className={({ isActive }) => isActive ? "active" : ""}>status</NavLink></li>
-                  <li>
-                    <NavLink to="locations"
-                      className={({ isActive }) => isActive ? "active" : ""}>locations</NavLink></li>
-                  <li>
-                    <NavLink to="addresses"
-                      className={({ isActive }) => isActive ? "active" : ""}>addresses</NavLink></li>
+                  { crud[rol].map((i: any) => {
+                    return <li>
+                        <NavLink to={i} className={({ isActive }) => isActive ? "active" : ""}>{i[0].toUpperCase() + i.substring(1)}</NavLink>
+                    </li>
+                  }) }
                 </ul>
               </details>
             </li>
-            <li>
+            { (rol === 'Admin' || rol === 'Chef' || rol === 'SuperAdmin') && <li>
               <NavLink to="/stock" end>
                 <h2 >Stock</h2>
               </NavLink>
-            </li>
-            <ul className=" menu">
+            </li> }
+            { (rol === 'Admin' || rol === 'SuperAdmin')  && <ul className=" menu">
               <li>
                 <h2 >Rankings</h2>
                 <ul>
-                  <li><NavLink to="/statistics/products" end>
-                    <h2 >Products</h2>
-                  </NavLink>
+                  <li>
+                    <NavLink to="/statistics/products" end>
+                      <h2 >Products</h2>
+                    </NavLink>
                   </li>
-                  <li><NavLink to="/statistics/client" end>
-                    <h2 >Clients</h2>
-                  </NavLink>
+                  <li>
+                    <NavLink to="/statistics/clients" end>
+                      <h2 >Clients</h2>
+                    </NavLink>
                   </li>
                   <li>
                     <NavLink to="/statistics/movements" end>
                       <h2 >Movements</h2>
                     </NavLink>
                   </li>
-
                 </ul>
               </li>
-            </ul>
-
+            </ul>}
           </div>
           <ul>
             <li className="nav-list-item-logout" onClick={() => logout()}>

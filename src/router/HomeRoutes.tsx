@@ -18,10 +18,15 @@ import OrderDetail from "../pages/OrderDetail/OrderDetail"
 import RankingsProducts from "../pages/Rankings/RankingsProducts/RankingsProducts"
 import RankingsClients from "../pages/Rankings/RankingsClients/RankingsClients"
 import Movements from "../pages/Rankings/Movements/Movements"
+import { ProtectedRoute } from "./ProtectedRoute"
+import { useState } from "react"
 
 
 
 const homeRoutes = () => {
+
+  const [user, setUser] = useState({ user: 'Fulano', rol: 'Chef'});
+
   return (
     <Routes>
       {/* HOME */}
@@ -32,25 +37,76 @@ const homeRoutes = () => {
       <Route path="/change_password" element={<ChangePassword />} />
 
       {/* CRUD */}
-      <Route path="/categories" element={<CategoriesCRUD />} />
-      <Route path="/employees" element={<Employees />} />
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Admin') ||
+          user.rol.includes('Chef')
+      }/>}>
+        <Route path="/categories" element={<CategoriesCRUD />} />
+        <Route path="/ingredients" element={<Ingredient />} />
+        <Route path="/products" element={<Product />} />
+      </Route>
+
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Admin')
+      }/>}>
+        <Route path="/employees" element={<Employees />} />
+        <Route path="/users" element={<User />} />
+      </Route>
+
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Admin') ||
+          user.rol.includes('Cashier')
+      }/>}>
+        <Route path="/bills" element={<Bill />} />
+      </Route>
+
+
       <Route path="/status" element={<Status />} />
       <Route path="/measures" element={<Measure />} />
-      <Route path="/ingredients" element={<Ingredient />} />
-      <Route path="/products" element={<Product />} />
-      <Route path="/bills" element={<Bill />} />
-      <Route path="/users" element={<User />} />
       <Route path="/sections" element={<Section />} />
       <Route path="/locations" element={<Location />} />
       <Route path="/addresses" element={<Address />} />
 
       {/* ORDER */}
-      <Route path="/orders" element={<Order />} />
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Cashier') ||
+          user.rol.includes('Chef') ||
+          user.rol.includes('Delivery')
+      }/>}>
+        <Route path="/orders" element={<Order />} />
+      </Route>
+
       <Route path="/orders/:idOrder" element={<OrderDetail />} />
 
-      <Route path="/statistics/products" element={<RankingsProducts  />} />
-      <Route path="/statistics/client" element={<RankingsClients  />} />
-      <Route path="/statistics/movements" element={<Movements  />} />
+      {/* STOCK */}
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Admin') ||
+          user.rol.includes('Chef')
+      }/>}>
+        <Route path="/stock"/>
+      </Route>
+
+      {/* RANKINGS */}
+      <Route element={<ProtectedRoute
+        isAllowed={
+          user.rol.includes('SuperAdmin') ||
+          user.rol.includes('Admin')
+      }/>}>
+        <Route path="/statistics/products" element={<RankingsProducts  />} />
+        <Route path="/statistics/clients" element={<RankingsClients  />} />
+        <Route path="/statistics/movements" element={<Movements  />} />
+      </Route>
+      
     </Routes>
   )
 }
