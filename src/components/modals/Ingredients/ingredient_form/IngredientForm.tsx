@@ -1,14 +1,14 @@
 import './IngredientForm.scss'
 import React from 'react'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import { Ingredient } from '../../../models/Ingredient'
-import { IngredientService } from '../../../services/Ingredient'
+import { Ingredient } from '../../../../models/Ingredient'
+import { IngredientService } from '../../../../services/Ingredient'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadIngredients } from '../../../state/actions/ingredientActions'
+import { loadIngredients } from '../../../../state/actions/ingredientActions'
 import * as Yup from 'yup'
-import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
-import { measureSelector } from '../../../state/selectors'
-import Measure from '../../../pages/Measure/Measure'
+import ComboBoxModel from '../../_ComboBoxModel/ComboBoxModel'
+import { measureSelector } from '../../../../state/selectors'
+import Measure from '../../../../pages/Measure/Measure'
 
 interface Props {
     obj?: Ingredient,

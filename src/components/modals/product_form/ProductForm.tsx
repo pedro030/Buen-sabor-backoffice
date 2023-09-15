@@ -216,11 +216,9 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
                                         </div>
                                     </div>
-
-
                                 </div>
-
                             </div>
+
                             <div className="flex justify-around my-3">
                                 <button
                                     type="submit"

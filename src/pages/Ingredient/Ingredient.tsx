@@ -5,6 +5,7 @@ import { loadIngredients } from '../../state/actions/ingredientActions'
 import CrudCard from '../../components/crud_components/crud_card/CrudCard'
 import { Ingredient } from '../../models/Ingredient'
 import IngredientForm from '../../components/modals/Ingredients/ingredient_form/IngredientForm'
+import IngredientListForm from '../../components/modals/Ingredients/IngredientList_form/IngredientListForm'
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
 import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
 import { FiEdit2 } from 'react-icons/fi'
@@ -156,9 +157,14 @@ const Ingredient = () => {
     <div className="m-4">
       <div className='flex gap-5'>
         <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
-        <button className='btn btn-secondary'><AiOutlineReload /> Recargar Stock</button>
+        <CrudCreateButton Modal={IngredientListForm} Title='Recargar Stock' />
       </div>
       <IngredientForm
+        obj={selectedItem}
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+      />
+      <IngredientListForm
         obj={selectedItem}
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
