@@ -27,14 +27,12 @@ import { BillService } from "../../services/Bill"
 import { loadBills } from "../../state/actions/billActions"
 import { UserService } from "../../services/User"
 import { loadUsers } from "../../state/actions/userActions"
+import jwtDecode from "jwt-decode"
 
 function Home() {
 
     const { user, getAccessTokenSilently, logout } = useAuth0();
     const dispatch = useDispatch();
-    const userSession = useSelector(userSessionSelector);
-    console.log(userSession);
-
 
     useEffect(() => {
         getAccessTokenSilently(
@@ -45,6 +43,8 @@ function Home() {
             }
         )
             .then(data => {
+                const decodedToken = jwtDecode(data)
+                console.log(decodedToken);
                 new UserService().GetAll()
                     .then(users => {
                         let userLoged = users.find(u => u.mail == user?.email);
@@ -55,7 +55,6 @@ function Home() {
                         })
                         if (userLoged) {
                             dispatch(sign_in(userLoged));
-                            console.log(userLoged.rol);
                         }
                     })
                 dispatch(load_token(data))

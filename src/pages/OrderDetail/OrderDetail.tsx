@@ -13,6 +13,14 @@ const OrderDetail = () => {
 
     const { address, date, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode } = orders[0]
 
+    const states: any = {
+        'SuperAdmin': ['In_Queue', 'In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered', 'Not_Delivered', 'Cancelled'],
+        'Admin': ['In_Queue', 'In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered', 'Not_Delivered', 'Cancelled'],
+        'Cashier': ['In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered'],
+        'Chef': ['Ready'],
+        'Delivery': ['Delivered', 'Not_Delivered']
+    }
+
     const listStatus = ['In_Queue', "In_Preparation", "Ready", "Out_for_Delivery", "Delivered", "Not_Delivered", "Cancelled"]
 
     const valueTypeStatus = listStatus.indexOf(statusOrder.statusType)
