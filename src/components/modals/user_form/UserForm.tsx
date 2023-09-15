@@ -1,6 +1,6 @@
 import React from 'react'
 import { User } from '../../../models/User'
-import { Field, Form, Formik } from 'formik'
+import { ErrorMessage, Field, Form, Formik } from 'formik'
 import './UserForm.scss'
 import { UserService } from '../../../services/User'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +9,8 @@ import toast from 'react-hot-toast'
 import { rolSelector } from '../../../state/selectors'
 import { Rol } from '../../../models/Rol'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import { registerUserAuth0 } from '../../../services/Auth0Service'
+import * as Yup from 'yup'
 
 
 interface Props {
@@ -21,6 +23,19 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const userService = new UserService();
+
+    const validationSchema = Yup.object({
+        mail: Yup.string()
+            .email("Invalid mail")
+            .required("Mail is required"),
+            password: Yup.string()
+            .required('New password is required')
+            .min(8, 'Your password is too short.')
+            .matches(/^(?=.*[a-z])(?=.*[A-Z])/, 'The password must have at least one uppercase and lowercase letter.')
+            .matches(/(?=.*\d)/, 'The password must have at least one digit')
+            .matches(/(?=.*[@$!%*?&#])/, 'The password must have a special character')
+            .matches(/[A-Za-z\d@$!%*?&#]/, 'The password is invalid'),
+    })
 
     const rolsOptions:Rol[] = useSelector(rolSelector) // traer los registros de "rols" del Redux
 
@@ -49,6 +64,11 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
         } else {
             userService.newObj(state)
                 .then(() => {
+                    registerUserAuth0(state.mail, state.password)
+                    .then(res => {
+                        if(res) alert("Create user success")
+                        else alert("Error to create user")
+                    })
                     userService.GetAll()
                         .then((res: User[]) => {
                             dispatch(loadUsers(res))
@@ -78,6 +98,7 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             blacklist: "Enabled"
                         }
                     }
+                    validationSchema={validationSchema}
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     <Form>
@@ -101,11 +122,13 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
                             <div className="field">
                                 <label htmlFor='mail'>Mail</label>
                                 <Field name='mail' type='text' className='input input-sm' />
+                                <ErrorMessage name="mail">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='password'>Password</label>
                                 <Field name='password' type='text' className='input input-sm' />
+                                <ErrorMessage name="password">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">

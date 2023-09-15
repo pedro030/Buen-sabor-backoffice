@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 const PersonalInfo = () => {
-    const { user, logout } = useAuth0()
+    const { user } = useAuth0()
     const userSession = useSelector(userSessionSelector);
 
     return (

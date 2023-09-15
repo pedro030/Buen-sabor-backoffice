@@ -112,7 +112,7 @@ function Sidebar() {
             </ul>}
           </div>
           <ul>
-            <li className="nav-list-item-logout" onClick={() => logout()}>
+            <li className="nav-list-item-logout" onClick={() => logout({logoutParams:{returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CALLBACK_URL}})}>
               <div className='flex justify-center'>
                 <h2>Log Out</h2>
                 <img className='h-3' src={loguot_icon} />
