@@ -17,7 +17,7 @@ const handleSelect = (e:any) => {
         <>
             {/* <label htmlFor={name}>{title}</label> */}
             <Field name={name} as="select" className="input input-sm">
-                <option onChange={handleSelect} value="-1">Select {value}</option>
+                <option onChange={handleSelect} value="-1" key={-1}>Select {value}</option>
                 {
                     list.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>

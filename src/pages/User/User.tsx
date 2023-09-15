@@ -27,9 +27,9 @@ function User() {
   const filterUser = (users: any) => {
     return users.filter((u: any) => {
       return (
-        (u.firstName.toLowerCase().includes(filters.fn.toLowerCase()))
+        (u.firstName?.toLowerCase().includes(filters.fn?.toLowerCase()))
         &&
-        (u.lastName.toLowerCase().includes(filters.ln.toLowerCase()))
+        (u.lastName?.toLowerCase().includes(filters.ln?.toLowerCase()))
         &&
         (filters.rol === 0 || u.rol.id === filters.rol)
         )
