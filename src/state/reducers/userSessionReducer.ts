@@ -1,12 +1,14 @@
 import { User } from "../../models/User";
-import { LOAD_TOKEN, SIGN_IN } from "../types";
+import { LOAD_ROL, LOAD_TOKEN, SIGN_IN } from "../types";
 
 interface userSession {
     token: string,
-    user?: User
+    user?: User,
+    rol:string
 }
 const initialState:userSession = {
-    token: ""
+    token: "",
+    rol:""
 }
 
 export default function userSessionReducer(state = initialState, action: any){
@@ -15,6 +17,11 @@ export default function userSessionReducer(state = initialState, action: any){
             return{
                 ...state,
                 token: action.payload.token
+            }
+        case LOAD_ROL:
+            return{
+                ...state,
+                rol: action.payload.token
             }
         case SIGN_IN:
             return{

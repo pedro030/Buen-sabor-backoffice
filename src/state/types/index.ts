@@ -1,5 +1,6 @@
 export const SIGN_IN = "SIGN_IN";
 export const LOAD_TOKEN = "LOAD_TOKEN";
+export const LOAD_ROL = "LOAD_ROL";
 
 // unit of measure
 export const LOAD_MEASURE = "LOAD_UNITS_OF_MEASURE";

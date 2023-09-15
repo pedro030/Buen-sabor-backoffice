@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import Sidebar from "../../components/sidebar_employee/Sidebar"
 import { useAuth0 } from "@auth0/auth0-react"
 import { useEffect, useState } from "react"
-import { load_token, sign_in } from "../../state/actions/userSessionAction"
+import { load_token, sign_in, load_rol } from "../../state/actions/userSessionAction"
 import HomeRoutes from "../../router/HomeRoutes"
 import { LocationService } from "../../services/Location"
 import { loadLocations } from "../../state/actions/locationActions"
@@ -45,6 +45,8 @@ function Home() {
             .then(data => {
                 const decodedToken = jwtDecode(data)
                 console.log(decodedToken);
+                // TODO: Hacer el filter del rol y enviarlo al dispatch
+                //dispatch(load_rol(rol))
                 new UserService().GetAll()
                     .then(users => {
                         let userLoged = users.find(u => u.mail == user?.email);
