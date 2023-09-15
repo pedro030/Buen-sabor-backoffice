@@ -11,7 +11,6 @@ import { useState } from 'react'
 
 function Sidebar() {
 
-    
   const { user, logout } = useAuth0()
   const navigate = useNavigate()
 

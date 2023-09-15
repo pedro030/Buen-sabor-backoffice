@@ -2,6 +2,7 @@
 // import { userSelector } from '../state/selectors';
 import axios from 'axios';
 import store from '../state/store/store';
+import { Product } from '../models/Product';
 // const axios = require('axios/dist/browser/axios.cjs');
 
 export class ApiServ<T extends { id: string }> {
@@ -96,6 +97,7 @@ export class ApiServ<T extends { id: string }> {
     async updateProduct(product: T, imagen: File | null) {
 
         try {
+
             let formData = new FormData();
 
             formData.append(
@@ -113,6 +115,7 @@ export class ApiServ<T extends { id: string }> {
                     Authorization: 'Bearer ' + this.token,
                 },
             });
+
             return data
         } catch (error) {
             console.error(error)

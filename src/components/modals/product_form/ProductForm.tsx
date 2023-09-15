@@ -21,6 +21,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     const dispatch = useDispatch()
     const productService = new ProductService();
     const [imagen, setImagen] = useState<File | null>(null);
+    const [subcategoryChange, setSubcategoryChange] = useState<Category>();
 
     const validationSchema = Yup.object({
         name: Yup.string().max(30).required("Product name is required"),
@@ -33,28 +34,24 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     //const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
     const ingredientsOptions = useSelector(ingredientSelector)
 
-    const handleImageChange = (e:any) => {
+    const handleImageChange = (e: any) => {
         setImagen(e.target.files[0])
     }
 
-    const handleOnSubmit = (state: any) => {
-        // console.log(state)
-        // console.log(imagen)
-
-
+    const handleOnSubmit = (state: Product) => {
         // state = {
         //     ...state,
         //     subcategory: JSON.parse(state.subcategory)
         // }
         //state.subcategory = JSON.parse(state.subcategory)
-       
-        // console.log(imagen)
+        // state.active == 'true' ? state.active = true : state.active = false
 
-        state.active == 'true' ? state.active = true : state.active = false
+        // console.log(state)
+        // console.log(imagen)
 
         if (state?.id) {
             toast.promise(
-                productService.updateProduct(state,imagen)
+                productService.updateProduct(state, imagen)
                     .then(() => {
                         productService.GetAll().then((res: Product[]) => {
                             dispatch(loadProducts(res))
@@ -67,7 +64,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                     error: 'Error when fetching',
                 })
         } else {
-            productService.newProduct(state,imagen)
+            productService.newProduct(state, imagen)
                 .then(() => {
                     productService.GetAll()
                         .then((res: Product[]) => {
@@ -96,6 +93,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
         setFieldValue('ingredients', updatedIngredients);
     }
 
+
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
@@ -109,6 +107,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             cookingTime: 0,
                             subcategory: {},
                             image: '',
+                            cost: 0,
                             ingredients: [],
                             price: 0
                         }
@@ -127,19 +126,19 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
 
                                 <div className="field">
                                     <label htmlFor='price'>Price</label>
-                                    <Field name='price' type='text' className='input input-sm' />
+                                    <Field name='price' type='number' className='input input-sm' />
                                     <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='image'>Image</label>
-                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e:any) => handleImageChange(e)} />
+                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: any) => handleImageChange(e)} />
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='cookingTime'>Cooking Time</label>
-                                    <Field name='cookingTime' type='text' className='input input-sm' />
+                                    <Field name='cookingTime' type='number' className='input input-sm' />
                                     <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
@@ -157,16 +156,24 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                     <label htmlFor='active'>Category</label>
                                     <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: any) => {
                                         const selectedCategory = JSON.parse(e.target.value);
+                                        setSubcategoryChange(selectedCategory)
                                         setFieldValue('subcategory', selectedCategory);
                                     }}>
                                         <option value='' label='Select Category' />
-                                        {categories.map((cat: any, ind: number) => {
+                                        {categories.filter((item: Category) => item?.parentCategory !== null).map((cat: any, ind: number) => {
                                             return <option key={ind} value={JSON.stringify(cat)} label={cat.name} />
                                         })}
                                     </Field>
                                     <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
+                                {((subcategoryChange?.parentCategory?.name === "Bebidas") || (values.subcategory.parentCategory?.name === "Bebidas")) &&
+                                    <div className="field">
+                                        <label htmlFor='cost'>Cost</label>
+                                        <Field name='cost' type='number' className='input input-sm' />
+                                        <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                    </div>
+                                }
 
 
                             </div>
@@ -194,7 +201,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                         </div>
 
                                                         <div className="flex flex-col field">
-                                                            <Field name={`ingredients[${index}].cant`} type='number' max="99" className='w-16 input input-sm' value={e.cant} />
+                                                            <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} />
                                                             {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
                                                         </div>
 
