@@ -4,6 +4,7 @@ import { RiFileExcel2Line } from 'react-icons/ri';
 import { orderSelector } from "../../../state/selectors";
 import { useSelector } from "react-redux";
 import { Order } from "../../../models/Order";
+import { Product } from "../../../models/Product";
 
 const Movements = () => {
   const token = store.getState().userSession.token
@@ -15,26 +16,18 @@ const Movements = () => {
     totalIncome += n
     return (n)
   }
-  const totalEgressF = (n: number) => {
-    totalEgress += n
-    return (n)
+  const totalEgressF = (products: Product[]) => {
+    // console.log(products)
+    let n = 0;
+    products.map((item: Product) => {
+      n += item.product.cost
+    })
+    totalEgress += n;
+    return n
   }
-  // const [clients, setClients] = useState<Array<User>>([])
-
-  useEffect(() => {
-    // fetch(`${apiURL}/products/getByQuanSold`, {
-    //   headers: {
-    //     Authorization: `Bearer ${(token).trim()}`
-    //   }
-    // })
-    //   .then(res => res.json())
-    //   .then(data => setClients(data))
-    //   .catch(error => console.error(error))
-  }, [])
-
 
   console.log(orders)
-  
+
   return (
     <div className="h-[100vh] overflow-y-auto">
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Movements</h1>
@@ -70,7 +63,7 @@ const Movements = () => {
                   orders.filter((f: Order) => (f.totalPrice > 0)).map((order: Order, index: number) => (
                     <tr key={index}>
                       <th className="text-center text-green-500">+{totalIncomeF(order.totalPrice)}</th>
-                      <th className="text-center text-red-500">-{totalEgressF(Math.trunc(order.totalPrice * 0.4))}</th>
+                      <th className="text-center text-red-500">-{totalEgressF(order.products)}</th>
                     </tr>
                   ))
                 }
