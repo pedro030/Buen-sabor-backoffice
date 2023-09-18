@@ -20,14 +20,16 @@ import RankingsClients from "../pages/Rankings/RankingsClients/RankingsClients"
 import Movements from "../pages/Rankings/Movements/Movements"
 import { ProtectedRoute } from "./ProtectedRoute"
 import { useState } from "react"
+import { UserDetail } from "../pages/UserDetail/UserDetail"
+import { UserOrderDetail } from "../pages/UserDetail/UserOrderDetail/UserOrderDetail"
 
 
 
 const homeRoutes = () => {
 
-  const [user, setUser] = useState({ user: 'Fulano', rol: 'Chef'});
+  const [user, setUser] = useState({ user: 'Fulano', rol: 'SuperAdmin' });
 
-  
+
   return (
     <Routes>
       {/* HOME */}
@@ -43,7 +45,7 @@ const homeRoutes = () => {
           user.rol.includes('SuperAdmin') ||
           user.rol.includes('Admin') ||
           user.rol.includes('Chef')
-      }/>}>
+        } />}>
         <Route path="/categories" element={<CategoriesCRUD />} />
         <Route path="/ingredients" element={<Ingredient />} />
         <Route path="/products" element={<Product />} />
@@ -53,7 +55,7 @@ const homeRoutes = () => {
         isAllowed={
           user.rol.includes('SuperAdmin') ||
           user.rol.includes('Admin')
-      }/>}>
+        } />}>
         <Route path="/employees" element={<Employees />} />
         <Route path="/users" element={<User />} />
       </Route>
@@ -63,7 +65,7 @@ const homeRoutes = () => {
           user.rol.includes('SuperAdmin') ||
           user.rol.includes('Admin') ||
           user.rol.includes('Cashier')
-      }/>}>
+        } />}>
         <Route path="/bills" element={<Bill />} />
       </Route>
 
@@ -81,7 +83,7 @@ const homeRoutes = () => {
           user.rol.includes('Cashier') ||
           user.rol.includes('Chef') ||
           user.rol.includes('Delivery')
-      }/>}>
+        } />}>
         <Route path="/orders" element={<Order />} />
       </Route>
 
@@ -93,8 +95,8 @@ const homeRoutes = () => {
           user.rol.includes('SuperAdmin') ||
           user.rol.includes('Admin') ||
           user.rol.includes('Chef')
-      }/>}>
-        <Route path="/stock"/>
+        } />}>
+        <Route path="/stock" />
       </Route>
 
       {/* RANKINGS */}
@@ -102,12 +104,14 @@ const homeRoutes = () => {
         isAllowed={
           user.rol.includes('SuperAdmin') ||
           user.rol.includes('Admin')
-      }/>}>
-        <Route path="/statistics/products" element={<RankingsProducts  />} />
-        <Route path="/statistics/clients" element={<RankingsClients  />} />
-        <Route path="/statistics/movements" element={<Movements  />} />
+        } />}>
+        <Route path="/statistics/products" element={<RankingsProducts />} />
+        <Route path="/statistics/clients" element={<RankingsClients />} />
+        <Route path="/statistics/movements" element={<Movements />} />
       </Route>
-      
+
+      <Route path="/statistics/clients/:idUser" element={<UserDetail />} />
+      <Route path="/statistics/clients/:idUser/order/:idOrder" element={<UserOrderDetail />} />
     </Routes>
   )
 }

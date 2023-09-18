@@ -26,7 +26,7 @@ const Movements = () => {
     return n
   }
 
-  console.log(orders)
+  // console.log(orders)
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -60,7 +60,7 @@ const Movements = () => {
               </thead>
               <tbody>
                 {
-                  orders.filter((f: Order) => (f.totalPrice > 0)).map((order: Order, index: number) => (
+                  orders.map((order: Order, index: number) => (
                     <tr key={index}>
                       <th className="text-center text-green-500">+{totalIncomeF(order.totalPrice)}</th>
                       <th className="text-center text-red-500">-{totalEgressF(order.products)}</th>

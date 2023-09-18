@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react"
 import store from "../../../state/store/store";
 import { RiEyeLine, RiFileExcel2Line } from 'react-icons/ri';
-import { User } from "@auth0/auth0-react";
+import { userSelector } from "../../../state/selectors";
+import { useSelector } from "react-redux";
+import { User } from "../../../models/User";
+import { Order } from "../../../models/Order";
+import { NavLink } from "react-router-dom";
 
 const RankingsClients = () => {
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
-  // const [clients, setClients] = useState<Array<User>>([])
+    const user = useSelector(userSelector).filter((item:User) => item.rol.rol === 'Client')
+  const [clients, setClients] = useState<Array<User>>(user)
 
-  useEffect(() => {
-    // fetch(`${apiURL}/products/getByQuanSold`, {
-    //   headers: {
-    //     Authorization: `Bearer ${(token).trim()}`
-    //   }
-    // })
-    //   .then(res => res.json())
-    //   .then(data => setClients(data))
-    //   .catch(error => console.error(error))
-  }, [])
+  const total = (orders: Order[]) => {
+    let total = 0;
+    orders.map((item: Order) => {
+      total += item.totalPrice
+    })
+    return total
+  }
+
+// console.log(clients)
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -49,34 +53,15 @@ const RankingsClients = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>test</th>
-                <th>test</th>
-                <th>test</th>
-                <th><button><RiEyeLine className='w-5 h-5 eye-icon' /> </button></th>
-              </tr>
-              <tr>
-                <th>test</th>
-                <th>test</th>
-                <th>test</th>
-                <th>test</th>
-              </tr>
-              <tr>
-                <th>test</th>
-                <th>test</th>
-                <th>test</th>
-                <th>test</th>
-              </tr>
               {
-                // clients.filter((item: Product) => item.subcategory?.name !== "Gaseosas").map((product: Product, index: number) => (
-                //   <tr key={index}>
-                //     <th >{product.name}</th>
-                //     <th className="text-center">{product.quantitySold}</th>
-                //     <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
-                //     <th className="text-center">{product.price}</th>
-                //     <th >{product.subcategory?.name}</th>
-                //   </tr>
-                // ))
+                clients.sort((a:User, b:User) => b.orders.length - a.orders.length).map((item: User, index: number) => (
+                  <tr key={index}>
+                    <th >{`${item.firstName} ${item.lastName}`}</th>
+                    <th >{item.orders.length}</th>
+                    <th >{total(item.orders)}</th>
+                    <th><NavLink to={`${item.id}`} ><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink></th>
+                  </tr>
+                ))
               }
             </tbody>
           </table>

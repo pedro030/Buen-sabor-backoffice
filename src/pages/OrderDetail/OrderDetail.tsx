@@ -4,6 +4,7 @@ import { orderSelector } from "../../state/selectors"
 import { Order } from "../../models/Order"
 import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
+import { IoMdArrowRoundBack } from "react-icons/io"
 
 const OrderDetail = () => {
 
@@ -40,7 +41,7 @@ const OrderDetail = () => {
 
     return (
         <div className="p-5 h-[94.6vh] overflow-y-auto">
-            <NavLink to="/orders" >back</NavLink>
+            <NavLink to="/orders" ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack/> back</span></NavLink>
             <h1 className="mb-5 text-2xl font-semibold text-center">Order Detail</h1>
 
             <div className="grid grid-cols-[3fr_1fr] gap-5">

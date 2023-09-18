@@ -1,3 +1,5 @@
+import Order from "../pages/Order/Order";
+import { Address } from "./Address";
 import { Rol } from "./Rol";
 
 export interface User{
@@ -6,5 +8,9 @@ export interface User{
     lastName: string,
     mail: string,
     password: string,
-    rol: Rol
+    rol: Rol,
+    blacklist: string,
+    orders: Order[],
+    telephone: number,
+    addresses: Address[]
 }
