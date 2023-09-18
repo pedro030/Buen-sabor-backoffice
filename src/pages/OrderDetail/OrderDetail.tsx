@@ -1,41 +1,51 @@
-import { useSelector } from "react-redux"
-import { NavLink, useParams } from "react-router-dom"
-import { orderSelector } from "../../state/selectors"
+import { useState } from 'react'
+import { useDispatch, useSelector } from "react-redux"
+import { NavLink, useNavigate, useParams } from "react-router-dom"
+import { orderSelector, statusSelector, userSessionSelector } from "../../state/selectors"
 import { Order } from "../../models/Order"
 import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
 import { IoMdArrowRoundBack } from "react-icons/io"
+import { updateOrder } from '../../state/actions/orderActions'
 
 const OrderDetail = () => {
-
-    let { idOrder } = useParams()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { idOrder } = useParams()
     let orders: Order[] = useSelector(orderSelector)
+    const { token } = useSelector(userSessionSelector);
+    const status = useSelector(statusSelector);
     orders = orders.filter(item => item.id == idOrder)
 
     const { address, date, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode } = orders[0]
 
     const states: any = {
-        'SuperAdmin': ['In_Queue', 'In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered', 'Not_Delivered', 'Cancelled'],
-        'Admin': ['In_Queue', 'In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered', 'Not_Delivered', 'Cancelled'],
-        'Cashier': ['In_Preparation', 'Ready', 'Out_for_Delivery', 'Delivered'],
-        'Chef': ['Ready'],
-        'Delivery': ['Delivered', 'Not_Delivered']
+        'In_Queue': ['In_Preparation', 'Ready'],
+        'In_Preparation': ['Ready'],
+        'Ready': ['In_Preparation', 'Out_for_Delivery', 'Delivered'],
+        'Out_for_Delivery': ['Delivered', 'Not_Delivered']
     }
 
-    const listStatus = ['In_Queue', "In_Preparation", "Ready", "Out_for_Delivery", "Delivered", "Not_Delivered", "Cancelled"]
-
-    const valueTypeStatus = listStatus.indexOf(statusOrder.statusType)
-
-    const changeStatus = async (type: string, obj: any) => {
-        if (confirm(`You sure of change the status to ${type} ?`)) {
+    const changeStatus = async (type: string) => {
+        if (confirm(`You sure of change the status to '${type.replaceAll('_', ' ')}' ?`)) {
+            const statusType = status.find((s: any) => s.statusType === type)
             const requestOptions = {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(obj)
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(statusType)
             };
+
             const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/changeStatus/${id}`, requestOptions)
                 .catch((e) => console.error(e));
-            // location.assign('/orders')
+
+            if(res?.ok) {
+                const updatedOrder = { ...orders[0], statusOrder: statusType}
+                dispatch(updateOrder(id, updatedOrder))
+                navigate(-1);
+            }
         }
     }
 
@@ -69,7 +79,7 @@ const OrderDetail = () => {
                             <div>
                                 <div className="flex justify-between my-3">
                                     <h1>Order</h1>
-                                    <p>{/*order.products.length*/} products</p>
+                                    <p>{orders[0].products.length} products</p>
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                     {products.map((item: any) => {
@@ -142,11 +152,16 @@ const OrderDetail = () => {
                     <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300"> Statues</h1>
 
                     <div className="flex flex-col gap-5">
-                        <button onClick={() => changeStatus('in queue', { "id": 1, "statusType": 'In_Queue' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 0 && 'btn-disabled'}`}>In Queue</button>
-                        <button onClick={() => changeStatus('in preparation', { "id": 2, "statusType": 'In_Preparation' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 1 && 'btn-disabled'}`}>In Preparation</button>
-                        <button onClick={() => changeStatus('ready', { "id": 3, "statusType": 'Ready' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 2 && 'btn-disabled'}`}>Ready</button>
-                       {(withdrawalMode === 'Delivery') && <button onClick={() => changeStatus('delivery', { "id": 4, "statusType": 'Out_for_Delivery' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 4 && 'btn-disabled'}`}>delivery</button>}
-                        <button onClick={() => changeStatus('delivery', { "id": 5, "statusType": 'Delivered' })} className={`btn btn-primary btn-sm btn-wide ${valueTypeStatus >= 4 && 'btn-disabled'}`}>done !</button>
+                        {states[statusOrder.statusType].map((s: any) => {
+                            if (statusOrder.statusType === 'Ready') {
+                                if (withdrawalMode === 'Take Away' && s === 'Out_for_Delivery') {
+                                    return null; // No mostrar el botón 'Out_for_Delivery' en modo de entrega 'Delivery'
+                                } else if (withdrawalMode === 'Delivery' && s === 'Delivered') {
+                                    return null; // No mostrar el botón 'Delivered' en modo de entrega 'Take_Away'
+                                }
+                            }
+                            return <button onClick={() => changeStatus(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
+                        })}
                     </div>
 
                 </div>

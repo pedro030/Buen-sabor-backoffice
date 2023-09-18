@@ -16,6 +16,7 @@ export const LOAD_PRODUCTS = "LOAD_PRODUCTS";
 
 // ORDERS
 export const LOAD_ORDERS = "LOAD_ORDERS";
+export const UPDATE_ORDER = "UPDATE_ORDER";
 
 // BILLS
 export const LOAD_BILLS = "LOAD_BILLS";

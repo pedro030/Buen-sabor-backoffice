@@ -29,7 +29,6 @@ const homeRoutes = () => {
 
   const [user, setUser] = useState({ user: 'Fulano', rol: 'SuperAdmin' });
 
-
   return (
     <Routes>
       {/* HOME */}

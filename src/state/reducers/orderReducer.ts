@@ -1,4 +1,5 @@
-import { LOAD_ORDERS } from "../types";
+import { Order } from "../../models/Order";
+import { LOAD_ORDERS, UPDATE_ORDER } from "../types";
 
 const initialState = {
     orders: []
@@ -10,6 +11,14 @@ export default function orderReducer(state = initialState, action: any) {
             return {
                 ...state,
                 orders: action.payload
+            }
+        case UPDATE_ORDER:
+            const { orderId, updatedOrder } = action.payload;
+            const updatedOrders = state.orders.map((order: Order) => order.id === orderId ? { ...order, ...updatedOrder } : order);
+
+            return {
+                ...state,
+                orders: updatedOrders
             }
         default:
             return state;
