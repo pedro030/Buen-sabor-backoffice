@@ -24,11 +24,14 @@ const RankingsClients = () => {
 // console.log(clients)
 
   return (
-    <div className="h-[100vh] overflow-y-auto">
+    <div className=" grid grid-rows-[80px_0.9fr_50px] overflow-y-auto h-[99vh]">
+      <div>
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Rankings clients</h1>
       <hr />
-      <div className="flex justify-center">
-        <div className="w-[70vw]">
+      </div>
+
+      <div className="flex justify-center overflow-y-auto">
+        <div className="w-[60vw]">
           <div className="flex justify-center gap-5 my-2">
             <div>
               <label className="label">
@@ -66,9 +69,8 @@ const RankingsClients = () => {
             </tbody>
           </table>
         </div>
-
-
       </div>
+
       <div className="flex justify-end w-full mt-10 mb-5 ">
         <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
       </div>

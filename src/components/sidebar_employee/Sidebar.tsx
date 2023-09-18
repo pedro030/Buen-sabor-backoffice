@@ -82,11 +82,11 @@ function Sidebar() {
                 </ul>
               </details>
             </li>
-            { (rol === 'Admin' || rol === 'Chef' || rol === 'SuperAdmin') && <li>
+            {/* { (rol === 'Admin' || rol === 'Chef' || rol === 'SuperAdmin') && <li>
               <NavLink to="/stock" end>
                 <h2 >Stock</h2>
               </NavLink>
-            </li> }
+            </li> } */}
             { (rol === 'Admin' || rol === 'SuperAdmin')  && <ul className=" menu">
               <li>
                 <h2 >Rankings</h2>

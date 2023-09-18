@@ -20,7 +20,7 @@ function HomePage() {
             })}
             { (rol === 'Admin' || rol === 'SuperAdmin') && <>
                 <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/products">Products Ranking</NavLink>
-                <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/client">Clients Ranking</NavLink>
+                <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/clients">Clients Ranking</NavLink>
                 <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/movements">Monetary Movements</NavLink>
             </>}
         </div>
