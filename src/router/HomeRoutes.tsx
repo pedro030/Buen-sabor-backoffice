@@ -22,12 +22,14 @@ import { ProtectedRoute } from "./ProtectedRoute"
 import { useState } from "react"
 import { UserDetail } from "../pages/UserDetail/UserDetail"
 import { UserOrderDetail } from "../pages/UserDetail/UserOrderDetail/UserOrderDetail"
+import { useSelector } from "react-redux"
+import { userSessionSelector } from "../state/selectors"
 
 
 
 const homeRoutes = () => {
 
-  const [user, setUser] = useState({ user: 'Fulano', rol: 'SuperAdmin' });
+  const { rol } = useSelector(userSessionSelector)
 
   return (
     <Routes>
@@ -41,9 +43,9 @@ const homeRoutes = () => {
       {/* CRUD */}
       <Route element={<ProtectedRoute
         isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Admin') ||
-          user.rol.includes('Chef')
+          rol.includes('_superAdmin') ||
+          rol.includes('_admin') ||
+          rol.includes('_chef')
         } />}>
         <Route path="/categories" element={<CategoriesCRUD />} />
         <Route path="/ingredients" element={<Ingredient />} />
@@ -52,8 +54,8 @@ const homeRoutes = () => {
 
       <Route element={<ProtectedRoute
         isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Admin')
+          rol.includes('_superAdmin') ||
+          rol.includes('_admin')
         } />}>
         <Route path="/employees" element={<Employees />} />
         <Route path="/users" element={<User />} />
@@ -61,9 +63,9 @@ const homeRoutes = () => {
 
       <Route element={<ProtectedRoute
         isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Admin') ||
-          user.rol.includes('Cashier')
+          rol.includes('_superAdmin') ||
+          rol.includes('_admin') ||
+          rol.includes('_cashier')
         } />}>
         <Route path="/bills" element={<Bill />} />
       </Route>
@@ -78,39 +80,29 @@ const homeRoutes = () => {
       {/* ORDER */}
       <Route element={<ProtectedRoute
         isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Cashier') ||
-          user.rol.includes('Chef') ||
-          user.rol.includes('Delivery')
+          rol.includes('_superAdmin') ||
+          rol.includes('_cashier') ||
+          rol.includes('_chef') ||
+          rol.includes('_delivery')
         } />}>
         <Route path="/orders" element={<Order />} />
       </Route>
 
       <Route path="/orders/:idOrder" element={<OrderDetail />} />
 
-      {/* STOCK */}
-      <Route element={<ProtectedRoute
-        isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Admin') ||
-          user.rol.includes('Chef')
-        } />}>
-        <Route path="/stock" />
-      </Route>
-
       {/* RANKINGS */}
       <Route element={<ProtectedRoute
         isAllowed={
-          user.rol.includes('SuperAdmin') ||
-          user.rol.includes('Admin')
+          rol.includes('_superAdmin') ||
+          rol.includes('_admin')
         } />}>
         <Route path="/statistics/products" element={<RankingsProducts />} />
         <Route path="/statistics/clients" element={<RankingsClients />} />
         <Route path="/statistics/movements" element={<Movements />} />
+        <Route path="/statistics/clients/:idUser" element={<UserDetail />} />
+        <Route path="/statistics/clients/:idUser/order/:idOrder" element={<UserOrderDetail />} />
       </Route>
 
-      <Route path="/statistics/clients/:idUser" element={<UserDetail />} />
-      <Route path="/statistics/clients/:idUser/order/:idOrder" element={<UserOrderDetail />} />
     </Routes>
   )
 }

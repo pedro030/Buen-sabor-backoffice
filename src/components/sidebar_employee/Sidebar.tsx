@@ -6,24 +6,22 @@ import store from '../../state/store/store'
 import { useSelector } from 'react-redux'
 import { userSessionSelector } from '../../state/selectors'
 import { Rol } from '../../models/Rol'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import PageLoader from '../page_loader/PageLoader'
 
 
 function Sidebar() {
 
   const { user, logout } = useAuth0()
-  const navigate = useNavigate()
-
-  const [rol, setRol] = useState('SuperAdmin')
+  const { rol } = useSelector(userSessionSelector)
 
   const crud: any = {
-    'SuperAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
-    'Admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
-    'Cashier': ['orders', 'bills'],
-    'Chef': ['categories', 'ingredients', 'products', 'orders'],
-    'Delivery': ['orders']
+    '_superAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
+    '_admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
+    '_cashier': ['orders', 'bills'],
+    '_chef': ['categories', 'ingredients', 'products', 'orders'],
+    '_delivery': ['orders']
   }
-
 
   return (
 
@@ -82,12 +80,7 @@ function Sidebar() {
                 </ul>
               </details>
             </li>
-            {/* { (rol === 'Admin' || rol === 'Chef' || rol === 'SuperAdmin') && <li>
-              <NavLink to="/stock" end>
-                <h2 >Stock</h2>
-              </NavLink>
-            </li> } */}
-            { (rol === 'Admin' || rol === 'SuperAdmin')  && <ul className=" menu">
+            { (rol === '_admin' || rol === '_superAdmin')  && <ul className=" menu">
               <li>
                 <h2 >Rankings</h2>
                 <ul>

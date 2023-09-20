@@ -21,7 +21,7 @@ export default function userSessionReducer(state = initialState, action: any){
         case LOAD_ROL:
             return{
                 ...state,
-                rol: action.payload.token
+                rol: action.payload.rol
             }
         case SIGN_IN:
             return{

@@ -28,11 +28,15 @@ import { loadBills } from "../../state/actions/billActions"
 import { UserService } from "../../services/User"
 import { loadUsers } from "../../state/actions/userActions"
 import jwtDecode from "jwt-decode"
+import PageLoader from "../../components/page_loader/PageLoader"
 
 function Home() {
 
     const { user, getAccessTokenSilently, logout } = useAuth0();
     const dispatch = useDispatch();
+    const { rol } = useSelector(userSessionSelector)
+    const [rolReady, setRolReady] = useState(false);
+
 
     useEffect(() => {
         getAccessTokenSilently(
@@ -44,9 +48,8 @@ function Home() {
         )
             .then(data => {
                 const decodedToken = jwtDecode(data)
-                console.log(decodedToken);
-                // TODO: Hacer el filter del rol y enviarlo al dispatch
-                //dispatch(load_rol(rol))
+                const rol: string = decodedToken.permissions.find((p: string) => p.charAt(0) === '_')
+                dispatch(load_rol(rol))
                 new UserService().GetAll()
                     .then(users => {
                         let userLoged = users.find(u => u.mail == user?.email);
@@ -74,6 +77,20 @@ function Home() {
                 // new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             })
     }, [])
+
+    useEffect(() => {
+        if(rol.length > 0) {
+            setRolReady(true);
+        }
+      }, [rol])
+    
+      if(!rolReady) {
+          return (
+              <div className="page-layout">
+                <PageLoader />
+              </div>
+            );
+      }
 
     return (
         <div className="flex">

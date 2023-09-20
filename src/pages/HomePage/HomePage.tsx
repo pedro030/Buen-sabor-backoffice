@@ -1,16 +1,18 @@
 import { useState } from "react"
+import { useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
+import { userSessionSelector } from "../../state/selectors"
 
 function HomePage() {
 
-    const [rol, setRol] = useState('SuperAdmin')
+    const { rol } = useSelector(userSessionSelector)
 
     const cards: any = {
-        'SuperAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
-        'Admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees', 'stock'],
-        'Cashier': ['orders', 'bills'],
-        'Chef': ['categories', 'ingredients', 'products', 'orders', 'stock'],
-        'Delivery': ['orders']
+        '_superAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
+        '_admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
+        '_cashier': ['orders', 'bills'],
+        '_chef': ['categories', 'ingredients', 'products', 'orders'],
+        '_delivery': ['orders']
     }
 
     return (
@@ -18,7 +20,7 @@ function HomePage() {
             { cards[rol].map((i: any) => {
                 return <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to={i}>{i[0].toUpperCase() + i.substring(1)}</NavLink>
             })}
-            { (rol === 'Admin' || rol === 'SuperAdmin') && <>
+            { (rol === '_admin' || rol === '_superAdmin') && <>
                 <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/products">Products Ranking</NavLink>
                 <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/clients">Clients Ranking</NavLink>
                 <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/movements">Monetary Movements</NavLink>
