@@ -129,7 +129,7 @@ function CategoriesCRUD() {
   }
 
   return (
-    <div className="m-4">
+    <div className="mx-4 mt-4">
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
       <CategoryForm
         obj={selectedItem}

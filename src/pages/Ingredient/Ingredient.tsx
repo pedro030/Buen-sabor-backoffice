@@ -153,8 +153,11 @@ const Ingredient = () => {
     sortIngredients(ingredientsFilter, currentSorting);
   }, [filters])
 
+
+  // console.log(ingredients)
+
   return (
-    <div className="m-4">
+    <div className="mx-4 mt-4">
       <div className='flex gap-5'>
         <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
         <CrudCreateButton Modal={IngredientListForm} Title='Recargar Stock' />
@@ -203,20 +206,30 @@ const Ingredient = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedIngredients.map((ingredient: Ingredient, i: number) => (
-              <tr key={i}>
-                <td>{ingredient.name}</td>
-                <td>{ingredient.cost}</td>
-                <td>{ingredient.stock}</td>
-                <td>{ingredient.measure?.measure}</td>
-                <td>
-                  <div className='flex gap-2'>
-                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button onClick={() => openEditModal(ingredient)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
-                    <button onClick={() => handleDelete(ingredient)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
-                  </div>
-                </td>
-              </tr>))}
+            {sortedIngredients.map((ingredient: Ingredient, i: number) => {
+
+              // try {
+              //   (ingredient.stockMin > ingredient.stock) && setSelectedItem(ingredient)
+              // } catch (error) {
+              //   console.log(error)
+              // }
+
+              return (
+                <tr key={i} className={`${ingredient.stockMin > ingredient.stock && 'bg-red-200'}`}>
+                  <td>{ingredient.name}</td>
+                  <td>{ingredient.cost}</td>
+                  <td>{ingredient.stock}</td>
+                  <td>{ingredient.measure?.measure}</td>
+                  <td>
+                    <div className='flex gap-2'>
+                      <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                      <button onClick={() => openEditModal(ingredient)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
+                      <button onClick={() => handleDelete(ingredient)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

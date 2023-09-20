@@ -17,6 +17,24 @@
   font-family: Poppins;
 }
 
+// @layer utilities {
+//   .scrollbar::-webkit-scrollbar {
+//     width: 15px;
+//     height: 15px;
+//   }
+
+//   .scrollbar::-webkit-scrollbar-track {
+//     border-radius: 100vh;
+//     background: #F1AAA8;
+//   }
+
+//   .scrollbar::-webkit-scrollbar-thumb {
+//     background: #E73636;
+//     border-radius: 100vh;
+//     border: 3px solid #F1AAA8;
+//   }
+// }
+
 body {
   background-color: var(--main-wall-bg-color);
   font-family: Poppins;
@@ -122,3 +140,4 @@ Form {
     }
   }
 }
+

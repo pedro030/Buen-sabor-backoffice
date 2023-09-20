@@ -24,9 +24,9 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
     const handleSubmit = (state: any) => {
 
 
-        console.log(state)
-        console.log("INGREDIENT LIST")
-        console.log("--------------------------------------------------------------------------------------------------------------")
+        // console.log(state)
+        // console.log("INGREDIENT LIST")
+        // console.log("--------------------------------------------------------------------------------------------------------------")
 
         // if (state.id) {
         //     ingredientService.updateObj(state)
@@ -71,7 +71,7 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+            <div className='modal-container w-[60vw]' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>Ingredient List</h3>
                 <Formik
@@ -91,29 +91,40 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
 
                                     <div className='flex flex-row w-full h-64 ml-5 overflow-y-auto'>
                                         <div className='flex flex-col gap-5 m-1'>
+                                            <div className='grid grid-cols-[200px_100px_100px_130px_100px] text-center'>
+                                                <h2>Ingrediet</h2>
+                                                <h2>Amount</h2>
+                                                <h2>Stock</h2>
+                                                <h2>Minimum stock</h2>
+                                                <h2>Measure </h2>
+                                            </div>
                                             {values.ingredients.map((e: any, index: any) => (
-                                                    <div key={index} className='flex flex-row w-full gap-5'>
-                                                        <div className='flex flex-col'>
-                                                            <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
-                                                                <option value='' label='Select Ingredient' />
-                                                                {ingredientsOptions.map((i: Ingredient, ind: any) => {
-                                                                    return <option key={ind} value={JSON.stringify(i)} label={i.name} />
-                                                                })}
-                                                            </Field>
-                                                        </div>
-
-                                                        <div className="flex flex-col field">
-                                                            <Field name={`ingredients[${index}].cant`} type='number' className='w-32 input input-sm' value={e.cant} />
-                                                            <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                                        </div>
-
-                                                        <div className='flex flex-col'>
-                                                            <label>{values.ingredients[index].ingredient.measure.measure}</label>
-                                                        </div>
-
-                                                        <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
+                                                <div key={index} className='grid grid-cols-[200px_100px_100px_130px_100px_100px] text-center'>
+                                                    <div className='field'>
+                                                        <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
+                                                            <option value='' label='Select Ingredient' />
+                                                            {ingredientsOptions.map((i: Ingredient, ind: any) => {
+                                                                return <option key={ind} value={JSON.stringify(i)} label={i.name} />
+                                                            })}
+                                                        </Field>
                                                     </div>
-                                                )
+
+                                                    <div className="field">
+                                                        <Field name={`ingredients[${index}].cant`} type='number' className='w-20 input input-sm' value={e.cant} />
+                                                        <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                                    </div>
+
+                                                    <label>{values.ingredients[index].ingredient.stock}</label>
+
+                                                    <label>{values.ingredients[index].ingredient.stockMin}</label>
+
+                                                    <label>{values.ingredients[index].ingredient.measure.measure}</label>
+
+                                                    <div className='flex place-content-center'>
+                                                        <button type='button' className='w-8 btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
+                                                    </div>
+                                                </div>
+                                            )
                                             )}
 
                                         </div>
