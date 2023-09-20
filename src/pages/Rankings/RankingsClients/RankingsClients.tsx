@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 const RankingsClients = () => {
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
-    const user = useSelector(userSelector).filter((item:User) => item.rol.rol === 'Client')
+  const user = useSelector(userSelector).filter((item:User) => item.rol.rol === 'Client')
   const [clients, setClients] = useState<Array<User>>(user)
 
   const total = (orders: Order[]) => {
@@ -21,7 +21,6 @@ const RankingsClients = () => {
     return total
   }
 
-// console.log(clients)
 
   return (
     <div className=" grid grid-rows-[80px_0.9fr_50px] overflow-y-auto h-[99vh]">
@@ -33,7 +32,8 @@ const RankingsClients = () => {
       <div className="flex justify-center overflow-y-auto">
         <div className="w-[60vw]">
           <div className="flex justify-center gap-5 my-2">
-            <div>
+
+            {/*<div>
               <label className="label">
                 <span className="text-gray-500 label-text">Desde</span>
               </label>
@@ -44,6 +44,9 @@ const RankingsClients = () => {
                 <span className="text-gray-500 label-text">Hasta</span>
               </label>
               <input className="input input-sm input-bordered" type="date" />
+            </div> */}
+            <div>
+              <button className="btn btn-primary btn-sm">Search</button>
             </div>
           </div>
           <table className="table table-xs">
