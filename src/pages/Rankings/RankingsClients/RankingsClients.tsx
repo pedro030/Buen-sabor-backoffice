@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { User } from "../../../models/User";
 import { Order } from "../../../models/Order";
 import { NavLink } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const RankingsClients = () => {
   const token = store.getState().userSession.token
@@ -32,7 +34,11 @@ const RankingsClients = () => {
       <div className="flex justify-center overflow-y-auto">
         <div className="w-[60vw]">
           <div className="flex justify-center gap-5 my-2">
-
+            <div>
+              <DatePicker
+                onChange={() => {}}
+              />
+            </div>
             {/*<div>
               <label className="label">
                 <span className="text-gray-500 label-text">Desde</span>
