@@ -3,7 +3,7 @@ import { User } from '../../models/User'
 import { userSelector } from '../../state/selectors'
 import { useSelector } from 'react-redux'
 import { Order } from '../../models/Order'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useLocation, useParams } from 'react-router-dom'
 import { RiEyeLine } from 'react-icons/ri'
 import { IoMdArrowRoundBack } from 'react-icons/io'
 
@@ -11,13 +11,16 @@ import { IoMdArrowRoundBack } from 'react-icons/io'
 
 export const UserDetail = () => {
 
+    const location = useLocation()
+    const orders: Order[] = location.state ? location.state.orders : []
+    const { startDate, endDate } = location.state ? location.state : null
     let { idUser } = useParams()
     let user: User[] = useSelector(userSelector).filter((item: User) => item.id == idUser)
-    const { orders, firstName, lastName } = user[0]
+    const { firstName, lastName } = user[0]
 
     return (
         <div className="m-4">
-            <NavLink to="/statistics/clients" ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
+            <NavLink to="/statistics/clients" state={{ start: startDate, end: endDate }}><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
             <h2 className='my-2 text-lg font-bold text-center stat-title'></h2>
             <div className="flex items-center justify-center w-full gap-5 ">
                 {/* <input type="date" placeholder='DATE' className=" input input-sm" onChange={handleChangeDate} />

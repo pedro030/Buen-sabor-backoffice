@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { Order } from '../../../models/Order'
 import { orderSelector } from '../../../state/selectors'
 import { useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io'
 
 export const UserOrderDetail = () => {
 
+  const navigate = useNavigate();
   let { idOrder } = useParams()
   let { idUser } = useParams()
   let orders: Order[] = useSelector(orderSelector).filter((item: Order) => item.id == idOrder)
@@ -16,7 +17,7 @@ export const UserOrderDetail = () => {
 
   return (
     <div className=" p-5 h-[100vh] overflow-y-auto">
-      <NavLink to={`/statistics/clients/${idUser}`} ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
+      <span className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => navigate(-1)}><IoMdArrowRoundBack /> back</span>
       <h1 className="mb-5 text-2xl font-semibold text-center">Order Detail</h1>
 
       <div className='flex flex-col items-center w-full'>
