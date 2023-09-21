@@ -26,16 +26,16 @@ const RankingsClients = () => {
 
   const sortRanking = (users: User[], sortOp: number) => {
     switch (sortOp) {
-      case 1: setSortedRanking(clients.sort((a:User, b:User) => a.orders.length < b.orders.length ? 1 : -1));
+      case 1: setSortedRanking(users.sort((a:User, b:User) => a.orders.length < b.orders.length ? 1 : -1));
         break;
 
-      case 2: setSortedRanking(clients.sort((a: User, b: User) => a.orders.length > b.orders.length ? 1 : -1))
+      case 2: setSortedRanking(users.sort((a: User, b: User) => a.orders.length > b.orders.length ? 1 : -1))
         break;
 
-      case 3: setSortedRanking(clients.sort((a: User, b: User) => total(a.orders) < total(b.orders) ? 1 : -1))
+      case 3: setSortedRanking(users.sort((a: User, b: User) => total(a.orders) < total(b.orders) ? 1 : -1))
         break;
       
-      case 4: setSortedRanking(clients.sort((a: User, b: User) => total(a.orders) > total(b.orders) ? 1 : -1))
+      case 4: setSortedRanking(users.sort((a: User, b: User) => total(a.orders) > total(b.orders) ? 1 : -1))
         break;
     }
   }

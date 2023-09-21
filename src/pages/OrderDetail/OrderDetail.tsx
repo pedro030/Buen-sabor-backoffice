@@ -16,6 +16,7 @@ const OrderDetail = () => {
     const { token } = useSelector(userSessionSelector);
     const status = useSelector(statusSelector);
     orders = orders.filter(item => item.id == idOrder)
+    const [minutes, setMinutes] = useState<number>(0)
 
     const { address, date, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode } = orders[0]
 
@@ -46,6 +47,32 @@ const OrderDetail = () => {
                 dispatch(updateOrder(id, updatedOrder))
                 navigate(-1);
             }
+        }
+    }
+
+    const handleChangeMinutes = (e: any) => {
+        const minutes = +e.target.value;
+        setMinutes(minutes);
+    }
+
+    const handleClickAddMinutes = async () => {
+        if(minutes > 0 && confirm(`Are you sure you need to add ${minutes} to the order?`)) {
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(minutes)
+            };
+
+            /*const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/${id}`, requestOptions)
+                .catch((e) => console.error(e));
+
+            if(res?.ok) {
+                const updatedOrder = { ...orders[0], statusOrder: statusType}
+                dispatch(updateOrder(id, updatedOrder))
+            }*/
         }
     }
 
@@ -148,8 +175,8 @@ const OrderDetail = () => {
                     </div>
                 </div>
 
-                <div className={`h-64 p-5 bg-white rounded-3xl ${(withdrawalMode === 'Delivery') && 'h-80'}`}>
-                    <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300"> Statues</h1>
+                <div className="h-48 p-5 bg-white rounded-3xl">
+                    <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Statuses</h1>
 
                     <div className="flex flex-col gap-5">
                         {states[statusOrder.statusType].map((s: any) => {
@@ -163,9 +190,16 @@ const OrderDetail = () => {
                             return <button onClick={() => changeStatus(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
                         })}
                     </div>
-
                 </div>
+                { statusOrder.statusType === 'In_Preparation' && <div className={`h-28 p-5 bg-white rounded-3xl`}>
+                    <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Add Minutes</h1>
 
+                    <div className="flex flex-row gap-5">
+                        <input type="number" min={0} placeholder='MINUTES' className="input input-sm" onChange={handleChangeMinutes} />
+                        <button className="btn btn-primary btn-sm" onClick={handleClickAddMinutes}>Add</button>
+                    </div>
+                </div>
+                }
             </div>
 
         </div>
