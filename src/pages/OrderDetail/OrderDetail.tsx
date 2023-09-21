@@ -62,17 +62,16 @@ const OrderDetail = () => {
                 headers: { 
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(minutes)
+                }
             };
 
-            /*const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/${id}`, requestOptions)
+            const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/${id}&${minutes}`, requestOptions)
                 .catch((e) => console.error(e));
 
             if(res?.ok) {
-                const updatedOrder = { ...orders[0], statusOrder: statusType}
+                const updatedOrder = { ...orders[0], totalCookingTime: minutes}
                 dispatch(updateOrder(id, updatedOrder))
-            }*/
+            }
         }
     }
 
@@ -195,7 +194,7 @@ const OrderDetail = () => {
                     <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Add Minutes</h1>
 
                     <div className="flex flex-row gap-5">
-                        <input type="number" min={0} placeholder='MINUTES' className="input input-sm" onChange={handleChangeMinutes} />
+                        <input type="number" min={0} max={120} placeholder='MINUTES' className="input input-sm" onChange={handleChangeMinutes} />
                         <button className="btn btn-primary btn-sm" onClick={handleClickAddMinutes}>Add</button>
                     </div>
                 </div>

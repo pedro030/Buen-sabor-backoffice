@@ -6,6 +6,7 @@ import { Product } from "./Product";
 export interface Order{
     id: string,
     date: string,
+    totalCookingTime: number | null,
     paymode: any,
     withdrawalMode: string,
     address: String,
