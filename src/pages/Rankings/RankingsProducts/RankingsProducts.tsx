@@ -4,6 +4,7 @@ import { Product } from "../../../models/Product";
 import { RiFileExcel2Line } from 'react-icons/ri';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { dateToString, stringToDate } from "../dates";
 
 const RankingsProducts = () => {
   const token = store.getState().userSession.token
@@ -14,14 +15,20 @@ const RankingsProducts = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  // Format Date. Example: 2023-6-2 to 2023-06-02
-  const formatToConsistentDate = (inputDate: string) => {
-    const parts = inputDate.split("-");
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1].length === 1 ? `0${parts[1]}` : parts[1]) - 1;
-    const day = parseInt(parts[2].length === 1 ? `0${parts[2]}` : parts[2]);
-    
-    return new Date(year, month, day);
+
+  const fetchProductRanking = async (stDate: string = '2023-01-01', edDate: string | null = dateToString(new Date(Date.now()))) => {
+
+    const endURL = startDate && endDate ? `${dateToString(startDate)}&${dateToString(endDate)}` : `${stDate}&${edDate}`
+
+    fetch(`${apiURL}/products/getProductsByQuantity/${endURL}`, {
+      headers: {
+        Authorization: `Bearer ${(token).trim()}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {setProducts(data); initialRanking.length != 0 ? '' : setInitialRanking(data)})
+      .catch(error => console.error(error))
+
   }
 
   // Handle Change DatePicker
@@ -33,15 +40,12 @@ const RankingsProducts = () => {
     if(!startDate && !endDate) setProducts(initialRanking);
   };
 
+  const handleClickGetRankingByDate = () => {
+    if(startDate && endDate) fetchProductRanking();
+  }
+
   useEffect(() => {
-    fetch(`${apiURL}/products/getByQuanSold`, {
-      headers: {
-        Authorization: `Bearer ${(token).trim()}`
-      }
-    })
-      .then(res => res.json())
-      .then(data => {setProducts(data); setInitialRanking(data)})
-      .catch(error => console.error(error))
+    fetchProductRanking();
   }, [])
 
   return (
@@ -71,7 +75,7 @@ const RankingsProducts = () => {
                   />
             </div>
             <div>
-              <button className="btn btn-primary btn-sm">Get Ranking by Date</button>
+              <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
             </div>
             <div>
               <button className="text-white btn btn-success"><RiFileExcel2Line />EXPORT EXCEL</button>
@@ -85,18 +89,16 @@ const RankingsProducts = () => {
                 <th className="text-center">QUANTITY SOLD</th>
                 <th>ACTIVE</th>
                 <th className="text-center">PRICE</th>
-                <th>CATEGORY</th>
               </tr>
             </thead>
             <tbody>
             {
-              products.filter((item: Product) => item.subcategory?.name !== "Gaseosas").map((product: Product, index: number) => (
+              products.map((product: Product, index: number) => (
                 <tr key={index}>
                   <th >{product.name}</th>
-                  <th className="text-center">{product.quantitySold}</th>
+                  <th className="text-center">{product.quantity_sold}</th>
                   <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
                   <th className="text-center">{product.price}</th>
-                  <th >{product.subcategory?.name}</th>
                 </tr>
               ))
             }
@@ -112,24 +114,22 @@ const RankingsProducts = () => {
                 <th className="text-center">QUANTITY SOLD</th>
                 <th>ACTIVE</th>
                 <th className="text-center">PRICE</th>
-                <th>CATEGORY</th>
               </tr>
             </thead>
             <tbody>
               {
-                products.filter((item: Product) => item.subcategory?.name === "Gaseosas").map((product: Product, index: number) => (
+                products.map((product: Product, index: number) => (
                   <tr key={index}>
                   <th >{product.name}</th>
-                  <th className="text-center">{product.quantitySold}</th>
+                  <th className="text-center">{product.quantity_sold}</th>
                   <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
                   <th className="text-center">{product.price}</th>
-                  <th >{product.subcategory?.name}</th>
                 </tr>
                 ))
               }
             </tbody>
           </table>
-        </>)}
+            </>) }
         
       </div>
 
