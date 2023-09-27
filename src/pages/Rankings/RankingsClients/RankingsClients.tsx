@@ -105,7 +105,7 @@ const RankingsClients = () => {
   return (
     <div className=" grid grid-rows-[80px_0.9fr_50px] overflow-y-auto h-[99vh]">
       <div>
-      <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Rankings clients</h1>
+      <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Client Ranking</h1>
       <hr />
       </div>
 
