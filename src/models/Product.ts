@@ -7,7 +7,7 @@ export interface Product{
     image: string,
     price: number,
     cookingTime: number,
-    quantitySold: number,
+    quantity_sold: number,
     subcategory: Category,
     cost:number,
     ingredients: Array<Ingredient>,

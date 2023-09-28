@@ -5,17 +5,24 @@ import { orderSelector } from "../../../state/selectors";
 import { useSelector } from "react-redux";
 import { Order } from "../../../models/Order";
 import { Product } from "../../../models/Product";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Movements = () => {
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const orders: Order[] = useSelector(orderSelector)
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
   let totalIncome = 0;
   let totalEgress = 0;
+
   const totalIncomeF = (n: number) => {
     totalIncome += n
     return (n)
   }
+
   const totalEgressF = (products: Product[]) => {
     // console.log(products)
     let n = 0;
@@ -26,7 +33,13 @@ const Movements = () => {
     return n
   }
 
-  // console.log(orders)
+  const handleChangeDate = (range: [Date, Date]) => {
+    const [startDate, endDate] = range;
+    setStartDate(startDate);
+    setEndDate(endDate);
+
+    if(!startDate && !endDate) {} // ADD LOGIC
+  };
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -38,17 +51,23 @@ const Movements = () => {
 
           <div className="flex justify-center gap-5 my-2">
             <div>
-              <label className="label">
-                <span className="text-gray-500 label-text">Desde</span>
-              </label>
-              <input className="input input-sm input-bordered" type="date" />
-            </div>
-            <div>
-              <label className="label">
-                <span className="text-gray-500 label-text">Hasta</span>
-              </label>
-              <input className="input input-sm input-bordered" type="date" />
-            </div>
+                <DatePicker
+                    isClearable
+                    withPortal
+                    selectsRange
+                    selected={startDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={handleChangeDate}
+                    placeholderText="Date: From - To"
+                    dateFormat="yyyy/MM/dd"
+                    className="input input-sm input-bordered"
+                    maxDate={new Date(Date.now())}
+                  />
+              </div>
+              <div>
+                <button className="btn btn-primary btn-sm">Get Movements by Date</button>
+              </div>
           </div>
           <div className="w-[50vw] h-[60vh] overflow-y-auto">
             <table className="table table-pin-rows">
