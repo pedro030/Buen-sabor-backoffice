@@ -72,11 +72,11 @@ function Sidebar() {
               <details className="dropdown dropdown-end">
                 <summary>Table</summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
-                  { crud[rol].map((i: any) => {
-                    return <li>
-                        <NavLink to={i} className={({ isActive }) => isActive ? "active" : ""}>{i[0].toUpperCase() + i.substring(1)}</NavLink>
+                  { crud[rol].map((element: any, index:number) =>( 
+                  <li key={index}>
+                        <NavLink to={element} className={({ isActive }) => isActive ? "active" : ""}>{element[0].toUpperCase() + element.substring(1)}</NavLink>
                     </li>
-                  }) }
+                  )) }
                 </ul>
               </details>
             </li>
