@@ -151,7 +151,7 @@ const Ingredient = () => {
 
   useEffect(() => {
     sortIngredients(ingredientsFilter, currentSorting);
-  }, [filters])
+  }, [filters, ingredients])
 
 
   // console.log(ingredients)
