@@ -7,6 +7,7 @@ import pizzaSvg from '../../assets/pizza.svg'
 import iceCreamSVG from '../../assets/ice-cream.svg'
 import { IoMdArrowRoundBack } from "react-icons/io"
 import { updateOrder } from '../../state/actions/orderActions'
+import swal from 'sweetalert'
 
 const OrderDetail = () => {
     const dispatch = useDispatch();
@@ -73,6 +74,19 @@ const OrderDetail = () => {
                 dispatch(updateOrder(id, updatedOrder))
             }
         }
+    }
+
+    const confirm = () => {
+        swal("Are you sure?", {
+            dangerMode: true,
+            buttons: [true, "Do it!"],
+        })
+        .then(data => data && swal({
+            icon: "success",
+            text: "Se ha hecho cancelacion de la factura",
+            timer: 1200,
+            buttons: [false]
+          }))
     }
 
     return (
@@ -175,7 +189,7 @@ const OrderDetail = () => {
                 </div>
 
                 <div className=''>
-                    <div className="h-56 p-5 mb-5 bg-white rounded-3xl">
+                    <div className="p-5 mb-5 bg-white rounded-3xl">
                         <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Statuses</h1>
 
                         <div className="flex flex-col gap-5">
@@ -192,9 +206,9 @@ const OrderDetail = () => {
                         </div>
                     </div>
 
-                    <div className='h-56 p-5 bg-white rounded-3xl'>
-                        <button className="btn btn-primary btn-sm btn-wide">Canceled</button>
-                        <textarea className="h-40 resize-none textarea textarea-bordered" required name="" id="" ></textarea>
+                    <div className='flex flex-col gap-5 p-5 bg-white rounded-3xl'>
+                        <textarea className="w-full h-40 resize-none textarea textarea-bordered" required name="" id="" ></textarea>
+                        <button className="btn btn-primary btn-sm btn-wide" onClick={() => confirm()}>Canceled</button>
                     </div>
 
                 </div>
