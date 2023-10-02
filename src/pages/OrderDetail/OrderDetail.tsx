@@ -32,7 +32,7 @@ const OrderDetail = () => {
             const statusType = status.find((s: any) => s.statusType === type)
             const requestOptions = {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
@@ -42,8 +42,8 @@ const OrderDetail = () => {
             const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/changeStatus/${id}`, requestOptions)
                 .catch((e) => console.error(e));
 
-            if(res?.ok) {
-                const updatedOrder = { ...orders[0], statusOrder: statusType}
+            if (res?.ok) {
+                const updatedOrder = { ...orders[0], statusOrder: statusType }
                 dispatch(updateOrder(id, updatedOrder))
                 navigate(-1);
             }
@@ -56,10 +56,10 @@ const OrderDetail = () => {
     }
 
     const handleClickAddMinutes = async () => {
-        if(minutes > 0 && confirm(`Are you sure you need to add ${minutes} to the order?`)) {
+        if (minutes > 0 && confirm(`Are you sure you need to add ${minutes} to the order?`)) {
             const requestOptions = {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
@@ -68,8 +68,8 @@ const OrderDetail = () => {
             const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/${id}&${minutes}`, requestOptions)
                 .catch((e) => console.error(e));
 
-            if(res?.ok) {
-                const updatedOrder = { ...orders[0], totalCookingTime: minutes}
+            if (res?.ok) {
+                const updatedOrder = { ...orders[0], totalCookingTime: minutes }
                 dispatch(updateOrder(id, updatedOrder))
             }
         }
@@ -77,7 +77,7 @@ const OrderDetail = () => {
 
     return (
         <div className="p-5 h-[94.6vh] overflow-y-auto">
-            <NavLink to="/orders" ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack/> back</span></NavLink>
+            <NavLink to="/orders" ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
             <h1 className="mb-5 text-2xl font-semibold text-center">Order Detail</h1>
 
             <div className="grid grid-cols-[3fr_1fr] gap-5">
@@ -109,7 +109,7 @@ const OrderDetail = () => {
                                 </div>
                                 <div className="h-32 mt-6 mb-1 overflow-y-auto scrollbar">
                                     {products.map((item: any) => {
-                                        return <div className='flex items-center'>
+                                        return <div key={item.id} className='flex items-center'>
                                             <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
                                             <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                                         </div>
@@ -174,23 +174,32 @@ const OrderDetail = () => {
                     </div>
                 </div>
 
-                <div className="h-48 p-5 bg-white rounded-3xl">
-                    <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Statuses</h1>
+                <div className=''>
+                    <div className="h-56 p-5 mb-5 bg-white rounded-3xl">
+                        <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Statuses</h1>
 
-                    <div className="flex flex-col gap-5">
-                        {states[statusOrder.statusType].map((s: any) => {
-                            if (statusOrder.statusType === 'Ready') {
-                                if (withdrawalMode === 'Take Away' && s === 'Out_for_Delivery') {
-                                    return null; // No mostrar el botón 'Out_for_Delivery' en modo de entrega 'Delivery'
-                                } else if (withdrawalMode === 'Delivery' && s === 'Delivered') {
-                                    return null; // No mostrar el botón 'Delivered' en modo de entrega 'Take_Away'
+                        <div className="flex flex-col gap-5">
+                            {states[statusOrder.statusType].map((s: any) => {
+                                if (statusOrder.statusType === 'Ready') {
+                                    if (withdrawalMode === 'Take Away' && s === 'Out_for_Delivery') {
+                                        return null; // No mostrar el botón 'Out_for_Delivery' en modo de entrega 'Delivery'
+                                    } else if (withdrawalMode === 'Delivery' && s === 'Delivered') {
+                                        return null; // No mostrar el botón 'Delivered' en modo de entrega 'Take_Away'
+                                    }
                                 }
-                            }
-                            return <button onClick={() => changeStatus(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
-                        })}
+                                return <button onClick={() => changeStatus(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
+                            })}
+                        </div>
                     </div>
+
+                    <div className='h-56 p-5 bg-white rounded-3xl'>
+                        <button className="btn btn-primary btn-sm btn-wide">Canceled</button>
+                        <textarea className="h-40 resize-none textarea textarea-bordered" required name="" id="" ></textarea>
+                    </div>
+
                 </div>
-                { statusOrder.statusType === 'In_Preparation' && <div className={`h-28 p-5 bg-white rounded-3xl`}>
+
+                {statusOrder.statusType === 'In_Preparation' && <div className={`h-28 p-5 bg-white rounded-3xl`}>
                     <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Add Minutes</h1>
 
                     <div className="flex flex-row gap-5">

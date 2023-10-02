@@ -19,35 +19,21 @@ interface Props {
 const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
     if (!open) return null
     const ingredientsOptions = useSelector(ingredientSelector)
+    const ingredientService = new IngredientService()
+    const dispatch = useDispatch()
+
 
 
     const handleSubmit = (state: any) => {
-
-
-        // console.log(state)
-        // console.log("INGREDIENT LIST")
-        // console.log("--------------------------------------------------------------------------------------------------------------")
-
-        // if (state.id) {
-        //     ingredientService.updateObj(state)
-        //         .then(() => {
-        //             ingredientService.GetAll()
-        //                 .then(m => {
-        //                     dispatch(loadIngredients(m))
-        //                 })
-        //         })
-        //         .finally(() => onClose())
-        // } else {
-        //     state.measure = JSON.parse(state.measure)
-        //     ingredientService.newObj(state)
-        //         .then(() => {
-        //             ingredientService.GetAll()
-        //                 .then(m => {
-        //                     dispatch(loadIngredients(m))
-        //                 })
-        //         })
-        //         .finally(() => onClose())
-        // }
+        
+        ingredientService.repoIngredients(state.ingredients)
+            .then(() => {
+                ingredientService.GetAll()
+                    .then(m => {
+                        dispatch(loadIngredients(m))
+                    })
+            })
+            .finally(() => onClose())
     }
 
     const handleSelect = (event: any, index: number, values: any, setFieldValue: any) => {
@@ -110,7 +96,7 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
                                                     </div>
 
                                                     <div className="field">
-                                                        <Field name={`ingredients[${index}].cant`} type='number' className='w-20 input input-sm' value={e.cant} />
+                                                        <Field name={`ingredients[${index}].cant`} type='number' className='w-20 input input-sm' min={1} value={e.cant} />
                                                         <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                                     </div>
 

@@ -69,6 +69,27 @@ export class ApiServ<T extends { id: string }> {
         return data
     }
 
+    async repoIngredients(repoIngredients: T) {
+
+        const requestOptions: RequestInit = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`
+            },
+            body: JSON.stringify(repoIngredients)
+        };
+        try {
+            const resp = await fetch(`${this.apiURL}/${this.endpoint}/reponerStock`, requestOptions)
+            const data = await resp.json()
+            return data
+        } catch (error) {
+            console.error(error)
+        }
+
+
+    }
+
     async newProduct(product: T, imagen: File | null) {
 
         try {
