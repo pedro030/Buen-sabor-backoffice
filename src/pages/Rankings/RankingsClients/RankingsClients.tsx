@@ -1,68 +1,77 @@
-import { useEffect, useState } from "react"
-import store from "../../../state/store/store";
-import { RiEyeLine, RiFileExcel2Line } from 'react-icons/ri';
-import { userSelector } from "../../../state/selectors";
-import { useSelector } from "react-redux";
-import { User } from "../../../models/User";
-import { Order } from "../../../models/Order";
-import { NavLink, useLocation } from "react-router-dom";
+// React
+import { useEffect, useState, ChangeEvent } from "react"
+
+// React Router
+import { Location, NavLink, useLocation } from "react-router-dom";
+
+// React DatePicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+// Redux
+import store from "../../../state/store/store";
+
+// React Icons
+import { RiEyeLine, RiFileExcel2Line } from 'react-icons/ri';
+
+// Functions
+import { dateToString } from "../rankingFunctions";
+
+// Types
+import { UserRanking } from "../../../models/UserRanking";
+
 const RankingsClients = () => {
-  const location = useLocation()
-  const start = location.state ? location.state.start : null
-  const end = location.state ? location.state.end : null
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
-  const user = useSelector(userSelector).filter((item:User) => item.rol.rol === 'Client')
-  const [clients, setClients] = useState<Array<User>>(user)
-  const [startDate, setStartDate] = useState<Date | null>(start);
-  const [endDate, setEndDate] = useState<Date | null>(end);
+
+  // Clients Raking States
+  const [clients, setClients] = useState<Array<UserRanking>>([])
+  const [initialClients, setInitialClients] = useState<Array<UserRanking>>([])
+
+  // Date States
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const fetchClientRanking = async (stDate: string = '2023-01-01', edDate: string | null = dateToString(new Date(Date.now()))) => {
+    // Si startDate y endDate son distintos de null se los convierte a string sino obtiene los parametros por defecto
+    const endURL = startDate && endDate ? `${dateToString(startDate)}&${dateToString(endDate)}` : `${stDate}&${edDate}`
+
+    // Fetch
+    fetch(`${apiURL}/users/getUserRanking/${endURL}`, {
+      headers: {
+        Authorization: `Bearer ${(token).trim()}`
+      }
+    })
+      .then(res => res.json())
+      // Si el rankingInicial es igual a 0 setea los datos ya que significa que es la primera vez que se produce el fetch
+      .then(data => { setClients(data); initialClients.length == 0 ? setInitialClients(data) : '' })
+      .catch(error => console.error(error))
+  }
 
   //Sorting
-  const [sortedRanking, setSortedRanking] = useState<Array<User>>();
+  const [sortedRanking, setSortedRanking] = useState<Array<UserRanking>>();
   const [currentSorting, setCurrentSorting] = useState(1);
 
-  const sortRanking = (users: User[], sortOp: number) => {
+  const sortRanking = (users: UserRanking[], sortOp: number) => {
     switch (sortOp) {
-      case 1: setSortedRanking(users.sort((a:User, b:User) => a.orders.length < b.orders.length ? 1 : -1));
+      case 1: setSortedRanking(users.sort((a:UserRanking, b:UserRanking) => a.orders_quantity < b.orders_quantity ? 1 : -1));
         break;
 
-      case 2: setSortedRanking(users.sort((a: User, b: User) => a.orders.length > b.orders.length ? 1 : -1))
+      case 2: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.orders_quantity > b.orders_quantity ? 1 : -1))
         break;
 
-      case 3: setSortedRanking(users.sort((a: User, b: User) => total(a.orders) < total(b.orders) ? 1 : -1))
+      case 3: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.total_sum < b.total_sum ? 1 : -1))
         break;
       
-      case 4: setSortedRanking(users.sort((a: User, b: User) => total(a.orders) > total(b.orders) ? 1 : -1))
+      case 4: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.total_sum > b.total_sum ? 1 : -1))
         break;
     }
   }
 
-  const handleChangeSorting = (e: any) => {
+  const handleChangeSorting = (e: ChangeEvent<HTMLSelectElement>) => {
     const sortOp = +e.target.value;
     setCurrentSorting(sortOp);
     sortRanking(clients, sortOp);
-  }
-
-  // Total Gastado en Orders
-  const total = (orders: Order[]) => {
-    let total = 0;
-    orders.map((item: Order) => {
-      total += item.totalPrice
-    })
-    return total
-  }
-  
-  // Format Date. Example: 2023-6-2 to 2023-06-02
-  const formatToConsistentDate = (inputDate: string) => {
-    const parts = inputDate.split("-");
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1].length === 1 ? `0${parts[1]}` : parts[1]) - 1;
-    const day = parseInt(parts[2].length === 1 ? `0${parts[2]}` : parts[2]);
-    
-    return new Date(year, month, day);
   }
 
   // Handle Change DatePicker
@@ -71,34 +80,20 @@ const RankingsClients = () => {
     setStartDate(startDate);
     setEndDate(endDate);
 
-    if(!startDate && !endDate) setClients(user);
+    if(!startDate && !endDate) setClients(initialClients);
   };
 
   // Handle Click Get Ranking by Date
   const handleClickGetRankingByDate = () => {
-    if(startDate && endDate) {
-      const newRanking = clients.map((user: User) => {
-        const filteredOrders = user.orders.filter((order: Order) => {
-          const orderDate = formatToConsistentDate(order.date)
-          return (
-            (!startDate || orderDate >= startDate) &&
-            (!endDate || orderDate <= endDate)
-          );
-        })
-
-        return {
-          ...user,
-          orders: filteredOrders,
-        };
-      })
-
-      setClients(newRanking)
-    } else setClients(clients)
+    if(startDate && endDate) fetchClientRanking();
   }
+
+  useEffect(() => {
+    fetchClientRanking();
+  }, [])
 
   // UseEffect que se ejecuta cada vez que hay un cambio de estado en 'clients'
   useEffect(() => {
-    handleClickGetRankingByDate();
     sortRanking(clients, currentSorting);
   }, [clients])
 
@@ -108,16 +103,15 @@ const RankingsClients = () => {
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Client Ranking</h1>
       <hr />
       </div>
-
       <div className="flex justify-center overflow-y-auto">
         <div className="w-[60vw]">
           <div className="flex justify-center gap-5 my-2">
             <div>
               <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
                 <option selected value={1}>SORT BY: + QTY</option>
-                <option value={2}>SORT BY NAME: - QTY</option>
-                <option value={3}>SORT BY NAME: + TOTAL</option>
-                <option value={4}>SORT BY NAME: - TOTAL</option>
+                <option value={2}>SORT BY: - QTY</option>
+                <option value={3}>SORT BY: + TOTAL</option>
+                <option value={4}>SORT BY: - TOTAL</option>
               </select>
             </div>
             <div>
@@ -131,12 +125,15 @@ const RankingsClients = () => {
                   onChange={handleChangeDate}
                   placeholderText="Date: From - To"
                   dateFormat="yyyy/MM/dd"
-                  className="input input-sm input-bordered"
+                  className="input input-sm input-bordered cursor-pointer"
                   maxDate={new Date(Date.now())}
                 />
             </div>
             <div>
               <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
+            </div>
+            <div>
+              <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
             </div>
           </div>
           <table className="table table-xs">
@@ -150,12 +147,12 @@ const RankingsClients = () => {
             </thead>
             <tbody>
               {
-                sortedRanking?.map((item: User, index: number) => (
+                sortedRanking?.map((item: UserRanking, index: number) => (
                   <tr key={index}>
-                    <th >{`${item.firstName} ${item.lastName}`}</th>
-                    <th >{item.orders.length}</th>
-                    <th >{total(item.orders)}</th>
-                    <th><NavLink to={`${item.id}`} state={{ orders: item.orders, startDate, endDate, currentSorting }}><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink></th>
+                    <th >{`${item.first_name} ${item.last_name}`}</th>
+                    <th >{item.orders_quantity}</th>
+                    <th >{item.total_sum}</th>
+                    {<th><NavLink to={`${item.id}`} state={{ startDate, endDate, currentSorting }}><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink></th>}
                   </tr>
                 ))
               }
@@ -163,11 +160,6 @@ const RankingsClients = () => {
           </table>
         </div>
       </div>
-
-      <div className="flex justify-end w-full mt-10 mb-5 ">
-        <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
-      </div>
-
     </div>
   )
 }

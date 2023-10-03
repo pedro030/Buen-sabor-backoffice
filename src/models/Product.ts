@@ -9,6 +9,7 @@ export interface Product{
     cookingTime: number,
     quantity_sold: number,
     subcategory: Category,
+    subcategory_fk?: Category,
     cost:number,
     ingredients: Array<Ingredient>,
     active: boolean

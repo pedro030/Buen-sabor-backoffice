@@ -25,7 +25,9 @@ const OrderDetail = () => {
         'In_Queue': ['In_Preparation', 'Ready'],
         'In_Preparation': ['Ready'],
         'Ready': ['In_Preparation', 'Out_for_Delivery', 'Delivered'],
-        'Out_for_Delivery': ['Delivered', 'Not_Delivered']
+        'Out_for_Delivery': ['Delivered', 'Not_Delivered'],
+        'Delivered': [],
+        'Not_Delivered': []
     }
 
     const changeStatus = async (type: string) => {

@@ -1,5 +1,5 @@
-import Order from "../pages/Order/Order";
 import { Address } from "./Address";
+import { Order } from "./Order";
 import { Rol } from "./Rol";
 
 export interface User{

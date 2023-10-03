@@ -1,47 +1,70 @@
-import React from 'react'
-import { User } from '../../models/User'
+//React
+import { useEffect, useState } from 'react'
+
+// Redux
+import store from '../../state/store/store'
 import { userSelector } from '../../state/selectors'
 import { useSelector } from 'react-redux'
-import { Order } from '../../models/Order'
-import { NavLink, useLocation, useParams } from 'react-router-dom'
+
+// React Router
+import { Location, NavLink, NavigateFunction, useLocation, useNavigate, useParams } from 'react-router-dom'
+
+// React Icons
 import { RiEyeLine } from 'react-icons/ri'
 import { IoMdArrowRoundBack } from 'react-icons/io'
 
+// Functions
+import { dateToString } from '../Rankings/rankingFunctions'
 
+// Types
+import { User } from '../../models/User'
+import { Order } from '../../models/Order'
 
 export const UserDetail = () => {
+    const token = store.getState().userSession.token
+    const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
+    const navigate: NavigateFunction = useNavigate();
 
-    const location = useLocation()
-    const orders: Order[] = location.state ? location.state.orders : []
+    // Para obtener y pasar Props al navegar de una pagina a otra
+    const location: Location = useLocation()
+
+    // Props obtenidos del obj 'location': startDate y endDate
     const { startDate, endDate } = location.state ? location.state : null
-    let { idUser } = useParams()
-    let user: User[] = useSelector(userSelector).filter((item: User) => item.id == idUser)
-    const { firstName, lastName } = user[0]
+
+    // ID Params del URL
+    const { idUser } = useParams()
+
+    // Obtenemos datos del usuario
+    const user: User = useSelector(userSelector).find((item: User) => item.id == idUser)
+    const { firstName, lastName } = user
+
+    // Orders State
+    const [orders, setOrders] = useState<Order[]>([])
+
+    const fetchOrdersByDates = async (stDate: string = '2023-01-01', edDate: string | null = dateToString(new Date(Date.now()))) => {
+        // Si startDate y endDate son distintos de null se los convierte a string sino obtiene los parametros por defecto
+        const endURL = startDate && endDate ? `${dateToString(startDate)}&${dateToString(endDate)}` : `${stDate}&${edDate}`
+
+        // Fetch
+        fetch(`${apiURL}/orders/getOrdersByDate/${endURL}`, {
+            headers: {
+            Authorization: `Bearer ${(token).trim()}`
+        }
+        })
+            .then(res => res.json())
+            .then(data => setOrders(data))
+            .catch(error => console.error(error))
+    }
+
+    useEffect(() => {
+        //fetchOrdersByDates()
+    }, [])
 
     return (
         <div className="m-4">
-            <NavLink to="/statistics/clients" state={{ start: startDate, end: endDate }}><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
+            <span className='flex flex-row items-center gap-2' onClick={() => navigate(-1)}><IoMdArrowRoundBack /> back</span>
             <h2 className='my-2 text-lg font-bold text-center stat-title'></h2>
             <div className="flex items-center justify-center w-full gap-5 ">
-                {/* <input type="date" placeholder='DATE' className=" input input-sm" onChange={handleChangeDate} />
-            <input type="number" placeholder='TOTAL MIN.' className='input input-sm' onChange={handleChangeTotalPrice} onKeyDown={searchTotalPriceOnEnter} />
-            <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-              <option defaultValue={1}>SORT BY: FEATURED</option>
-              <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-              <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-              <option value={4}>SORT BY DATE: ASC.</option>
-              <option value={5}>SORT BY DATE: DESC.</option>
-            </select> */}
-
-                {/* <select className="w-full max-w-xs select select-bordered select-sm" onChange={onConnected} >
-              <option defaultValue={0}>Super Admin</option>
-              <option value={1}>Admin</option>
-              <option value={2}>Casher</option>
-              <option value={3}>Chef</option>
-              <option value={4}>Delivery</option>
-              <option value={5}>Client</option>
-            </select> */}
-
             </div>
             <div className='flex justify-center w-full'>
                 <div className="overflow-x-auto h-[35rem] w-[60vw]">
