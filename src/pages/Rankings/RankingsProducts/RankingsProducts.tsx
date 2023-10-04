@@ -8,14 +8,12 @@ import store from "../../../state/store/store";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-// React Icons
-import { RiFileExcel2Line } from 'react-icons/ri';
-
 // Types
 import { Product } from "../../../models/Product";
 
 // Functions
-import { dateToString, handleExcelDownload } from "../rankingFunctions";
+import { dateToString } from "../rankingFunctions";
+import { ExportCSV } from "../ExportCSV";
 
 const RankingsProducts = () => {
   const token: string = store.getState().userSession.token
@@ -100,9 +98,7 @@ const RankingsProducts = () => {
             <div>
               <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
             </div>
-            <div>
-              <button className="text-white btn btn-success" onClick={() => handleExcelDownload(1, startDate, endDate, 'Product Ranking')}><RiFileExcel2Line />EXPORT EXCEL</button>
-            </div>
+            <ExportCSV csvData={products} rankingType={'Product Ranking'} rankingOpc={1} startDate={startDate} endDate={endDate}/>
           </div>
         { /* FOOD RANKING TABLE */}
         { foodRanking ? (<>

@@ -1,5 +1,3 @@
-import { Order } from "./Order";
-
 export interface UserRanking {
     id: number,
     blacklist: number,

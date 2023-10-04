@@ -2,7 +2,7 @@
 import { useEffect, useState, ChangeEvent } from "react"
 
 // React Router
-import { Location, NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 // React DatePicker
 import DatePicker from "react-datepicker";
@@ -12,13 +12,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import store from "../../../state/store/store";
 
 // React Icons
-import { RiEyeLine, RiFileExcel2Line } from 'react-icons/ri';
+import { RiEyeLine } from 'react-icons/ri';
 
 // Functions
 import { dateToString } from "../rankingFunctions";
 
 // Types
 import { UserRanking } from "../../../models/UserRanking";
+import { ExportCSV } from "../ExportCSV";
 
 const RankingsClients = () => {
   const token = store.getState().userSession.token
@@ -132,9 +133,7 @@ const RankingsClients = () => {
             <div>
               <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
             </div>
-            <div>
-              <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
-            </div>
+            <ExportCSV csvData={sortedRanking} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
           </div>
           <table className="table table-xs">
             <thead>
