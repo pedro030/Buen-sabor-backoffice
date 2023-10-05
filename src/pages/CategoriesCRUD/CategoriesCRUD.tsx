@@ -12,12 +12,15 @@ import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { useState, useEffect } from "react"
 import { usePagination } from "../../hooks/usePagination"
+import { useSorting } from "../../hooks/useSorting"
+import Pagination from "../../components/pagination/Pagination"
+import { useSortingStates } from "../../hooks/useSortingStates"
 
 
 function CategoriesCRUD() {
 
   const dispatch = useDispatch()
-  const category = useSelector(categoriesSelector)
+  const category: Category[] = useSelector(categoriesSelector)
   const categoryService = new CategoryService()
 
   const [selectedItem, setSelectedItem] = useState<Category>()
@@ -54,7 +57,7 @@ function CategoriesCRUD() {
     }
   }
 
-  const categories = filterCategories(category)
+  const categories: Category[] = filterCategories(category)
 
   //Search
   const [search, setSearch] = useState('')
@@ -79,35 +82,10 @@ function CategoriesCRUD() {
   }
 
   //Sorting
-  const [sortedCategories, setSortedCategories] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
-
-  const sortCategories = (categories: any, sortOp: number) => {
-    switch (sortOp) {
-      case 1: setSortedCategories(categories);
-        break;
-
-      case 2: setSortedCategories(categories.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
-        break;
-
-      case 3: setSortedCategories(categories.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
-        break;
-    }
-  }
-
-  const handleChangeSorting = (e: any) => {
-    const sortOp = +e.target.value;
-    setCurrentSorting(sortOp);
-    sortCategories(categories, sortOp);
-  }
-
-  //Pagination
-  const [currentObjects, currentPage, objetsPerPage, pages, setCurrentPage] = usePagination(sortedCategories)
-
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(categories, 'id');
 
   useEffect(() => {
-    setCurrentPage(1);
-    sortCategories(categories, currentSorting);
+    setSortedItems(useSorting(categories, currentSorting, isAsc));
   }, [filters])
 
 
@@ -140,9 +118,9 @@ function CategoriesCRUD() {
       <div className="flex items-center justify-center w-full gap-5 my-2">
         <input type="text" placeholder='NAME' className=" input w-[60%] input-sm" onChange={handleChangeSearch} value={search} onKeyDown={searchOnEnter} />
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-          <option selected value={1}>SORT BY: FEATURED</option>
-          <option value={2}>SORT BY NAME: A - Z</option>
-          <option value={3}>SORT BY NAME: Z - A</option>
+          <option selected value={'id true'}>SORT BY: FEATURED</option>
+          <option value={'name true'}>SORT BY NAME: A - Z</option>
+          <option value={'name false'}>SORT BY NAME: Z - A</option>
         </select>
         
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSubcategory}>
@@ -160,7 +138,7 @@ function CategoriesCRUD() {
             </tr>
           </thead>
           <tbody>
-            {currentObjects.map((cat: Category, i: number) => (
+            { sortedItems.map((cat: Category, i: number) => (
               <tr key={i}>
                 <td>{cat.name}</td>
                 <td>{cat.parentCategory?.name}</td>
@@ -173,17 +151,6 @@ function CategoriesCRUD() {
                 </td>
               </tr>))}
           </tbody>
-          <tfoot>
-            {
-              (category.length > 0) && <div className='mt-5 join'>
-                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage > 1 ? setCurrentPage(currentPage - 1) : ''}>«</button>
-                {pages.map((page: any, index: any) => {
-                  return <input key={index} className="join-item btn btn-sm max-lg:btn-xs btn-square" type="radio" name="options" aria-label={index + 1} onClick={() => setCurrentPage(page)} checked={currentPage === page} />
-                })}
-                <button className="join-item btn btn-sm max-lg:btn-xs" onClick={() => currentPage < Math.ceil(category.length / objetsPerPage) ? setCurrentPage(currentPage + 1) : ''}>»</button>
-              </div>
-            }
-          </tfoot>
         </table>
       </div>
     </div>

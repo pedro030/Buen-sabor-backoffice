@@ -10,10 +10,14 @@ import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { useState, useEffect } from 'react'
+import { useSorting } from "../../hooks/useSorting"
+import { usePagination } from "../../hooks/usePagination"
+import Pagination from "../../components/pagination/Pagination"
+import { useSortingStates } from "../../hooks/useSortingStates"
 
 function User() {
 
-  const user = useSelector(userSelector)
+  const user: User[] = useSelector(userSelector)
   const rols = useSelector(rolSelector)
   const userService = new UserService()
 
@@ -45,7 +49,7 @@ function User() {
       }))
   }
 
-  const usersFilter = filterUser(user)
+  const usersFilter: User[] = filterUser(user)
 
   //Search
   const [firstName, setFirstName] = useState<string>('')
@@ -90,37 +94,15 @@ function User() {
   }
 
   //Sorting
-  const [sortedUsers, setSortedUsers] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(usersFilter, 'id');
 
-  const sortUsers = (users: any, sortOp: number) => {
-      switch (sortOp) {
-          case 1: setSortedUsers(users);
-              break;
-
-          case 2: setSortedUsers(users.sort((a: any, b: any) => a.firstName > b.firstName ? 1 : -1))
-              break;
-
-          case 3: setSortedUsers(users.sort((a: any, b: any) => a.firstName < b.firstName ? 1 : -1))
-              break;
-          
-          case 4: setSortedUsers(users.sort((a: any, b: any) => a.lastName > b.lastName ? 1 : -1))
-              break;
-          
-          case 5: setSortedUsers(users.sort((a: any, b: any) => a.lastName < b.lastName ? 1 : -1))
-              break;
-      }
-  }
-
-  const handleChangeSorting = (e: any) => {
-      const sortOp = +e.target.value;
-      setCurrentSorting(sortOp);
-      sortUsers(usersFilter, sortOp);
-  }
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems)
 
 
   useEffect(() => {
-    sortUsers(usersFilter, currentSorting);
+    setCurrentPage(1);
+    setSortedItems(useSorting(usersFilter, currentSorting, isAsc));
   }, [filters])
 
   return (
@@ -137,11 +119,11 @@ function User() {
           })}
         </select>
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                        <option selected value={1}>SORT BY: FEATURED</option>
-                        <option value={2}>SORT BY FIRST NAME: A - Z</option>
-                        <option value={3}>SORT BY FIRST NAME: Z - A</option>
-                        <option value={4}>SORT BY LAST NAME: A - Z</option>
-                        <option value={5}>SORT BY LAST NAME: Z - A</option>
+                        <option selected value={'id true'}>SORT BY: FEATURED</option>
+                        <option value={'firstName true'}>SORT BY FIRST NAME: A - Z</option>
+                        <option value={'firstName false'}>SORT BY FIRST NAME: Z - A</option>
+                        <option value={'lastName true'}>SORT BY LAST NAME: A - Z</option>
+                        <option value={'lastName false'}>SORT BY LAST NAME: Z - A</option>
                     </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
@@ -157,7 +139,7 @@ function User() {
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((userItem: User, i: number) => (
+            {currentObjects.map((userItem: User, i: number) => (
               <tr key={i}>
                 <td>{userItem.firstName}</td>
                 <td>{userItem.lastName}</td>
@@ -173,6 +155,9 @@ function User() {
                 </td>
               </tr>))}
           </tbody>
+          <tfoot>
+            <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+          </tfoot>
         </table>
       </div>
     </div>

@@ -11,11 +11,14 @@ import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { usePagination } from '../../hooks/usePagination'
+import { useSorting } from '../../hooks/useSorting'
+import Pagination from '../../components/pagination/Pagination'
+import { useSortingStates } from '../../hooks/useSortingStates'
 
 const Product = () => {
   // selecciona el listados de products del reducer
   const dispatch = useDispatch()
-  const products = useSelector(productSelector)
+  const products: Product[] = useSelector(productSelector)
   const categories = useSelector(categoriesSelector)
   const productService = new ProductService()
 
@@ -84,7 +87,7 @@ const Product = () => {
     }))
   }
 
-  const productsFilter = filterProducts(products)
+  const productsFilter: Product[] = filterProducts(products)
 
   //Search
   const [search, setSearch] = useState<string>('')
@@ -129,40 +132,15 @@ const Product = () => {
   }
 
   //Sorting
-  const [sortedProducts, setSortedProducts] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(productsFilter, 'id');
 
-  const sortProducts = (products: any, sortOp: number) => {
-      switch (sortOp) {
-          case 1: setSortedProducts(products);
-              break;
-
-          case 2: setSortedProducts(products.sort((a: any, b: any) => a.price > b.price ? 1 : -1))
-              break;
-
-          case 3: setSortedProducts(products.sort((a: any, b: any) => a.price < b.price ? 1 : -1))
-              break;
-
-          case 4: setSortedProducts(products.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
-              break;
-
-          case 5: setSortedProducts(products.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
-              break;
-      }
-  }
-
-
-  const handleChangeSorting = (e: any) => {
-      const sortOp = +e.target.value;
-      setCurrentSorting(sortOp);
-      sortProducts(productsFilter, sortOp);
-  }
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems)
 
   useEffect(() => {
-    sortProducts(productsFilter, currentSorting);
+    setCurrentPage(1);
+    setSortedItems(useSorting(productsFilter, currentSorting, isAsc));
   }, [filters])
-
-  const [currentObjects, currentPage, objetsPerPage, pages, setCurrentPage] = usePagination(products)
 
   const openEditModal = (p: Product) => {
     setSelectedItem(p);
@@ -210,11 +188,11 @@ const Product = () => {
           })}
         </select>
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-          <option selected value={1}>SORT BY: FEATURED</option>
-          <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-          <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-          <option value={4}>SORT BY NAME: A - Z</option>
-          <option value={5}>SORT BY NAME: Z - A</option>
+          <option selected value={'id true'}>SORT BY: FEATURED</option>
+          <option value={'price true'}>SORT BY PRICE: LOW to HIGH</option>
+          <option value={'price false'}>SORT BY PRICE: HIGH to LOW</option>
+          <option value={'name true'}>SORT BY NAME: A - Z</option>
+          <option value={'name false'}>SORT BY NAME: Z - A</option>
         </select>
       </div>
       
@@ -230,7 +208,7 @@ const Product = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedProducts.map((product: Product, i: number) => (
+            {currentObjects.map((product: Product, i: number) => (
               <tr key={i}>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
@@ -245,6 +223,9 @@ const Product = () => {
                 </td>
               </tr>))}
           </tbody>
+          <tfoot>
+            <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+          </tfoot>
         </table>
       </div>
     </div>

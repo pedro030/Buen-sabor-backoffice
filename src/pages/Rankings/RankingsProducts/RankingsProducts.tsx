@@ -11,12 +11,21 @@ import "react-datepicker/dist/react-datepicker.css";
 // Types
 import { Product } from "../../../models/Product";
 
+// Hooks
+import { usePagination } from "../../../hooks/usePagination";
+
+// Components
+import Pagination from "../../../components/pagination/Pagination";
+
 // Functions
 import { dateToString } from "../rankingFunctions";
 import { ExportCSV } from "../ExportCSV";
 
 const RankingsProducts = () => {
+  // Token
   const token: string = store.getState().userSession.token
+
+  // Api URL
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Product Ranking States
@@ -63,10 +72,18 @@ const RankingsProducts = () => {
     if(startDate && endDate) fetchProductRanking();
   }
 
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(products);
+
   // Cuando carga el componente se realiza el fetch para obtener el ranking
   useEffect(() => {
     fetchProductRanking();
   }, [])
+
+  // Cuando cambian los productos o la vista de comidas a bebidas se setea la pagina inicial
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [products, foodRanking])
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -114,7 +131,7 @@ const RankingsProducts = () => {
             </thead>
             <tbody>
             {
-              products.filter((product: Product) => product.subcategory_fk?.name !== 'Bebidas' && product.subcategory_fk?.parentCategory?.name !== 'Bebidas').map((product: Product, index: number) => (
+              currentObjects.filter((product: Product) => product.subcategory_fk?.name !== 'Bebidas' && product.subcategory_fk?.parentCategory?.name !== 'Bebidas').map((product: Product, index: number) => (
                 <tr key={index}>
                   <th>{product.name}</th>
                   <th>{product.subcategory_fk?.name}</th>
@@ -125,6 +142,9 @@ const RankingsProducts = () => {
               ))
             }
           </tbody>
+          <tfoot>
+            <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+          </tfoot>
         </table>
         </>)
         : 
@@ -142,7 +162,7 @@ const RankingsProducts = () => {
             </thead>
             <tbody>
               {
-                products.filter((product: Product) => product.subcategory_fk?.name === 'Bebidas' || product.subcategory_fk?.parentCategory?.name === 'Bebidas').map((product: Product, index: number) => (
+                currentObjects.filter((product: Product) => product.subcategory_fk?.name === 'Bebidas' || product.subcategory_fk?.parentCategory?.name === 'Bebidas').map((product: Product, index: number) => (
                   <tr key={index}>
                   <th >{product.name}</th>
                   <th>{product.subcategory_fk?.name}</th>
@@ -153,6 +173,9 @@ const RankingsProducts = () => {
                 ))
               }
             </tbody>
+            <tfoot>
+              <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+            </tfoot>
           </table>
             </>) }
       </div>

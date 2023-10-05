@@ -14,6 +14,14 @@ import store from "../../../state/store/store";
 // React Icons
 import { RiEyeLine } from 'react-icons/ri';
 
+// Components
+import Pagination from "../../../components/pagination/Pagination";
+
+// Hooks
+import { useSorting } from "../../../hooks/useSorting";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSortingStates } from "../../../hooks/useSortingStates";
+
 // Functions
 import { dateToString } from "../rankingFunctions";
 
@@ -22,7 +30,10 @@ import { UserRanking } from "../../../models/UserRanking";
 import { ExportCSV } from "../ExportCSV";
 
 const RankingsClients = () => {
+  // User Token
   const token = store.getState().userSession.token
+
+  // Api URL
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Clients Raking States
@@ -49,32 +60,6 @@ const RankingsClients = () => {
       .catch(error => console.error(error))
   }
 
-  //Sorting
-  const [sortedRanking, setSortedRanking] = useState<Array<UserRanking>>();
-  const [currentSorting, setCurrentSorting] = useState(1);
-
-  const sortRanking = (users: UserRanking[], sortOp: number) => {
-    switch (sortOp) {
-      case 1: setSortedRanking(users.sort((a:UserRanking, b:UserRanking) => a.orders_quantity < b.orders_quantity ? 1 : -1));
-        break;
-
-      case 2: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.orders_quantity > b.orders_quantity ? 1 : -1))
-        break;
-
-      case 3: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.total_sum < b.total_sum ? 1 : -1))
-        break;
-      
-      case 4: setSortedRanking(users.sort((a: UserRanking, b: UserRanking) => a.total_sum > b.total_sum ? 1 : -1))
-        break;
-    }
-  }
-
-  const handleChangeSorting = (e: ChangeEvent<HTMLSelectElement>) => {
-    const sortOp = +e.target.value;
-    setCurrentSorting(sortOp);
-    sortRanking(clients, sortOp);
-  }
-
   // Handle Change DatePicker
   const handleChangeDate = (range: [Date, Date]) => {
     const [startDate, endDate] = range;
@@ -89,13 +74,20 @@ const RankingsClients = () => {
     if(startDate && endDate) fetchClientRanking();
   }
 
+  //Sorting
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(clients, 'id');
+
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
+
   useEffect(() => {
     fetchClientRanking();
   }, [])
 
   // UseEffect que se ejecuta cada vez que hay un cambio de estado en 'clients'
   useEffect(() => {
-    sortRanking(clients, currentSorting);
+    setCurrentPage(1);
+    setSortedItems(useSorting(clients, currentSorting, isAsc));
   }, [clients])
 
   return (
@@ -109,10 +101,11 @@ const RankingsClients = () => {
           <div className="flex justify-center gap-5 my-2">
             <div>
               <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                <option selected value={1}>SORT BY: + QTY</option>
-                <option value={2}>SORT BY: - QTY</option>
-                <option value={3}>SORT BY: + TOTAL</option>
-                <option value={4}>SORT BY: - TOTAL</option>
+                <option selected value={'id true'}>SORT BY: ID CLIENT</option>
+                <option value={'orders_quantity false'}>SORT BY: + QTY</option>
+                <option value={'orders_quantity true'}>SORT BY: - QTY</option>
+                <option value={'total_sum false'}>SORT BY: + TOTAL</option>
+                <option value={'total_sum true'}>SORT BY: - TOTAL</option>
               </select>
             </div>
             <div>
@@ -133,11 +126,12 @@ const RankingsClients = () => {
             <div>
               <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
             </div>
-            <ExportCSV csvData={sortedRanking} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
+            <ExportCSV csvData={sortedItems} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
           </div>
           <table className="table table-xs">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>FULL NAME</th>
                 <th>ORDER QUANTITY</th>
                 <th>TOTAL</th>
@@ -146,8 +140,9 @@ const RankingsClients = () => {
             </thead>
             <tbody>
               {
-                sortedRanking?.map((item: UserRanking, index: number) => (
+                currentObjects?.map((item: UserRanking, index: number) => (
                   <tr key={index}>
+                    <th>{item.id}</th>
                     <th >{`${item.first_name} ${item.last_name}`}</th>
                     <th >{item.orders_quantity}</th>
                     <th >{item.total_sum}</th>
@@ -156,6 +151,9 @@ const RankingsClients = () => {
                 ))
               }
             </tbody>
+            <tfoot>
+              <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+            </tfoot>
           </table>
         </div>
       </div>

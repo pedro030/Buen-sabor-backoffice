@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const usePagination = (objects : []) => {
+export const usePagination = <T>(objects : T[]) => {
     const [currentPage, setCurrentPage] = useState(1)
     const [objetsPerPage, setObjetsPerPage] = useState(10)
     const lastIndex = currentPage * objetsPerPage
@@ -14,5 +14,5 @@ export const usePagination = (objects : []) => {
 
     for(let i = 1; i <= Math.ceil(objects.length / objetsPerPage); i++) pages.push(i)
 
-    return [currentObjects, currentPage, objetsPerPage, pages, setCurrentPage]
+    return { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage }
 }
