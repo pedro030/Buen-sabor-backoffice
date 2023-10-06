@@ -7,23 +7,41 @@ import { Order } from "../../../models/Order";
 import { Product } from "../../../models/Product";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Movement } from "../../../models/Movement";
 
 const Movements = () => {
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const orders: Order[] = useSelector(orderSelector)
+  const [movements, setMovements] = useState<Movement[]>([])
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  let totalIncome = 0;
+  const fetchMovements = async () => {
+    try {
+      const response = await fetch(`${apiURL}/movements/getAll`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${(token).trim()}`
+        }
+      })
+
+      const data = await response.json();
+      setMovements(data);
+    } catch(e) {
+      console.log(e)
+    }
+  }
+
+  /*let totalIncome = 0;
   let totalEgress = 0;
 
   const totalIncomeF = (n: number) => {
     totalIncome += n
     return (n)
-  }
+  }*/
 
-  const totalEgressF = (products: Product[]) => {
+  /*const totalEgressF = (products: Product[]) => {
     // console.log(products)
     let n = 0;
     products.map((item: Product) => {
@@ -31,7 +49,7 @@ const Movements = () => {
     })
     totalEgress += n;
     return n
-  }
+  }*/
 
   const handleChangeDate = (range: [Date, Date]) => {
     const [startDate, endDate] = range;
@@ -40,6 +58,10 @@ const Movements = () => {
 
     if(!startDate && !endDate) {} // ADD LOGIC
   };
+
+  useEffect(() => {
+    fetchMovements();
+  }, [])
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -68,23 +90,43 @@ const Movements = () => {
               <div>
                 <button className="btn btn-primary btn-sm">Get Movements by Date</button>
               </div>
+              <div>
+                <select className="w-full max-w-xs select select-bordered select-sm" onChange={()=>{}}>
+                  <option selected value={1}>TYPE: ALL</option>
+                  <option value={2}>TYPE: RESTOCKING</option>
+                  <option value={3}>TYPE: BILL</option>
+                </select>
+              </div>
+              <div>
+                <select className="w-full max-w-xs select select-bordered select-sm" onChange={()=>{}}>
+                  <option selected value={1}>SORT BY: FEATURED</option>
+                  <option value={2}>SORT BY DATE: NEW to OLD</option>
+                  <option value={3}>SORT BY DATE: OLD to NEW</option>
+                  <option value={4}>SORT BY PRICE: HIGH to LOW</option>
+                  <option value={5}>SORT BY PRICE: LOW to HIGH</option>
+                </select>
+              </div>
           </div>
           <div className="w-[50vw] h-[60vh] overflow-y-auto">
             <table className="table table-pin-rows">
               <thead>
                 <tr>
+                  <th className="text-center">ID</th>
+                  <th className="text-center">TYPE</th>
+                  <th className="text-center">DATE / HOURS</th>
+                  <th className="text-center">DESCRIPTION</th>
                   <th className="text-center">INCOME</th>
                   <th className="text-center">EGRESS</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  orders.map((order: Order, index: number) => (
+                  /*movements.map((movement: Movement, index: number) => (
                     <tr key={index}>
-                      <th className="text-center text-green-500">+{totalIncomeF(order.totalPrice)}</th>
+                      <th className="text-center text-green-500">+{}</th>
                       <th className="text-center text-red-500">-{totalEgressF(order.products)}</th>
                     </tr>
-                  ))
+                  ))*/
                 }
               </tbody>
               <tfoot>
@@ -98,8 +140,6 @@ const Movements = () => {
           <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome > totalEgress) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome - totalEgress}</span></div>
         </div>
       </div>
-
-
       <div className="flex justify-end w-full mt-10 mb-5 ">
         <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
       </div>
