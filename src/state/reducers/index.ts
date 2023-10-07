@@ -12,6 +12,7 @@ import locationReducer from "./locationReducer";
 import addressReducer from "./addressReducer";
 import rolReducer from "./rolReducer";
 import statusReducer from "./statusReducer";
+import movementReducer from "./movementReducer";
 
 const reducer = combineReducers({
     measures: measureReducer,
@@ -26,7 +27,8 @@ const reducer = combineReducers({
     addresses: addressReducer,
     rols: rolReducer,
     statues: statusReducer,
-    userSession: userSessionReducer
+    userSession: userSessionReducer,
+    movements: movementReducer
 })
 
 export default reducer;

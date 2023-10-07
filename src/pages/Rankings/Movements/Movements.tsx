@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
 import store from "../../../state/store/store";
 import { RiFileExcel2Line } from 'react-icons/ri';
-import { orderSelector } from "../../../state/selectors";
-import { useSelector } from "react-redux";
+import { movementsSelector, orderSelector } from "../../../state/selectors";
+import { useDispatch, useSelector } from "react-redux";
 import { Order } from "../../../models/Order";
 import { Product } from "../../../models/Product";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Movement } from "../../../models/Movement";
+import { loadMovements } from "../../../state/actions/movementsActions";
 
 const Movements = () => {
+  const dispatch = useDispatch();
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const orders: Order[] = useSelector(orderSelector)
-  const [movements, setMovements] = useState<Movement[]>([])
+  const {movements}= useSelector(movementsSelector);
+  const [movementsState, setMovements] = useState<Movement[]>([])
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -27,6 +30,7 @@ const Movements = () => {
       })
 
       const data = await response.json();
+      dispatch(loadMovements(data));
       setMovements(data);
     } catch(e) {
       console.log(e)
@@ -72,7 +76,7 @@ const Movements = () => {
         <div className="">
 
           <div className="flex justify-center gap-5 my-2">
-            <div>
+            {/* <div>
                 <DatePicker
                     isClearable
                     withPortal
@@ -86,7 +90,7 @@ const Movements = () => {
                     className="input input-sm input-bordered"
                     maxDate={new Date(Date.now())}
                   />
-              </div>
+              </div> */}
               <div>
                 <button className="btn btn-primary btn-sm">Get Movements by Date</button>
               </div>
@@ -115,29 +119,31 @@ const Movements = () => {
                   <th className="text-center">TYPE</th>
                   <th className="text-center">DATE / HOURS</th>
                   <th className="text-center">DESCRIPTION</th>
-                  <th className="text-center">INCOME</th>
-                  <th className="text-center">EGRESS</th>
+                  <th className="text-center">AMOUNT</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  /*movements.map((movement: Movement, index: number) => (
+                  movements.map((movement: Movement, index: number) => (
                     <tr key={index}>
-                      <th className="text-center text-green-500">+{}</th>
-                      <th className="text-center text-red-500">-{totalEgressF(order.products)}</th>
+                      <th className="text-center">{movement.id}</th>
+                      <th className="text-center">{movement.type}</th>
+                      <th className="text-center">{movement.date}</th>
+                      <th className="text-center">{movement.type === "Credit_Note"?JSON.parse(movement.description).description:movement.description}</th>
+                      <th className={`text-center text-${movement.total >= 0?'green':'red'}-500`}>{movement.total}</th>
                     </tr>
-                  ))*/
+                  ))
                 }
               </tbody>
               <tfoot>
                 <tr>
-                  <th className="text-center">{totalIncome}</th>
-                  <th className="text-center">{totalEgress}</th>
+                  {/* <th className="text-center">{totalIncome}</th>
+                  <th className="text-center">{totalEgress}</th> */}
                 </tr>
               </tfoot>
             </table>
           </div>
-          <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome > totalEgress) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome - totalEgress}</span></div>
+          {/* <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome > totalEgress) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome - totalEgress}</span></div> */}
         </div>
       </div>
       <div className="flex justify-end w-full mt-10 mb-5 ">

@@ -6,5 +6,5 @@ export interface Movement {
     date: string,
     description: string,
     total: number,
-    order: Order
+    order?: Order
 }

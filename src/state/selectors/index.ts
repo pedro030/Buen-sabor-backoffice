@@ -38,3 +38,6 @@ export const statusSelector = (state: any) => state.statues.statues
 // User Info
 export const userSessionSelector = (state: any) => state.userSession
 
+// Movements
+export const movementsSelector = (state: any) => state.movements
+

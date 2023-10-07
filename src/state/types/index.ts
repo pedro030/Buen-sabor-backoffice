@@ -38,3 +38,6 @@ export const LOAD_ROLS = "LOAD_ROLS";
 
 // STATUES
 export const LOAD_STATUES = "LOAD_STATUES";
+
+// MOVEMENTS
+export const LOAD_MOVEMENTS = "LOAD_MOVEMENTS";
