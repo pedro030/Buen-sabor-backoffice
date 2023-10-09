@@ -1,7 +1,7 @@
 import { Order } from "./Order";
 
 export interface Movement {
-    id: number,
+    id: string,
     type: string,
     date: string,
     description: string,

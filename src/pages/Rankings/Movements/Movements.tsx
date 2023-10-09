@@ -9,32 +9,31 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Movement } from "../../../models/Movement";
 import { loadMovements } from "../../../state/actions/movementsActions";
+import { MovementsService } from "../../../services/Movements";
 
 const Movements = () => {
+  // service
+  const movementServ = new MovementsService();
   const dispatch = useDispatch();
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const orders: Order[] = useSelector(orderSelector)
   const {movements}= useSelector(movementsSelector);
-  const [movementsState, setMovements] = useState<Movement[]>([])
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  const fetchMovements = async () => {
-    try {
-      const response = await fetch(`${apiURL}/movements/getAll`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${(token).trim()}`
-        }
-      })
+  //Filters
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    type:""
+  });
 
-      const data = await response.json();
-      dispatch(loadMovements(data));
-      setMovements(data);
-    } catch(e) {
-      console.log(e)
-    }
+  const formatDate = (fecha: Date) => {
+    var year = fecha.getFullYear();
+    var month = ('0' + (fecha.getMonth() + 1)).slice(-2);  // Suma 1 al mes porque los meses van de 0 a 11
+    var day = ('0' + fecha.getDate()).slice(-2);
+    return year + '-' + month + '-' + day;
   }
 
   /*let totalIncome = 0;
@@ -60,12 +59,46 @@ const Movements = () => {
     setStartDate(startDate);
     setEndDate(endDate);
 
-    if(!startDate && !endDate) {} // ADD LOGIC
+    if(startDate && endDate) {
+      setFilters({
+        ...filters,
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate)
+      })
+    }
   };
+  const handleChangeType = (e: any) => {
+    setFilters({
+      ...filters,
+      type: e.target.value
+    })
+  }
 
   useEffect(() => {
-    fetchMovements();
+    movementServ.GetAll()
+    .then(data => {
+      dispatch(loadMovements(data));
+    })
   }, [])
+  // filters
+  useEffect(() => {
+    if(filters.startDate && filters.endDate && filters.type){
+      movementServ.GetByDates(filters.startDate,filters.endDate,filters.type)
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }else if (filters.startDate && filters.endDate){
+      movementServ.GetByDates(filters.startDate,filters.endDate)
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }else{
+      movementServ.GetAll()
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }
+  }, [filters])
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -76,7 +109,7 @@ const Movements = () => {
         <div className="">
 
           <div className="flex justify-center gap-5 my-2">
-            {/* <div>
+            <div>
                 <DatePicker
                     isClearable
                     withPortal
@@ -90,15 +123,16 @@ const Movements = () => {
                     className="input input-sm input-bordered"
                     maxDate={new Date(Date.now())}
                   />
-              </div> */}
+              </div>
               <div>
                 <button className="btn btn-primary btn-sm">Get Movements by Date</button>
               </div>
               <div>
-                <select className="w-full max-w-xs select select-bordered select-sm" onChange={()=>{}}>
-                  <option selected value={1}>TYPE: ALL</option>
-                  <option value={2}>TYPE: RESTOCKING</option>
-                  <option value={3}>TYPE: BILL</option>
+                <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeType}>
+                  <option selected value="">TYPE: ALL</option>
+                  <option value="Restocking">TYPE: RESTOCKING</option>
+                  <option value="Bill">TYPE: BILL</option>
+                  <option value="Credit_Note">TYPE: CREDIT NOTE</option>
                 </select>
               </div>
               <div>
