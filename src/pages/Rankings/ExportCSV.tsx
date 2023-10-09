@@ -37,8 +37,6 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
     }
 
     const exportProductRankingToCSV = (csvData: Product[], fileName: string) => {
-
-
         let foodTable = [
             {
                 A: "NAME",
@@ -68,7 +66,7 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
                 E: String(product.price),
             });
         });
-        
+
         csvData.filter((product: Product) => product.subcategory_fk?.name === 'Bebidas' || product.subcategory_fk?.parentCategory?.name === 'Bebidas').map((product) => {
             drinksTable.push({
                 A: product.name,
@@ -109,14 +107,46 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
         saveExcel(workbook, fileName);
     }
 
+
+
     const exportClientRankingToCSV = (csvData: UserRanking[], fileName: string) => {
-        const formatUserRanking = csvData.map((item: UserRanking) => ({
-            'FULL NAME': `${item.first_name} ${item.last_name}`,
-            'ORDER QTY.': item.orders_quantity,
-            'TOTAL. SPENT': item.total_sum,
-        }));
-        const clientSheet = XLSX.utils.json_to_sheet(formatUserRanking);
-        const workbook = { Sheets: { 'Client Ranking': clientSheet }, SheetNames: ['Client Ranking'] };
+        let table = [
+            {
+                A: "FULL NAME",
+                B: "ORDER QTY.",
+                C: "TOTAL. SPENT",
+            },
+        ];
+
+        csvData.map((user: UserRanking) => {
+            table.push({
+                A: `${user.first_name} ${user.last_name}`,
+                B: String(user.orders_quantity),
+                C: String(user.total_sum),
+            });
+        });
+
+        const dataFinal = [...[{ A: "USER RANKING" }, {}], ...table];
+
+        const sheet = XLSX.utils.json_to_sheet(dataFinal, { skipHeader: true });
+
+        sheet["!merges"] = [
+            XLSX.utils.decode_range("A1:E1"),
+        ];
+
+        let properties: any = [];
+        const longitude = [25, 25, 25];
+
+        longitude.forEach((col) => {
+            properties.push({
+                width: col,
+            });
+        });
+
+        sheet["!cols"] = properties;
+
+
+        const workbook = { Sheets: { 'Client Ranking': sheet }, SheetNames: ['Client Ranking'] };
         saveExcel(workbook, fileName);
     }
 
