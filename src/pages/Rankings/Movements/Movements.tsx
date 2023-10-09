@@ -1,26 +1,42 @@
-import { useEffect, useState } from "react"
-import store from "../../../state/store/store";
-import { RiFileExcel2Line } from 'react-icons/ri';
-import { movementsSelector, orderSelector } from "../../../state/selectors";
+// React
+import { useEffect, useState, ChangeEvent } from "react"
+
+// Redux
 import { useDispatch, useSelector } from "react-redux";
-import { Order } from "../../../models/Order";
-import { Product } from "../../../models/Product";
+import { movementsSelector } from "../../../state/selectors";
+import { loadMovements } from "../../../state/actions/movementsActions";
+
+// React DatePicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Movement } from "../../../models/Movement";
-import { loadMovements } from "../../../state/actions/movementsActions";
+
+// Services
 import { MovementsService } from "../../../services/Movements";
 
-const Movements = () => {
-  // service
-  const movementServ = new MovementsService();
-  // redux
-  const dispatch = useDispatch();
-  const {movements}= useSelector(movementsSelector);
+// Hooks
+import { useSorting } from "../../../hooks/useSorting";
+import { usePagination } from "../../../hooks/usePagination";
+import { useSortingStates } from "../../../hooks/useSortingStates";
 
-  const token = store.getState().userSession.token
-  const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
-  const orders: Order[] = useSelector(orderSelector)
+// Functions
+import { dateToString } from "../rankingFunctions";
+
+// Components
+import Pagination from "../../../components/pagination/Pagination";
+
+// Types
+import { Movement } from "../../../models/Movement";
+
+// Assets
+import { RiFileExcel2Line } from 'react-icons/ri';
+
+const Movements = () => {  
+  // Service
+  const movementServ = new MovementsService();
+
+  // Redux
+  const dispatch = useDispatch();
+  const { movements } = useSelector(movementsSelector);
   
   //Filters
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -31,58 +47,79 @@ const Movements = () => {
     type:""
   });
 
-  const formatDate = (fecha: Date) => {
-    var year = fecha.getFullYear();
-    var month = ('0' + (fecha.getMonth() + 1)).slice(-2);  // Suma 1 al mes porque los meses van de 0 a 11
-    var day = ('0' + fecha.getDate()).slice(-2);
-    return year + '-' + month + '-' + day;
+  const filterMovements = (movements: Movement[]) => {
+    return movements.filter((movement: Movement) => {
+      return (
+        (
+          filters.type === '' ||
+          movement.type === filters.type
+        )
+      )
+    })
   }
 
-  /*let totalIncome = 0;
-  let totalEgress = 0;
+  const filteredMovements =  filterMovements(movements);
 
-  const totalIncomeF = (n: number) => {
-    totalIncome += n
-    return (n)
-  }*/
+  // Sorting
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredMovements, 'date');
 
-  /*const totalEgressF = (products: Product[]) => {
-    // console.log(products)
-    let n = 0;
-    products.map((item: Product) => {
-      n += item.product.cost
-    })
-    totalEgress += n;
-    return n
-  }*/
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
 
+  // Calcula el total que ingresa
+  const totalIncome = () => {
+    let totalIncome = 0;
+    movements.forEach((movement: Movement) => { movement.total >= 0 ? totalIncome += movement.total : '' });
+    return totalIncome;
+  }
+
+  // Calcula el total que egresa
+  const totalEgress = () => {
+    let totalEgress = 0;
+    movements.forEach((movement: Movement) => { movement.total < 0 ? totalEgress -= movement.total : '' });
+    return totalEgress;
+  }
+
+  // Handlers
   const handleChangeDate = (range: [Date, Date]) => {
     const [startDate, endDate] = range;
     setStartDate(startDate);
     setEndDate(endDate);
 
+    const stDate = dateToString(startDate);
+    const edDate = dateToString(endDate);
+
     if(startDate && endDate) {
       setFilters({
         ...filters,
-        startDate: formatDate(startDate),
-        endDate: formatDate(endDate)
+        startDate: stDate ? stDate : '',
+        endDate: edDate ? edDate : '',
+      })
+    } else {
+      setFilters({
+        ...filters,
+        startDate: '',
+        endDate: ''
       })
     }
   };
-  const handleChangeType = (e: any) => {
+
+  const handleChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
     setFilters({
       ...filters,
       type: e.target.value
     })
   }
 
+  // UseEffect inicial
   useEffect(() => {
     movementServ.GetAll()
     .then(data => {
       dispatch(loadMovements(data));
     })
   }, [])
-  // filters
+
+  // UseEffect que se ejecuta cuando cambia el estado de filters así se realiza el filtrado
   useEffect(() => {
     if(filters.startDate && filters.endDate && filters.type){
       movementServ.GetByDates(filters.startDate,filters.endDate,filters.type)
@@ -101,6 +138,12 @@ const Movements = () => {
       })
     }
   }, [filters])
+
+  // UseEffect que se ejecuta cada vez que cambia el estado de movements
+  useEffect(() => {
+    setCurrentPage(1);
+    setSortedItems(useSorting(filteredMovements, currentSorting, isAsc));
+  }, [movements])
 
   return (
     <div className="h-[100vh] overflow-y-auto">
@@ -127,9 +170,6 @@ const Movements = () => {
                   />
               </div>
               <div>
-                <button className="btn btn-primary btn-sm">Get Movements by Date</button>
-              </div>
-              <div>
                 <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeType}>
                   <option selected value="">TYPE: ALL</option>
                   <option value="Restocking">TYPE: RESTOCKING</option>
@@ -138,12 +178,11 @@ const Movements = () => {
                 </select>
               </div>
               <div>
-                <select className="w-full max-w-xs select select-bordered select-sm" onChange={()=>{}}>
-                  <option selected value={1}>SORT BY: FEATURED</option>
-                  <option value={2}>SORT BY DATE: NEW to OLD</option>
-                  <option value={3}>SORT BY DATE: OLD to NEW</option>
-                  <option value={4}>SORT BY PRICE: HIGH to LOW</option>
-                  <option value={5}>SORT BY PRICE: LOW to HIGH</option>
+                <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+                  <option value='date true'>SORT BY DATE: OLD to NEW</option>
+                  <option value='date false'>SORT BY DATE: NEW to OLD</option>
+                  <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
+                  <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
                 </select>
               </div>
           </div>
@@ -153,18 +192,18 @@ const Movements = () => {
                 <tr>
                   <th className="text-center">ID</th>
                   <th className="text-center">TYPE</th>
-                  <th className="text-center">DATE / HOURS</th>
+                  <th className="text-center">DATE / HOUR</th>
                   <th className="text-center">DESCRIPTION</th>
                   <th className="text-center">AMOUNT</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  movements.map((movement: Movement, index: number) => (
+                  currentObjects.map((movement: Movement, index: number) => (
                     <tr key={index}>
                       <th className="text-center">{movement.id}</th>
-                      <th className="text-center">{movement.type}</th>
-                      <th className="text-center">{movement.date}</th>
+                      <th className="text-center">{movement.type.replace("_", " ")}</th>
+                      <th className="text-center">{movement.date.replace(" ", " / ")}</th>
                       <th className="text-center">{movement.type === "Credit_Note"?JSON.parse(movement.description).description:movement.description}</th>
                       <th className={`text-center text-${movement.total >= 0?'green':'red'}-500`}>{movement.total}</th>
                     </tr>
@@ -172,14 +211,13 @@ const Movements = () => {
                 }
               </tbody>
               <tfoot>
-                <tr>
-                  {/* <th className="text-center">{totalIncome}</th>
-                  <th className="text-center">{totalEgress}</th> */}
-                </tr>
+                <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
               </tfoot>
             </table>
           </div>
-          {/* <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome > totalEgress) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome - totalEgress}</span></div> */}
+          <div className='flex flex-row justify-end mr-10'><h1>TOTAL INCOME: </h1> <span className='ml-2 text-green-500'>+{totalIncome()}</span></div>
+          <div className='flex flex-row justify-end mr-10'><h1>TOTAL EGRESS: </h1> <span className='ml-2 text-red-500'>-{totalEgress()}</span></div>
+          <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome() > totalEgress()) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome() - totalEgress()}</span></div>
         </div>
       </div>
       <div className="flex justify-end w-full mt-10 mb-5 ">
