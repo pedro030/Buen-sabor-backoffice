@@ -14,15 +14,17 @@ import { MovementsService } from "../../../services/Movements";
 const Movements = () => {
   // service
   const movementServ = new MovementsService();
+  // redux
   const dispatch = useDispatch();
+  const {movements}= useSelector(movementsSelector);
+
   const token = store.getState().userSession.token
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const orders: Order[] = useSelector(orderSelector)
-  const {movements}= useSelector(movementsSelector);
+  
+  //Filters
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
-  //Filters
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
