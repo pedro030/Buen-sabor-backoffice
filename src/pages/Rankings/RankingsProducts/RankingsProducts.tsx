@@ -64,12 +64,12 @@ const RankingsProducts = () => {
     setEndDate(endDate);
 
     // Si startDate y endDate son null, se setea el ranking inicial
-    if(!startDate && !endDate) setProducts(initialRanking);
+    if (!startDate && !endDate) setProducts(initialRanking);
   };
 
   // Si startDate y endDate no son null se produce el fetch
   const handleClickGetRankingByDate = () => {
-    if(startDate && endDate) fetchProductRanking();
+    if (startDate && endDate) fetchProductRanking();
   }
 
   //Pagination
@@ -91,65 +91,36 @@ const RankingsProducts = () => {
       <hr />
       <div>
         { /* FOOD RANKING or DRINKS RANKING */}
-        <div className="grid grid-cols-2 join">
-          <input className="rounded-full join-item btn" type="radio" name="ranking" aria-label="FOOD RANKING" onClick={() => { setFoodRanking(true); }} defaultChecked={foodRanking ? true : false} />
-          <input className="rounded-full join-item btn" type="radio" name="ranking" aria-label="DRINKS RANKING" onClick={() => { setFoodRanking(false); }} defaultChecked={!foodRanking ? true : false} />
+        <div className="flex justify-center mt-5">
+          <div className="grid grid-cols-2 w-[80%] join">
+            <input className="rounded join-item btn" type="radio" name="ranking" aria-label="FOOD RANKING" onClick={() => { setFoodRanking(true); }} defaultChecked={foodRanking ? true : false} />
+            <input className="rounded-full join-item btn" type="radio" name="ranking" aria-label="DRINKS RANKING" onClick={() => { setFoodRanking(false); }} defaultChecked={!foodRanking ? true : false} />
+          </div>
         </div>
         <h1 className="mt-5 text-lg tracking-widest text-center ">{foodRanking ? 'FOOD RANKING' : 'DRINKS RANKING'}</h1>
-          <div className="flex justify-center gap-5 my-2">
-            <div>
-                <DatePicker
-                    isClearable
-                    withPortal
-                    selectsRange
-                    selected={startDate}
-                    startDate={startDate}
-                    endDate={endDate}
-                    onChange={handleChangeDate}
-                    placeholderText="Date: From - To"
-                    dateFormat="yyyy/MM/dd"
-                    className="input input-sm input-bordered cursor-pointer"
-                    maxDate={new Date(Date.now())}
-                  />
-            </div>
-            <div>
-              <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
-            </div>
-            <ExportCSV csvData={products} rankingType={'Product Ranking'} rankingOpc={1} startDate={startDate} endDate={endDate}/>
+        <div className="flex justify-center gap-5 my-2">
+          <div>
+            <DatePicker
+              isClearable
+              withPortal
+              selectsRange
+              selected={startDate}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={handleChangeDate}
+              placeholderText="Date: From - To"
+              dateFormat="yyyy/MM/dd"
+              className="cursor-pointer input input-sm input-bordered"
+              maxDate={new Date(Date.now())}
+            />
           </div>
+          <div>
+            <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
+          </div>
+          <ExportCSV csvData={products} rankingType={'Product Ranking'} rankingOpc={1} startDate={startDate} endDate={endDate} />
+        </div>
         { /* FOOD RANKING TABLE */}
-        { foodRanking ? (<>
-          <table className="table table-xs">
-            <thead>
-              <tr>
-                <th>NAME</th>
-                <th>CATEGORY</th>
-                <th className="text-center">QUANTITY SOLD</th>
-                <th>ACTIVE</th>
-                <th className="text-center">PRICE</th>
-              </tr>
-            </thead>
-            <tbody>
-            {
-              currentObjects.filter((product: Product) => product.subcategory_fk?.name !== 'Bebidas' && product.subcategory_fk?.parentCategory?.name !== 'Bebidas').map((product: Product, index: number) => (
-                <tr key={index}>
-                  <th>{product.name}</th>
-                  <th>{product.subcategory_fk?.name}</th>
-                  <th className="text-center">{product.quantity_sold}</th>
-                  <th><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
-                  <th className="text-center">{product.price}</th>
-                </tr>
-              ))
-            }
-          </tbody>
-          <tfoot>
-            <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
-          </tfoot>
-        </table>
-        </>)
-        : 
-        (<>
-          { /* DRINKS RANKING TABLE */}
+        {foodRanking ? (<>
           <table className="table table-xs">
             <thead>
               <tr>
@@ -162,22 +133,53 @@ const RankingsProducts = () => {
             </thead>
             <tbody>
               {
-                currentObjects.filter((product: Product) => product.subcategory_fk?.name === 'Bebidas' || product.subcategory_fk?.parentCategory?.name === 'Bebidas').map((product: Product, index: number) => (
+                currentObjects.filter((product: Product) => product.subcategory_fk?.name !== 'Bebidas' && product.subcategory_fk?.parentCategory?.name !== 'Bebidas').map((product: Product, index: number) => (
                   <tr key={index}>
-                  <th >{product.name}</th>
-                  <th>{product.subcategory_fk?.name}</th>
-                  <th className="text-center">{product.quantity_sold}</th>
-                  <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
-                  <th className="text-center">{product.price}</th>
-                </tr>
+                    <th>{product.name}</th>
+                    <th>{product.subcategory_fk?.name}</th>
+                    <th className="text-center">{product.quantity_sold}</th>
+                    <th><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
+                    <th className="text-center">{product.price}</th>
+                  </tr>
                 ))
               }
             </tbody>
             <tfoot>
-              <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+              <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage} />
             </tfoot>
           </table>
-            </>) }
+        </>)
+          :
+          (<>
+            { /* DRINKS RANKING TABLE */}
+            <table className="table table-xs">
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>CATEGORY</th>
+                  <th className="text-center">QUANTITY SOLD</th>
+                  <th>ACTIVE</th>
+                  <th className="text-center">PRICE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  currentObjects.filter((product: Product) => product.subcategory_fk?.name === 'Bebidas' || product.subcategory_fk?.parentCategory?.name === 'Bebidas').map((product: Product, index: number) => (
+                    <tr key={index}>
+                      <th >{product.name}</th>
+                      <th>{product.subcategory_fk?.name}</th>
+                      <th className="text-center">{product.quantity_sold}</th>
+                      <th ><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></th>
+                      <th className="text-center">{product.price}</th>
+                    </tr>
+                  ))
+                }
+              </tbody>
+              <tfoot>
+                <Pagination items={products} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage} />
+              </tfoot>
+            </table>
+          </>)}
       </div>
     </div>
   )
