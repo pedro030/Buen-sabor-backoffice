@@ -135,7 +135,7 @@ const RankingsClients = () => {
                 <th>FULL NAME</th>
                 <th>ORDER QUANTITY</th>
                 <th>TOTAL</th>
-                <th>VIEW</th>
+                <th>VIEW ORDERS</th>
               </tr>
             </thead>
             <tbody>

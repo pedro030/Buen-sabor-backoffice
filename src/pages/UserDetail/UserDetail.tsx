@@ -16,6 +16,9 @@ import { IoMdArrowRoundBack } from 'react-icons/io'
 // Functions
 import { dateToString } from '../Rankings/rankingFunctions'
 
+// Components
+import PageLoader from '../../components/page_loader/PageLoader'
+
 // Types
 import { User } from '../../models/User'
 import { Order } from '../../models/Order'
@@ -24,6 +27,8 @@ export const UserDetail = () => {
     const token = store.getState().userSession.token
     const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
     const navigate: NavigateFunction = useNavigate();
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Para obtener y pasar Props al navegar de una pagina a otra
     const location: Location = useLocation()
@@ -43,40 +48,48 @@ export const UserDetail = () => {
 
     const fetchOrdersByDates = async (stDate: string = '2023-01-01', edDate: string | null = dateToString(new Date(Date.now()))) => {
         // Si startDate y endDate son distintos de null se los convierte a string sino obtiene los parametros por defecto
-        const endURL = startDate && endDate ? `${dateToString(startDate)}&${dateToString(endDate)}` : `${stDate}&${edDate}`
+        const endURL = startDate && endDate ? `${idUser}&${dateToString(startDate)}&${dateToString(endDate)}` : `${idUser}&${stDate}&${edDate}`
 
         // Fetch
-        fetch(`${apiURL}/orders/getOrdersByDate/${endURL}`, {
+        fetch(`${apiURL}/orders/getByUserAndDates/${endURL}`, {
             headers: {
             Authorization: `Bearer ${(token).trim()}`
         }
         })
             .then(res => res.json())
-            .then(data => setOrders(data))
+            .then(data => {setOrders(data); setIsLoading(false)})
             .catch(error => console.error(error))
     }
 
     useEffect(() => {
-        //fetchOrdersByDates()
+        fetchOrdersByDates()
     }, [])
+
+    if (isLoading) {
+        return (
+          <div className="page-layout">
+            <PageLoader />
+          </div>
+        );
+      }
 
     return (
         <div className="m-4">
-            <span className='flex flex-row items-center gap-2' onClick={() => navigate(-1)}><IoMdArrowRoundBack /> back</span>
+            <span className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => navigate(-1)}><IoMdArrowRoundBack /> back</span>
             <h2 className='my-2 text-lg font-bold text-center stat-title'></h2>
             <div className="flex items-center justify-center w-full gap-5 ">
             </div>
             <div className='flex justify-center w-full'>
                 <div className="overflow-x-auto h-[35rem] w-[60vw]">
-                    <h1 className='mb-5 text-lg font-bold tracking-widest text-center uppercase'>{`Orders by: ${firstName} ${lastName}`}</h1>
+                    <h1 className='mb-5 text-lg font-bold tracking-widest text-center uppercase'>{`Ordered by: ${firstName} ${lastName}`}</h1>
                     <table className="table table-xs table-pin-rows ">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Withdrawal Mode</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th></th>
+                                <th>DATE / HOUR</th>
+                                <th>WITHDRAWAL MODE</th>
+                                <th>STATUS</th>
+                                <th>TOTAL</th>
+                                <th>VIEW ORDER</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,7 +99,7 @@ export const UserDetail = () => {
                                     <tr key={i}>
                                         <td>{order.creationDate}</td>
                                         <td>{order.withdrawalMode}</td>
-                                        <td>{order.statusOrder?.statusType}</td>
+                                        <td>{order.statusOrder?.statusType.replace("_", " ")}</td>
                                         <td>{order.totalPrice}</td>
                                         <td><NavLink to={`/statistics/clients/${idUser}/order/${order.id}`}><RiEyeLine className='w-5 h-5 eye-icon'/></NavLink></td>
                                     </tr>
