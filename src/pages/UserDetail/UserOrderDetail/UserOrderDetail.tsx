@@ -125,7 +125,7 @@ export const UserOrderDetail = () => {
           </div>
           { /* PAYMENTH METHOD */}
           <div className="flex flex-row items-center justify-between w-full h-20 p-5 bg-white rounded-3xl">
-            <h2>Your paymenth method is:</h2>
+            <h2>Paymenth method:</h2>
             <h2>{paymode.paymode}</h2>
           </div>
         </div>
