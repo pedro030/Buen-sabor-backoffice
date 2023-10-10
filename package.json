@@ -30,6 +30,7 @@
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
     "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.7.32",
     "webfontloader": "^1.6.28",
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13",
