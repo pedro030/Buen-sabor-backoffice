@@ -14,3 +14,9 @@ export interface Product{
     ingredients: Array<Ingredient>,
     active: boolean
 }
+
+export interface ProductOrder {
+    id: number,
+    product: Product,
+    cant: number
+}
