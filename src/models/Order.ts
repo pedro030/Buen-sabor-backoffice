@@ -5,11 +5,11 @@ import { Product } from "./Product";
 
 export interface Order{
     id: string,
-    date: string,
+    creationDate: string,
     totalCookingTime: number | null,
-    paymode: any,
+    paymode: { id: number, paymode: string },
     withdrawalMode: string,
-    address: String,
+    address: string,
     statusOrder: Status,
     totalPrice: number,
     products: Product[],

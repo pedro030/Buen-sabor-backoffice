@@ -227,11 +227,7 @@ const Order = () => {
                 <td>{order.totalPrice}</td>
                 <td>{order.user?.id}</td>
                 <td>
-                  <div className='flex gap-2'>
-                    <NavLink to={`${order.id}`} ><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink>
-                    {/* <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button> */}
-                    {/* <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button> */}
-                  </div>
+                  <NavLink to={`${order.id}`} ><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink>
                 </td>
               </tr>))}
           </tbody>

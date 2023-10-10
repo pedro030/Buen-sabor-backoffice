@@ -84,11 +84,11 @@ export const UserDetail = () => {
                                 (orders.length > 0) &&
                                 orders.map((order: Order, i: number) => (
                                     <tr key={i}>
-                                        <td>{order.date}</td>
+                                        <td>{order.creationDate}</td>
                                         <td>{order.withdrawalMode}</td>
                                         <td>{order.statusOrder?.statusType}</td>
                                         <td>{order.totalPrice}</td>
-                                        <td><NavLink to={`/statistics/clients/${idUser}/order/${order.id}`} ><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink></td>
+                                        <td><NavLink to={`/statistics/clients/${idUser}/order/${order.id}`}><RiEyeLine className='w-5 h-5 eye-icon'/></NavLink></td>
                                     </tr>
                                 ))
                             }

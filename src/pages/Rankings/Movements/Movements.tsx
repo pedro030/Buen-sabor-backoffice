@@ -111,6 +111,14 @@ const Movements = () => {
     })
   }
 
+  // UseEffect inicial
+  useEffect(() => {
+    movementServ.GetAll()
+    .then(data => {
+      dispatch(loadMovements(data));
+    })
+  }, [])
+
   // UseEffect que se ejecuta cuando cambia el estado de filters así se realiza el filtrado
   useEffect(() => {
     if(filters.startDate && filters.endDate && filters.type){

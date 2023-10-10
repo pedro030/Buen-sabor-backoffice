@@ -1,129 +1,129 @@
-import BillForm from "../../components/modals/bill_form/BillForm";
-import { Bill } from "../../models/Bill";
-import { useDispatch, useSelector } from "react-redux";
-import { loadBills } from "../../state/actions/billActions";
-import { billSelector } from "../../state/selectors";
-import CrudCard from "../../components/crud_components/crud_card/CrudCard";
-import { BillService } from "../../services/Bill";
-import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
-import CrudDeleteModal from "../../components/crud_components/crud_delete_modal/CrudDeleteModal";
-import { FiEdit2 } from "react-icons/fi";
-import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
+// React
 import { useState, useEffect } from "react";
-import { Movement } from "../../models/Movement";
-import store from "../../state/store/store";
+
+// React Router
+import { NavLink } from "react-router-dom";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { movementsSelector } from "../../state/selectors";
+import { loadMovements } from "../../state/actions/movementsActions";
+
+// React DatePicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+// Services
+import { MovementsService } from "../../services/Movements";
+
+// Components
+import Pagination from "../../components/pagination/Pagination";
+
+// Hooks
+import { useSorting } from "../../hooks/useSorting";
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { usePagination } from "../../hooks/usePagination";
+
+// Functions
+import { dateToString } from "../Rankings/rankingFunctions";
+
+// Types
+import { Movement } from "../../models/Movement";
+
+// Assets
+import { RiEyeLine } from "react-icons/ri";
+
 function Bill() {
-  const token = store.getState().userSession.token;
-  const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
-  const [movements, setMovements] = useState<Movement[]>([]);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  // Service
+  const movementServ = new MovementsService();
 
-  const fetchMovements = async () => {
-    try {
-      const response = await fetch(`${apiURL}/movements/getAll`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token.trim()}`,
-        },
-      });
-
-      const data = await response.json();
-      setMovements(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  /*const handleDelete = (state: Bill) => {
-    if (confirm(`You want to delete this item?`)) {
-      billService.deleteObj(state)
-        .then(() => {
-          billService.GetAll()
-            .then((res: Bill[]) => {
-              dispatch(loadBills(res))
-            })
-        })
-    }
-  }*/
-
-  // Format Date. Example: 2023-6-2 to 2023-06-02
-  const formatToConsistentDate = (inputDate: string) => {
-    const parts = inputDate.split("-");
-    const year = parts[0];
-    const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
-    const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
-
-    return `${year}-${month}-${day}`;
-  };
+  // Redux
+  const dispatch = useDispatch();
+  const { movements } = useSelector(movementsSelector);
 
   //Filters
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [filters, setFilters] = useState({
-    date: "",
+    startDate: "",
+    endDate: "",
+    type:"Bill"
   });
 
-  const filterBill = (bills: any) => {
-    return bills.filter((b: any) => {
-      return (
-        filters.date === "" ||
-        formatToConsistentDate(b.order.date) === filters.date
-      );
-    });
-  };
+  const filterBills = (movements: Movement[]) => {
+    return movements.filter((movement: Movement) => {
+      return (movement.type === filters.type)
+    })
+  }
 
-  const handleChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const d = e.target.value;
-    setFilters({ date: d });
+  const filteredBills =  filterBills(movements);
 
-    if (d == "") setFilters({ date: "" });
-  };
+  // Handlers
+  const handleChangeDate = (range: [Date, Date]) => {
+    const [startDate, endDate] = range;
+    setStartDate(startDate);
+    setEndDate(endDate);
 
-  const billsFilter = filterBill(bill);
+    const stDate = dateToString(startDate);
+    const edDate = dateToString(endDate);
 
-  //Sorting
-  const [sortedBills, setSortedBills] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
-
-  const sortBills = (bills: any, sortOp: number) => {
-    switch (sortOp) {
-      case 1:
-        setSortedBills(bills);
-        break;
-
-      case 2:
-        setSortedBills(
-          bills.sort((a: any, b: any) => (a.order.date > b.order.date ? 1 : -1))
-        );
-        break;
-
-      case 3:
-        setSortedBills(
-          bills.sort((a: any, b: any) => (a.order.date < b.order.date ? 1 : -1))
-        );
-        break;
+    if(startDate && endDate) {
+      setFilters({
+        ...filters,
+        startDate: stDate ? stDate : '',
+        endDate: edDate ? edDate : '',
+      })
+    } else {
+      setFilters({
+        ...filters,
+        startDate: '',
+        endDate: ''
+      })
     }
   };
 
-  const handleChangeSorting = (e: any) => {
-    const sortOp = +e.target.value;
-    setCurrentSorting(sortOp);
-    sortBills(billsFilter, sortOp);
-  };
+  // Sorting
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredBills, 'date');
 
-  useEffect(() => {
-    fetchMovements();
-  }, []);
+  //Pagination
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
 
+  // UseEffect inicial
   useEffect(() => {
-    sortBills(billsFilter, currentSorting);
-  }, [filters]);
+    movementServ.GetAll()
+    .then(data => {
+      dispatch(loadMovements(data));
+    })
+  }, [])
+
+  // UseEffect que se ejecuta cuando cambia el estado de filters así se realiza el filtrado
+  useEffect(() => {
+    if(filters.startDate && filters.endDate && filters.type){
+      movementServ.GetByDates(filters.startDate,filters.endDate,filters.type)
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }else if (filters.startDate && filters.endDate){
+      movementServ.GetByDates(filters.startDate,filters.endDate)
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }else{
+      movementServ.GetAll()
+      .then(data => {
+        dispatch(loadMovements(data));
+      })
+    }
+  }, [filters])
+
+  // UseEffect que se ejecuta cada vez que cambia el estado de movements
+  useEffect(() => {
+    setCurrentPage(1);
+    setSortedItems(useSorting(filteredBills, currentSorting, isAsc));
+  }, [movements])
 
   return (
     <div className="m-4">
-      <CrudCreateButton Modal={BillForm} Title="Bills" />
       <h2 className="my-2 text-lg font-bold text-center stat-title">Bills</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
         <div>
@@ -134,7 +134,7 @@ function Bill() {
             selected={startDate}
             startDate={startDate}
             endDate={endDate}
-            onChange={()=>{}}
+            onChange={handleChangeDate}
             placeholderText="Date: From - To"
             dateFormat="yyyy/MM/dd"
             className="input input-sm input-bordered"
@@ -142,15 +142,11 @@ function Bill() {
           />
         </div>
         <div>
-          <select
-            className="w-full max-w-xs select select-bordered select-sm"
-            onChange={handleChangeSorting}
-          >
-            <option selected value={1}>
-              SORT BY: FEATURED
-            </option>
-            <option value={2}>SORT BY DATE: ASC.</option>
-            <option value={3}>SORT BY DATE: DESC.</option>
+          <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+            <option value='date true'>SORT BY DATE: OLD to NEW</option>
+            <option value='date false'>SORT BY DATE: NEW to OLD</option>
+            <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
+            <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
           </select>
         </div>
       </div>
@@ -158,32 +154,27 @@ function Bill() {
         <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Order ID</th>
-              <th></th>
+              <th>DATE</th>
+              <th>ORDER ID</th>
+              <th>TOTAL</th>
+              <th>VIEW ORDER</th>
             </tr>
           </thead>
           <tbody>
-            {sortedBills.map((item: Bill, i: number) => (
+            {currentObjects.map((item: Movement, i: number) => (
               <tr key={i}>
                 <td>{item.date}</td>
-                <td>{item.order.id}</td>
+                <td>{item.order?.id}</td>
+                <td>{item.total}</td>
                 <td>
-                  <div className="flex gap-2">
-                    <button>
-                      <RiEyeLine className="w-5 h-5 eye-icon" />{" "}
-                    </button>
-                    <button>
-                      <FiEdit2 className="w-5 h-5 edit-icon" />{" "}
-                    </button>
-                    <button onClick={() => handleDelete(item)}>
-                      <RiDeleteBin6Line className="w-5 h-5 delete-icon" />{" "}
-                    </button>
-                  </div>
+                  <NavLink to={`${item.order?.id}`}><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink>
                 </td>
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+          </tfoot>
         </table>
       </div>
     </div>

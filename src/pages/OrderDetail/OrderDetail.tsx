@@ -93,7 +93,7 @@ const OrderDetail = () => {
 
     return (
         <div className="p-5 h-[94.6vh] overflow-y-auto">
-            <NavLink to="/orders" ><span className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span></NavLink>
+            <span onClick={() => navigate(-1)} className='flex flex-row items-center gap-2'><IoMdArrowRoundBack /> back</span>
             <h1 className="mb-5 text-2xl font-semibold text-center">Order Detail</h1>
 
             <div className="grid grid-cols-[3fr_1fr] gap-5">

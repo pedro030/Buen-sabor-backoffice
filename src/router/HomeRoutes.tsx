@@ -1,4 +1,11 @@
+// React Router
 import { Route, Routes } from "react-router-dom"
+
+// Redux
+import { useSelector } from "react-redux"
+import { userSessionSelector } from "../state/selectors"
+
+// Components
 import CategoriesCRUD from "../pages/CategoriesCRUD/CategoriesCRUD"
 import Measure from "../pages/Measure/Measure"
 import Ingredient from "../pages/Ingredient/Ingredient"
@@ -19,13 +26,9 @@ import RankingsProducts from "../pages/Rankings/RankingsProducts/RankingsProduct
 import RankingsClients from "../pages/Rankings/RankingsClients/RankingsClients"
 import Movements from "../pages/Rankings/Movements/Movements"
 import { ProtectedRoute } from "./ProtectedRoute"
-import { useState } from "react"
 import { UserDetail } from "../pages/UserDetail/UserDetail"
 import { UserOrderDetail } from "../pages/UserDetail/UserOrderDetail/UserOrderDetail"
-import { useSelector } from "react-redux"
-import { userSessionSelector } from "../state/selectors"
-
-
+import { BillOrderDetail } from "../pages/Bill/BillOrderDetail/BillOrderDetail"
 
 const homeRoutes = () => {
 
@@ -68,6 +71,7 @@ const homeRoutes = () => {
           rol.includes('_cashier')
         } />}>
         <Route path="/bills" element={<Bill />} />
+        <Route path="/bills/:idOrder" element={<BillOrderDetail/>} />
       </Route>
 
 
