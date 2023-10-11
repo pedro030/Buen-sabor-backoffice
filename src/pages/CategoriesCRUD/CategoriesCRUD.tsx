@@ -1,20 +1,29 @@
-// import './categoriescrud.scss'
-import CategoryForm from "../../components/modals/category_form/CategoryForm"
-import { Category } from "../../models/Category"
+// React
+import { useState, useEffect, ChangeEvent, KeyboardEvent } from "react"
+
+// Redux
 import { useDispatch, useSelector } from "react-redux"
 import { loadCategories } from "../../state/actions/categoryActions"
 import { categoriesSelector } from "../../state/selectors"
-import CrudCard from "../../components/crud_components/crud_card/CrudCard"
+
+//Services
 import { CategoryService } from '../../services/Category'
+
+// Hooks
+import { useSortingStates } from "../../hooks/useSortingStates"
+import { useSorting } from "../../hooks/useSorting"
+
+// Components
+import CategoryForm from "../../components/modals/category_form/CategoryForm"
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
-import CrudDeleteModal from '../../components/crud_components/crud_delete_modal/CrudDeleteModal'
+
+// Types
+import { Category } from "../../models/Category"
+
+// Assets
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
-import { useState, useEffect } from "react"
-import { usePagination } from "../../hooks/usePagination"
-import { useSorting } from "../../hooks/useSorting"
-import Pagination from "../../components/pagination/Pagination"
-import { useSortingStates } from "../../hooks/useSortingStates"
+import { useCrudActions } from "../../hooks/useCrudActions"
 
 
 function CategoriesCRUD() {
@@ -24,7 +33,7 @@ function CategoriesCRUD() {
   const categoryService = new CategoryService()
 
   const [selectedItem, setSelectedItem] = useState<Category>()
-  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
 
   //Filters
   const [filters, setFilters] = useState({
@@ -32,7 +41,7 @@ function CategoriesCRUD() {
     parentCategory: ''
   })
 
-  const filterCategories = (categories: any) => {
+  const filterCategories = (categories: Category[]) => {
     return categories.filter((c: any) => {
       return (
         (c.name.toLowerCase().includes(filters.search.toLowerCase()))
@@ -60,9 +69,9 @@ function CategoriesCRUD() {
   const categories: Category[] = filterCategories(category)
 
   //Search
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState<string>('')
 
-  const handleChangeSearch = (e: any) => {
+  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const s = e.target.value
     setSearch(s)
 
@@ -72,7 +81,7 @@ function CategoriesCRUD() {
     }))
   }
 
-  const searchOnEnter = (e: any) => {
+  const searchOnEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       setFilters((prevState: any) => ({
         ...prevState,
@@ -86,23 +95,16 @@ function CategoriesCRUD() {
 
   useEffect(() => {
     setSortedItems(useSorting(categories, currentSorting, isAsc));
-  }, [filters])
+  }, [filters, category])
 
 
-  const handleDelete = (state: Category) => {
-    if (confirm(`You want to delete this item?`)) {
-      categoryService.deleteObj(state)
-        .then(() => {
-          categoryService.GetAll()
-            .then((res: Category[]) => {
-              dispatch(loadCategories(res))
-            })
-        })
-    }
+  const handleDelete = (category: Category) => {
+    const { deleteObjectAlerts } = useCrudActions(category, categoryService, 'category', dispatch, loadCategories, () => setEditModalOpen(false))
+    deleteObjectAlerts()
   }
 
-  const handleEdit = (c: Category) => {
-    setSelectedItem(c);
+  const handleEdit = (category: Category) => {
+    setSelectedItem(category);
     setEditModalOpen(true);
   }
 

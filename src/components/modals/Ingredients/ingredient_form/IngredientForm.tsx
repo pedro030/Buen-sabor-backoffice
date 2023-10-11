@@ -9,13 +9,14 @@ import * as Yup from 'yup'
 import ComboBoxModel from '../../_ComboBoxModel/ComboBoxModel'
 import { measureSelector } from '../../../../state/selectors'
 import Measure from '../../../../pages/Measure/Measure'
+import { useCrudActions } from '../../../../hooks/useCrudActions'
 
 interface Props {
     obj?: Ingredient,
     open: boolean,
     onClose: () => void
 }
-const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
+const IngredientForm = ({ obj, open, onClose }: Props) => {
     if (!open) return null
     const ingredientService = new IngredientService()
     const dispatch = useDispatch()
@@ -26,34 +27,20 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
             .required("Ingredient name is required")
             .max(30),
         cost: Yup.number().required("Ingredient cost is required"),
-        stock: Yup.number().required("Ingredient stock is required")
+        stock: Yup.number().required("Ingredient stock is required"),
+        stockMin: Yup.number().required("Ingredient minimum stock is required")
     })
 
     // Crea o edita dependiendo si obj es pasado como prop
-    const handleSubmit = (state: any) => {
-        // state = {
-        //     ...state,
-        //     measure: JSON.parse(state.measure)
-        // }
+    const handleSubmit = (state: Ingredient) => {
+        state.measure = JSON.parse(state.measure);
+
         if (state.id) {
-            ingredientService.updateObj(state)
-                .then(() => {
-                    ingredientService.GetAll()
-                        .then(m => {
-                            dispatch(loadIngredients(m))
-                        })
-                })
-                .finally(() => onClose())
+            const { updateObjectAlerts } = useCrudActions(state, ingredientService, 'ingredient', dispatch, loadIngredients, onClose);
+            updateObjectAlerts();
         } else {
-            state.measure = JSON.parse(state.measure)
-            ingredientService.newObj(state)
-                .then(() => {
-                    ingredientService.GetAll()
-                        .then(m => {
-                            dispatch(loadIngredients(m))
-                        })
-                })
-                .finally(() => onClose())
+            const { addObjectAlerts } = useCrudActions(state, ingredientService, 'ingredient', dispatch, loadIngredients, onClose);
+            addObjectAlerts();
         }
     }
 
@@ -72,7 +59,8 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                         : {
                             name: "",
                             cost: "",
-                            stock: ""
+                            stock: "",
+                            stockMin: ""
                         }
                     }
                     validationSchema={validationSchema}
@@ -97,6 +85,12 @@ const IngredientForm = ({ obj: obj, open, onClose }: Props) => {
                                 <label htmlFor='stock'>Stock</label>
                                 <Field name='stock' type='number' className='input input-sm' />
                                 <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                            </div>
+
+                            <div className="field">
+                                <label htmlFor='stockMin'>Stock Min.</label>
+                                <Field name='stockMin' type='number' className='input input-sm' />
+                                <ErrorMessage name="stockMin">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">

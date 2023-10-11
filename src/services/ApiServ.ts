@@ -64,9 +64,8 @@ export class ApiServ<T extends { id: string }> {
         };
 
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions)
-        const data = await resp.json()
-        return data
+        const response = await fetch(`${this.apiURL}/${this.endpoint}/save`, requestOptions);
+        return response;
     }
 
     async repoIngredients(repoIngredients: T) {
@@ -80,9 +79,8 @@ export class ApiServ<T extends { id: string }> {
             body: JSON.stringify(repoIngredients)
         };
         try {
-            const resp = await fetch(`${this.apiURL}/${this.endpoint}/reponerStock`, requestOptions)
-            const data = await resp.json()
-            return data
+            const response = await fetch(`${this.apiURL}/${this.endpoint}/reponerStock`, requestOptions);
+            return response;
         } catch (error) {
             console.error(error)
         }
@@ -153,9 +151,8 @@ export class ApiServ<T extends { id: string }> {
             body: JSON.stringify(updateObj)
         };
 
-        const resp = await fetch(`${this.apiURL}/${this.endpoint}/update/${updateObj.id}`, requestOptions)
-        const data = await resp.json()
-        return data
+        const response = await fetch(`${this.apiURL}/${this.endpoint}/update/${updateObj.id}`, requestOptions);
+        return response;
     }
 
     async deleteObj(deleteObj: T) {
@@ -168,8 +165,7 @@ export class ApiServ<T extends { id: string }> {
             body: JSON.stringify(deleteObj)
         };
 
-        await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
-        // const data = await resp.json()
-        // return data
+        const response = await fetch(`${this.apiURL}/${this.endpoint}/delete/${deleteObj.id}`, requestOptions)
+        return response;
     }
 }

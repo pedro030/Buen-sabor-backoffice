@@ -1,5 +1,4 @@
-import { title } from 'process'
-import React, { useState } from 'react'
+import { useState, FC } from 'react'
 import { AiOutlineReload } from 'react-icons/ai'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 // import './CrudCreateButton.scss'
@@ -9,7 +8,7 @@ interface PropsModal {
   onClose: () => void
 }
 interface Props {
-  Modal: React.FC<PropsModal>
+  Modal: FC<PropsModal>
   Title: string
 }
 const CrudCreateButton = ({ Modal, Title }: Props) => {

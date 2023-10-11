@@ -12,11 +12,14 @@ import { FiEdit2 } from 'react-icons/fi'
 import { AiOutlineReload } from 'react-icons/ai'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
 import { useState, useEffect } from 'react'
+import { useCrudActions } from '../../hooks/useCrudActions'
+import { useSortingStates } from '../../hooks/useSortingStates'
+import { useSorting } from '../../hooks/useSorting'
 
 const Ingredient = () => {
   // selecciona el listados de ingredients del reducer
   const dispatch = useDispatch()
-  const ingredients = useSelector(ingredientSelector)
+  const ingredients: Ingredient[] = useSelector(ingredientSelector)
   const measures = useSelector(measureSelector)
   const ingredientService = new IngredientService()
 
@@ -24,16 +27,9 @@ const Ingredient = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Ingredient>();
 
-  const handleDelete = (state: Ingredient) => {
-    if (confirm(`You want to delete this item?`)) {
-      ingredientService.deleteObj(state)
-        .then(() => {
-          ingredientService.GetAll()
-            .then((res: Ingredient[]) => {
-              dispatch(loadIngredients(res))
-            })
-        })
-    }
+  const handleDelete = (ingredient: Ingredient) => {
+    const { deleteObjectAlerts } = useCrudActions(ingredient, ingredientService, 'ingredient', dispatch, loadIngredients, () => setEditModalOpen(false));
+    deleteObjectAlerts();
   }
 
   const openEditModal = (i: Ingredient) => {
@@ -69,9 +65,9 @@ const Ingredient = () => {
     }))
   }
 
-  const ingredientsFilter = filterIngredients(ingredients)
+  const ingredientsFilter: Ingredient[] = filterIngredients(ingredients)
 
-  //Search
+  //Search By Name and Stock
   const [search, setSearch] = useState<string>('')
   const [stock, setStock] = useState<number>(0)
 
@@ -114,47 +110,11 @@ const Ingredient = () => {
   }
 
   //Sorting
-  const [sortedIngredients, setSortedIngredients] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
-
-  const sortIngredients = (ingredients: any, sortOp: number) => {
-    switch (sortOp) {
-      case 1: setSortedIngredients(ingredients);
-        break;
-
-      case 2: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock > b.stock ? 1 : -1))
-        break;
-
-      case 3: setSortedIngredients(ingredients.sort((a: any, b: any) => a.stock < b.stock ? 1 : -1))
-        break;
-
-      case 4: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost > b.cost ? 1 : -1))
-        break;
-
-      case 5: setSortedIngredients(ingredients.sort((a: any, b: any) => a.cost < b.cost ? 1 : -1))
-        break;
-
-      case 6: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name > b.name ? 1 : -1))
-        break;
-
-      case 7: setSortedIngredients(ingredients.sort((a: any, b: any) => a.name < b.name ? 1 : -1))
-        break;
-    }
-  }
-
-  const handleChangeSorting = (e: any) => {
-    const sortOp = +e.target.value;
-    setCurrentSorting(sortOp);
-    sortIngredients(ingredientsFilter, sortOp);
-  }
-
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(ingredientsFilter, 'id');
 
   useEffect(() => {
-    sortIngredients(ingredientsFilter, currentSorting);
+    setSortedItems(useSorting(ingredientsFilter, currentSorting, isAsc));
   }, [filters, ingredients])
-
-
-  // console.log(ingredients)
 
   return (
     <div className="mx-4 mt-4">
@@ -163,11 +123,6 @@ const Ingredient = () => {
         <CrudCreateButton Modal={IngredientListForm} Title='Recargar Stock' />
       </div>
       <IngredientForm
-        obj={selectedItem}
-        open={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-      />
-      <IngredientListForm
         obj={selectedItem}
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
@@ -201,24 +156,19 @@ const Ingredient = () => {
               <th>Name</th>
               <th>Cost</th>
               <th>Stock</th>
+              <th>Stock Min.</th>
               <th>Measure</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {sortedIngredients.map((ingredient: Ingredient, i: number) => {
-
-              // try {
-              //   (ingredient.stockMin > ingredient.stock) && setSelectedItem(ingredient)
-              // } catch (error) {
-              //   console.log(error)
-              // }
-
+            {sortedItems.map((ingredient: Ingredient, i: number) => {
               return (
-                <tr key={i} className={`${ingredient.stockMin > ingredient.stock && 'bg-red-200'}`}>
+                <tr key={i} className={`${ingredient.stock < (ingredient.stockMin * 1.2) && ingredient.stock >= ingredient.stockMin ? 'bg-yellow-200' : ingredient.stock < ingredient.stockMin && 'bg-red-200'}`}>
                   <td>{ingredient.name}</td>
                   <td>{ingredient.cost}</td>
                   <td>{ingredient.stock}</td>
+                  <td>{ingredient.stockMin}</td>
                   <td>{ingredient.measure?.measure}</td>
                   <td>
                     <div className='flex gap-2'>

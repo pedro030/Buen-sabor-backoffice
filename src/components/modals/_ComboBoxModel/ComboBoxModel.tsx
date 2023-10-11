@@ -15,15 +15,14 @@ const handleSelect = (e:any) => {
 
     return (
         <>
-            {/* <label htmlFor={name}>{title}</label> */}
             <Field name={name} as="select" className="input input-sm">
-                <option onChange={handleSelect} value="-1" key={-1}>Select {value}</option>
+                <option onChange={handleSelect} value="-1" key={-1}>Select {value == 'category' ? 'parent category' : value}</option>
                 {
                     list.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>
                             {value == 'address' ?
                                 `${e.street} ${e.number}` :
-                            e.firstName? e.firstName + '  ' + e.lastName: e.email?e.email: e.statusType? e.statusType : e.rol? e.rol: e.location ? e.location : e.name? e.name: e.id}
+                            e.firstName? e.firstName + '  ' + e.lastName: e.email?e.email: e.statusType? e.statusType : e.rol? e.rol: e.location ? e.location : e.name? e.name: e.measure? e.measure : e.id}
                         </option>
                     ))}
             </Field>

@@ -9,14 +9,15 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
+import Swal from 'sweetalert2'
 
 interface Props {
     obj?: Ingredient,
     open: boolean,
     onClose: () => void
 }
-const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
+const IngredientListForm = ({ obj, open, onClose }: Props) => {
     if (!open) return null
     const ingredientsOptions = useSelector(ingredientSelector)
     const ingredientService = new IngredientService()
@@ -25,18 +26,40 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
 
 
     const handleSubmit = (state: any) => {
-        
+        Swal.fire({
+            title: 'Restocking...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        })
+
         ingredientService.repoIngredients(state.ingredients)
-            .then(() => {
-                ingredientService.GetAll()
-                    .then(m => {
-                        dispatch(loadIngredients(m))
+            .then((response) => {
+                if(response?.ok) {
+                    onClose();
+                    ingredientService.GetAll()
+                        .then((res: Ingredient[]) => {
+                            dispatch(loadIngredients(res))
+                        })
+                    Swal.fire({
+                        icon: 'success',
+                        title: `The restock was successful`,
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#E73636'
                     })
-            })
-            .finally(() => onClose())
+                } else {
+                    Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                }
+        })
     }
 
-    const handleSelect = (event: any, index: number, values: any, setFieldValue: any) => {
+    const handleSelect = (event: ChangeEvent<HTMLInputElement>, index: number, values: any, setFieldValue: any) => {
         const selectedIngredient = JSON.parse(event.target.value);
         const updatedIngredients = values.ingredients.map((ingredient: any, i: any) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
@@ -49,7 +72,7 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
     }
 
     const handleRemoveIngredient = (index: number, values: any, setFieldValue: any) => {
-        const updatedIngredients = values.ingredients.filter((i: any, ind: any) => ind !== index);
+        const updatedIngredients = values.ingredients.filter((i: Ingredient, ind: number) => ind !== index);
         setFieldValue('ingredients', updatedIngredients);
     }
 
@@ -84,12 +107,12 @@ const IngredientListForm = ({ obj: obj, open, onClose }: Props) => {
                                                 <h2>Minimum stock</h2>
                                                 <h2>Measure </h2>
                                             </div>
-                                            {values.ingredients.map((e: any, index: any) => (
+                                            {values.ingredients.map((e: any, index: number) => (
                                                 <div key={index} className='grid grid-cols-[200px_100px_100px_130px_100px_100px] text-center'>
                                                     <div className='field'>
-                                                        <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
+                                                        <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
                                                             <option value='' label='Select Ingredient' />
-                                                            {ingredientsOptions.map((i: Ingredient, ind: any) => {
+                                                            {ingredientsOptions.map((i: Ingredient, ind: number) => {
                                                                 return <option key={ind} value={JSON.stringify(i)} label={i.name} />
                                                             })}
                                                         </Field>
