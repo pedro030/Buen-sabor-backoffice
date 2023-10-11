@@ -9,7 +9,7 @@ import { categoriesSelector, ingredientSelector } from '../../../state/selectors
 import { Category } from '../../../models/Category'
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
-
+import Swal from 'sweetalert2'
 
 interface Props {
     obj?: any,
@@ -39,39 +39,70 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
     }
 
     const handleOnSubmit = (state: Product) => {
-        // state = {
-        //     ...state,
-        //     subcategory: JSON.parse(state.subcategory)
-        // }
-        //state.subcategory = JSON.parse(state.subcategory)
-        // state.active == 'true' ? state.active = true : state.active = false
-
-        // console.log(state)
-        // console.log(imagen)
-
         if (state?.id) {
-            toast.promise(
-                productService.updateProduct(state, imagen)
-                    .then(() => {
-                        productService.GetAll().then((res: Product[]) => {
-                            dispatch(loadProducts(res))
-                        })
-                    })
-                    .finally(() => onClose())
-                , {
-                    loading: 'Loading',
-                    success: 'Got the data',
-                    error: 'Error when fetching',
-                })
-        } else {
-            productService.newProduct(state, imagen)
-                .then(() => {
+            Swal.fire({
+                title: 'Updating...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCancelButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            })
+
+            productService.updateProduct(state, imagen)
+            .then((response) => {
+                if(response?.status === 200) {
+                    onClose();
                     productService.GetAll()
-                        .then((res: Product[]) => {
-                            dispatch(loadProducts(res))
-                            onClose()
+                    .then((res: Product[]) => {
+                        dispatch(loadProducts(res))
+                    })
+                    Swal.fire({
+                        icon: 'success',
+                        title: `The product was updated`,
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#E73636'
+                    })
+                } else {
+                    Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                }
+            })
+            
+        } else {
+            Swal.fire({
+                title: 'Adding...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCancelButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            })
+    
+            productService.newProduct(state, imagen)
+                .then((response) => {
+                    if(response?.status == 200) {
+                        onClose();
+                        productService.GetAll()
+                            .then((res: Product[]) => {
+                                dispatch(loadProducts(res))
+                            })
+                        Swal.fire({
+                            icon: 'success',
+                            title: `The product was added`,
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            showCancelButton: false,
+                            confirmButtonColor: '#E73636'
                         })
+                    } else Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
                 })
+
         }
 
     }
@@ -160,7 +191,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                         setFieldValue('subcategory', selectedCategory);
                                     }}>
                                         <option value='' label='Select Category' />
-                                        {categories.filter((item: Category) => item?.parentCategory !== null).map((cat: any, ind: number) => {
+                                        {categories.filter((item: Category) => item?.parentCategory !== null).map((cat: Category, ind: number) => {
                                             return <option key={ind} value={JSON.stringify(cat)} label={cat.name} />
                                         })}
                                     </Field>

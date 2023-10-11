@@ -14,6 +14,7 @@ import { usePagination } from '../../hooks/usePagination'
 import { useSorting } from '../../hooks/useSorting'
 import Pagination from '../../components/pagination/Pagination'
 import { useSortingStates } from '../../hooks/useSortingStates'
+import { useCrudActions } from '../../hooks/useCrudActions'
 
 const Product = () => {
   // selecciona el listados de products del reducer
@@ -140,7 +141,7 @@ const Product = () => {
   useEffect(() => {
     setCurrentPage(1);
     setSortedItems(useSorting(productsFilter, currentSorting, isAsc));
-  }, [filters])
+  }, [filters, products])
 
   const openEditModal = (p: Product) => {
     setSelectedItem(p);
@@ -148,16 +149,9 @@ const Product = () => {
   }
 
 
-  const handleDelete = (state: Product) => {
-    if (confirm(`You want to delete this item?`)) {
-      productService.deleteObj(state)
-        .then(() => {
-          productService.GetAll()
-            .then((res: Product[]) => {
-              dispatch(loadProducts(res))
-            })
-        })
-    }
+  const handleDelete = (product: Product) => {
+    const { deleteObjectAlerts } = useCrudActions(product, productService, 'product', dispatch, loadProducts, () => setIsEditModalOpen(false))
+    deleteObjectAlerts();
   }
 
 

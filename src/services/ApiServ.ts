@@ -108,11 +108,12 @@ export class ApiServ<T extends { id: string }> {
                     Authorization: 'Bearer ' + this.token,
                 },
             });
-            return data
+            return data;
         } catch (error) {
             console.error(error)
         }
     }
+    
     async updateProduct(product: T, imagen: File | null) {
 
         try {
@@ -134,8 +135,7 @@ export class ApiServ<T extends { id: string }> {
                     Authorization: 'Bearer ' + this.token,
                 },
             });
-
-            return data
+            return data;
         } catch (error) {
             console.error(error)
         }
