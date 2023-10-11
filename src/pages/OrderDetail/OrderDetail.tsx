@@ -1,102 +1,267 @@
-import { useState } from 'react'
+// React
+import { useState, ChangeEvent } from 'react'
+
+// Redux
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate, useParams } from "react-router-dom"
 import { orderSelector, statusSelector, userSessionSelector } from "../../state/selectors"
+import { updateOrder } from '../../state/actions/orderActions'
+
+// React Router
+import { NavigateFunction, useNavigate, useParams } from "react-router-dom"
+
+// Sweet Alert 2
+import Swal from 'sweetalert2'
+
+// Types
 import { Order } from "../../models/Order"
+import { ProductOrder } from '../../models/Product'
+import { Status } from '../../models/Status'
+
+// Assets
 import pizzaSvg from '../../assets/pizza.svg'
 import { IoMdArrowRoundBack } from "react-icons/io"
-import { updateOrder } from '../../state/actions/orderActions'
-import swal from 'sweetalert'
-import { ProductOrder } from '../../models/Product'
 
 const OrderDetail = () => {
+    // Api URL
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+
+    // Redux
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { idOrder } = useParams()
-    let orders: Order[] = useSelector(orderSelector)
     const { token } = useSelector(userSessionSelector);
+    const orders: Order[] = useSelector(orderSelector);
+    const order = orders.filter((item: Order) => item.id == idOrder);
     const status = useSelector(statusSelector);
-    orders = orders.filter(item => item.id == idOrder)
+
+    // Navigation
+    const navigate: NavigateFunction = useNavigate();
+
+    // URL Params
+    const { idOrder } = useParams()
+
+    // States
     const [minutes, setMinutes] = useState<number>(0)
+    const [creditNote, setCreditNote] = useState<string>('');
 
-    const { address, creationDate, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode, totalCookingTime } = orders[0]
+    // Extraccion de Atributos de la orden
+    const { address, creationDate, id, paymode, products, statusOrder, totalPrice, user, withdrawalMode, totalCookingTime } = order[0]
 
+    // Botonera para el cambio de estado que se cargara en base al estado de la orden
     const states: any = {
         'In_Queue': ['In_Preparation', 'Ready'],
         'In_Preparation': ['Ready'],
         'Ready': ['In_Preparation', 'Out_for_Delivery', 'Delivered'],
         'Out_for_Delivery': ['Delivered', 'Not_Delivered'],
         'Delivered': [],
-        'Not_Delivered': []
+        'Not_Delivered': [],
+        'Cancelled': []
     }
 
-    const changeStatus = async (type: string) => {
-        if (confirm(`You sure of change the status to '${type.replaceAll('_', ' ')}' ?`)) {
-            const statusType = status.find((s: any) => s.statusType === type)
-            const requestOptions = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(statusType)
-            };
+    // Alerts
+    const changeStatusAlert = (type: string) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Change Status',
+            text: `Are you sure you want to change the status to '${type.replaceAll('_', ' ')}' ?`,
+            confirmButtonText: 'Change Status',
+            showCancelButton: true,
+            reverseButtons: true,
+            confirmButtonColor: '#E73636',
+        })
+            .then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Loading...',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
+                    fetchChangeStatus(type);
+                } else if(result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+    }
 
-            const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/changeStatus/${id}`, requestOptions)
-                .catch((e) => console.error(e));
+    const addMinutesAlert = (minutes: number) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Add Minutes',
+            text: `Are you sure you want to add ${minutes} minutes to the order?`,
+            confirmButtonText: 'Add Minutes',
+            showCancelButton: true,
+            reverseButtons: true,
+            confirmButtonColor: '#E73636',
+        })
+            .then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Loading...',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
+                    fetchAddMinutes();
+                } else if(result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+    }
 
-            if (res?.ok) {
-                const updatedOrder = { ...orders[0], statusOrder: statusType }
-                dispatch(updateOrder(id, updatedOrder))
-                navigate(-1);
-            }
+    const cancelOrderAlert = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cancel Order',
+            text: `Are you sure you want to cancel the order ${id}?`,
+            confirmButtonText: 'Yes, Cancel Order',
+            cancelButtonText: 'No',
+            showCancelButton: true,
+            reverseButtons: true,
+            confirmButtonColor: '#E73636',
+        })
+            .then((result) => {
+                if(result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Loading...',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        showCancelButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
+                    fetchCancelOrder();
+                } else if(result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+    }
+
+    // Fetchs
+    const fetchChangeStatus = async (type: string) => {
+        const statusType = status.find((status: Status) => status.statusType === type)
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(statusType)
+        };
+
+        const res = await fetch(`${apiUrl}/orders/changeStatus/${id}`, requestOptions)
+            .catch((e) => console.error(e));
+
+        if (res?.ok) {
+            const updatedOrder = { ...orders[0], statusOrder: statusType }
+            dispatch(updateOrder(id, updatedOrder))
+            Swal.fire({
+                title: 'The status was changed',
+                icon: 'success',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+            })
+                .then((result) => {
+                    if(result.isConfirmed) {
+                        navigate(-1)
+                    }
+                })
+        } else {
+            Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
         }
     }
 
-    const handleChangeMinutes = (e: any) => {
+    const fetchAddMinutes = async () => {
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+
+        const res = await fetch(`${apiUrl}/orders/plusMinutes/${id}&${minutes}`, requestOptions)
+            .catch((e) => console.error(e));
+
+        if (res?.ok) {
+            const updatedOrder = { ...orders[0], totalCookingTime: (totalCookingTime + minutes) }
+            dispatch(updateOrder(id, updatedOrder))
+            Swal.fire({
+                title: 'The minutes were added',
+                icon: 'success',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+            })
+        } else {
+            Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+        }
+    }
+
+    const fetchCancelOrder = async () => {
+        const statusType = status.find((status: Status) => status.statusType === 'Cancelled')
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ description: creditNote })
+        };
+
+        const res = await fetch(`${apiUrl}/orders/cancelOrder/${id}`, requestOptions)
+            .catch((e) => console.error(e));
+
+        if (res?.ok) {
+            const updatedOrder = { ...orders[0], statusOrder: statusType }
+            dispatch(updateOrder(id, updatedOrder))
+            Swal.fire({
+                title: 'The order was cancelled',
+                text: `Credit Note: ${creditNote}`,
+                icon: 'success',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+            })
+                .then((result) => {
+                    if(result.isConfirmed) {
+                        navigate(-1)
+                    }
+                })
+        } else {
+            Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+        }
+    }
+
+    // Handlers
+    const handleChangeMinutes = (e: ChangeEvent<HTMLInputElement>) => {
         const minutes = +e.target.value;
         setMinutes(minutes);
     }
 
-    const handleClickAddMinutes = async () => {
-        if (minutes > 0 && confirm(`Are you sure you need to add ${minutes} to the order?`)) {
-            const requestOptions = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            };
-
-            const res = await fetch(`https://buen-sabor-backend-production.up.railway.app/api/orders/${id}&${minutes}`, requestOptions)
-                .catch((e) => console.error(e));
-
-            if (res?.ok) {
-                const updatedOrder = { ...orders[0], totalCookingTime: minutes }
-                dispatch(updateOrder(id, updatedOrder))
-            }
-        }
-    }
-
-    const confirm = () => {
-        swal("Are you sure?", {
-            dangerMode: true,
-            buttons: [true, "Do it!"],
-        })
-        .then(data => data && swal({
-            icon: "success",
-            text: "Se ha hecho cancelacion de la factura",
-            timer: 1200,
-            buttons: [false]
-          }))
+    const handleCreditNote = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const creditNote = e.target.value;
+        setCreditNote(creditNote);
     }
 
     //Setea hora y minuto en el que será entregado el pedido. Todo esto en base al coockingTime
-  const setDeliveryTime = (date: Date, coockingTime: number) => {
-    const deliveryTime = new Date(date.getTime() + coockingTime * 60000);
-    const amOrPm = deliveryTime.getHours() >= 12 ? "PM" : "AM";
-    return `${deliveryTime.getHours()-3}:${deliveryTime.getMinutes() < 10 ? "0" + deliveryTime.getMinutes() : deliveryTime.getMinutes()} ${amOrPm}`;
-}
+    const setDeliveryTime = (date: Date, coockingTime: number) => {
+        const deliveryTime = new Date(date.getTime() + coockingTime * 60000);
+        const amOrPm = deliveryTime.getHours() >= 12 ? "PM" : "AM";
+        return `${deliveryTime.getHours()-3}:${deliveryTime.getMinutes() < 10 ? "0" + deliveryTime.getMinutes() : deliveryTime.getMinutes()} ${amOrPm}`;
+    }
 
     return (
         <div className="p-5 h-[94.6vh] overflow-y-auto">
@@ -205,7 +370,7 @@ const OrderDetail = () => {
                         <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Statuses</h1>
 
                         <div className="flex flex-col gap-5">
-                            {states[statusOrder.statusType].map((s: any) => {
+                            {states[statusOrder.statusType].map((s: string) => {
                                 if (statusOrder.statusType === 'Ready') {
                                     if (withdrawalMode === 'Take Away' && s === 'Out_for_Delivery') {
                                         return null; // No mostrar el botón 'Out_for_Delivery' en modo de entrega 'Delivery'
@@ -213,15 +378,15 @@ const OrderDetail = () => {
                                         return null; // No mostrar el botón 'Delivered' en modo de entrega 'Take_Away'
                                     }
                                 }
-                                return <button onClick={() => changeStatus(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
+                                return <button onClick={() => changeStatusAlert(s)} className="btn btn-primary btn-sm btn-wide">{s.replaceAll('_', " ")}</button>
                             })}
                         </div>
                     </div>
 
                     {/* CANCEL ORDER WITH CREDIT NOTE */}
                     <div className='flex flex-col gap-5 p-5 bg-white rounded-3xl'>
-                        <textarea className="w-full h-40 resize-none textarea textarea-bordered" required name="" id="" ></textarea>
-                        <button className="btn btn-primary btn-sm btn-wide" onClick={() => confirm()}>Canceled</button>
+                        <textarea className="w-full h-40 resize-none textarea textarea-bordered" onChange={handleCreditNote} required name="" id="" ></textarea>
+                        <button className="btn btn-primary btn-sm btn-wide" onClick={() => { creditNote.length > 5 ? cancelOrderAlert() : Swal.fire({ title: 'Error', text: 'Add a valid Credit Note', icon: 'error', confirmButtonColor: '#E73636'})}}>Cancel Order</button>
                     </div>
                 </div>
 
@@ -230,8 +395,8 @@ const OrderDetail = () => {
                     <h1 className="mb-1 text-lg font-bold tracking-widest text-center text-gray-300">Add Minutes</h1>
 
                     <div className="flex flex-row gap-5">
-                        <input type="number" min={0} max={120} placeholder='MINUTES' className="input input-sm" onChange={handleChangeMinutes} />
-                        <button className="btn btn-primary btn-sm" onClick={handleClickAddMinutes}>Add</button>
+                        <input type="number" min={0} max={100} placeholder='MINUTES' className="input input-sm" onChange={handleChangeMinutes} />
+                        <button className="btn btn-primary btn-sm" onClick={() => { minutes > 0 && minutes < 100 ? addMinutesAlert(minutes) : Swal.fire({ title: 'Error', text: 'You can only add between 1 and 99 minutes', icon: 'error', confirmButtonColor: '#E73636'})}}>Add</button>
                     </div>
                 </div>
                 }

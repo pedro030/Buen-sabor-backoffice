@@ -1,5 +1,5 @@
 // React
-import { useEffect, useState, ChangeEvent } from "react"
+import { useEffect, useState } from "react"
 
 // React Router
 import { NavLink } from "react-router-dom";

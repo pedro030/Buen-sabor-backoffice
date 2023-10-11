@@ -5,7 +5,7 @@ import { ProductOrder } from "./Product";
 export interface Order{
     id: string,
     creationDate: string,
-    totalCookingTime: number | null,
+    totalCookingTime: number,
     paymode: { id: number, paymode: string },
     withdrawalMode: string,
     address: string,
