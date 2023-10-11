@@ -217,7 +217,7 @@ const OrderDetail = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ description: creditNote })
+            body: creditNote
         };
 
         const res = await fetch(`${apiUrl}/orders/cancelOrder/${id}`, requestOptions)

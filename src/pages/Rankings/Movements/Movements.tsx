@@ -204,7 +204,7 @@ const Movements = () => {
                       <th className="text-center">{movement.id}</th>
                       <th className="text-center">{movement.type.replace("_", " ")}</th>
                       <th className="text-center">{movement.date.replace(" ", " / ")}</th>
-                      <th className="text-center">{movement.type === "Credit_Note"?JSON.parse(movement.description).description:movement.description}</th>
+                      <th className="text-center">{movement.description}</th>
                       <th className={`text-center text-${movement.total >= 0?'green':'red'}-500`}>{movement.total}</th>
                     </tr>
                   ))
