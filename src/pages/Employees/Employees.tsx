@@ -3,20 +3,28 @@ import { Address } from "../../models/Address"
 import CrudCreateButton from '../../components/crud_components/crud_create_button/CrudCreateButton'
 import { FiEdit2 } from 'react-icons/fi'
 import { RiDeleteBin6Line, RiEyeLine } from 'react-icons/ri';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserService } from "../../services/User";
 import { rolSelector, userSelector } from "../../state/selectors";
-import User from "../User/User";
 import UserForm from "../../components/modals/user_form/UserForm";
 import { useState, useEffect } from 'react'
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { useSorting } from "../../hooks/useSorting";
+import { User } from "../../models/User";
+import { useCrudActions } from "../../hooks/useCrudActions";
+import { loadUsers } from "../../state/actions/userActions";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 
 const Employees = () => {
-
-  const user = useSelector(userSelector)
+  const dispatch = useDispatch();
+  const user: User[] = useSelector(userSelector)
   const rols = useSelector(rolSelector)
   const userService = new UserService()
-  const employees = user.filter((e: User) => e.rol?.rol != 'Client');
+  const employees: User[] = user.filter((e: User) => e.rol?.rol != 'Client');
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [selectedItem, setSelectedItem] = useState<User>();
+  const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
     //Filters
   const [filters, setFilters] = useState({
@@ -28,9 +36,9 @@ const Employees = () => {
   const filterEmployee = (employees: any) => {
     return employees.filter((e: any) => {
       return (
-        (e.firstName.toLowerCase().includes(filters.fn.toLowerCase()))
+        (e.firstName?.toLowerCase().includes(filters.fn?.toLowerCase()))
         &&
-        (e.lastName.toLowerCase().includes(filters.ln.toLowerCase()))
+        (e.lastName?.toLowerCase().includes(filters.ln?.toLowerCase()))
         &&
         (filters.rol === 0 || e.rol.id === filters.rol)
         )
@@ -46,7 +54,7 @@ const Employees = () => {
       }))
   }
 
-  const employeesFilter = filterEmployee(employees)
+  const filteredEmployees: User[] = filterEmployee(employees)
 
   //Search
   const [firstName, setFirstName] = useState<string>('')
@@ -91,44 +99,46 @@ const Employees = () => {
   }
 
   //Sorting
-  const [sortedEmployees, setSortedEmployees] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
+  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredEmployees, 'id');
 
-  const sortEmployees = (employees: any, sortOp: number) => {
-      switch (sortOp) {
-          case 1: setSortedEmployees(employees);
-              break;
-
-          case 2: setSortedEmployees(employees.sort((a: any, b: any) => a.firstName > b.firstName ? 1 : -1))
-              break;
-
-          case 3: setSortedEmployees(employees.sort((a: any, b: any) => a.firstName < b.firstName ? 1 : -1))
-              break;
-          
-          case 4: setSortedEmployees(employees.sort((a: any, b: any) => a.lastName > b.lastName ? 1 : -1))
-              break;
-          
-          case 5: setSortedEmployees(employees.sort((a: any, b: any) => a.lastName < b.lastName ? 1 : -1))
-              break;
-      }
+  const handleDelete = (employee: User) => {
+    const { deleteObjectAlerts } = useCrudActions(employee, userService, 'employee', dispatch, loadUsers, () => setEditModalOpen(false))
+    deleteObjectAlerts()
   }
 
-  const handleChangeSorting = (e: any) => {
-      const sortOp = +e.target.value;
-      setCurrentSorting(sortOp);
-      sortEmployees(employeesFilter, sortOp);
+  const handleEdit = (employee: User) => {
+    setWatchInfo(false);
+    setSelectedItem(employee);
+    setEditModalOpen(true);
   }
 
+  const handleAddNew = () => {
+    setWatchInfo(false);
+    setSelectedItem(undefined);
+    setEditModalOpen(true);
+  }
+
+  const handleWatch = (employee: User) => {
+    setWatchInfo(true);
+    setSelectedItem(employee);
+    setEditModalOpen(true);
+  }
 
   useEffect(() => {
-    sortEmployees(employeesFilter, currentSorting);
-  }, [filters])
+    setSortedItems(useSorting(filteredEmployees, currentSorting, isAsc));
+  }, [filters, user])
 
 
     return (
         <>
             <div className="m-4">
-                <CrudCreateButton Modal={UserForm} Title='Employee' />
+                <UserForm
+                  obj={selectedItem}
+                  open={editModalOpen}
+                  onClose={() => setEditModalOpen(false)}
+                  employee={true}
+                  watch={watchInfo}
+                />
                 <h2 className='my-2 text-lg font-bold text-center stat-title'>Employees</h2>
                 <div className="flex items-center justify-center w-full gap-5 my-5">
                     <input type="text" placeholder='FIRST NAME' className=" input input-sm" onChange={handleChangeFirstName} onKeyDown={searchFirstNameOnEnter}/>
@@ -140,11 +150,11 @@ const Employees = () => {
                         })}
                     </select>
                     <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-                        <option selected value={1}>SORT BY: FEATURED</option>
-                        <option value={2}>SORT BY FIRST NAME: A - Z</option>
-                        <option value={3}>SORT BY FIRST NAME: Z - A</option>
-                        <option value={4}>SORT BY LAST NAME: A - Z</option>
-                        <option value={5}>SORT BY LAST NAME: Z - A</option>
+                        <option selected value="id true">SORT BY: FEATURED</option>
+                        <option value="firstName true">SORT BY FIRST NAME: A - Z</option>
+                        <option value="firstName false">SORT BY FIRST NAME: Z - A</option>
+                        <option value="lastName true">SORT BY LAST NAME: A - Z</option>
+                        <option value="lastName false">SORT BY LAST NAME: Z - A</option>
                     </select>
                 </div>
                 <div className="overflow-x-auto h-[35rem]">
@@ -159,18 +169,16 @@ const Employees = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedEmployees.map((employee: User, i: number) => (
+                            {sortedItems.map((employee: User, i: number) => (
                                 <tr key={i}>
                                     <td>{employee.firstName + '  ' + employee.lastName}</td>
                                     <td>{employee.mail}</td>
                                     <td>{employee.password}</td>
                                     <td>{employee.rol?.rol}</td>
                                     <td>
-                                        <div className='flex gap-2'>
-                                            <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                                            <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
-                                            <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
-                                        </div>
+                                      <div className='flex gap-2'>
+                                        <button onClick={() => handleWatch(employee)}><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                                      </div>
                                     </td>
                                 </tr>))}
                         </tbody>

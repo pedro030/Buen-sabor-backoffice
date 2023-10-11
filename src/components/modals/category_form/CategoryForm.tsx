@@ -14,9 +14,10 @@ import { useCrudActions } from '../../../hooks/useCrudActions'
 interface Props {
     obj?: Category,
     open: boolean,
-    onClose: () => void
+    onClose: () => void,
+    watch: boolean
 }
-const CategoryForm = ({ obj, open, onClose }: Props) => {
+const CategoryForm = ({ obj, open, onClose, watch }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const categories: Category[] = useSelector(categoriesSelector)
@@ -45,7 +46,7 @@ const CategoryForm = ({ obj, open, onClose }: Props) => {
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
-                <h3>{obj ? 'Edit Category' : 'New Category'}</h3>
+                <h3>{watch ? `Info Category` : obj ? 'Edit Category' : 'New Category'}</h3>
                 <Formik
                     initialValues={
                         obj ? {
@@ -64,7 +65,7 @@ const CategoryForm = ({ obj, open, onClose }: Props) => {
                         <div className="inputs-form">
                             <div className="field">
                                 <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='w-full max-w-xs input input-sm' />
+                                <Field name='name' type='text' className='w-full max-w-xs input input-sm' disabled={watch}/>
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                             <div className="field">
@@ -74,16 +75,17 @@ const CategoryForm = ({ obj, open, onClose }: Props) => {
                                     name='parentCategory'
                                     title='Subcategory'
                                     value='category'
+                                    watch={watch}
                                 />
                             </div>
                         </div>
-                        <div className="flex items-baseline justify-around my-3">
+                        { !watch && <div className="flex items-baseline justify-around my-3">
                             <button
                                 type="submit"
                                 className="btn btn-primary btn-sm btn-wide "
                             >Save</button>
                             <span className='btn btn-secondary btn-sm btn-wide ' onClick={() => onClose()}>Cancel</span>
-                        </div>
+                        </div> }
                     </Form>
                 </Formik>
             </div>

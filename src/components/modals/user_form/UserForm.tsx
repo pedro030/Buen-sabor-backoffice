@@ -11,18 +11,21 @@ import { Rol } from '../../../models/Rol'
 import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
 import { registerUserAuth0 } from '../../../services/Auth0Service'
 import * as Yup from 'yup'
-
+import Swal from 'sweetalert2'
 
 interface Props {
     obj?: any,
     open: boolean,
-    onClose: () => void
+    onClose: () => void,
+    employee: boolean,
+    watch: boolean
 }
 
-const UserForm = ({ obj: obj, open, onClose }: Props) => {
+const UserForm = ({ obj, open, onClose, employee, watch }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const userService = new UserService();
+    const userEmployee = employee ? 'Employee' : 'User';
 
     const validationSchema = Yup.object({
         mail: Yup.string()
@@ -37,44 +40,80 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
             .matches(/[A-Za-z\d@$!%*?&#]/, 'The password is invalid'),
     })
 
-    const rolsOptions:Rol[] = useSelector(rolSelector) // traer los registros de "rols" del Redux
+    const rolsOptions:Rol[] = employee ? useSelector(rolSelector).filter((item: Rol) => item.rol !== 'Client') : useSelector(rolSelector) // traer los registros de "rols" del Redux
 
     const handleOnSubmit = (state: any) => {
-        // state = {
-        //     ...state,
-        //     rol: JSON.parse(state.rol)
-        // }
-
         state.rol = JSON.parse(state.rol)
 
         if (state?.id) {
-            toast.promise(
-                userService.updateObj(state)
-                    .then(() => {
-                        userService.GetAll().then((res: User[]) => {
-                            dispatch(loadUsers(res))
+            Swal.fire({
+                title: 'Updating...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCancelButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            })
+
+            userService.updateObj(state)
+            .then((response) => {
+                if(response?.ok) {
+                    onClose();
+                    userService.GetAll()
+                        .then((users: User[]) => {
+                            dispatch(loadUsers(users))
                         })
+                    Swal.fire({
+                        icon: 'success',
+                        title: `The ${userEmployee ? 'employee' : 'user'} was updated`,
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showCancelButton: false,
+                        confirmButtonColor: '#E73636'
                     })
-                    .finally(() => onClose())
-                , {
-                    loading: 'Loading',
-                    success: 'Got the data',
-                    error: 'Error when fetching',
-                })
+                } else {
+                    Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                }
+            })
         } else {
+            Swal.fire({
+                title: 'Creating...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                showCancelButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            })
+
             userService.newObj(state)
-                .then(() => {
+            .then((response) => {
+                if(response?.ok) {
                     registerUserAuth0(state.mail, state.password)
-                    .then(res => {
-                        if(res) alert("Create user success")
-                        else alert("Error to create user")
+                    .then((res) => {
+                        if(res) {
+                            onClose();
+                            Swal.fire({
+                                icon: 'success',
+                                title: `The ${userEmployee ? 'employee' : 'user'} was created`,
+                                allowEscapeKey: false,
+                                allowOutsideClick: false,
+                                showCancelButton: false,
+                                confirmButtonColor: '#E73636'
+                            })
+                        } else Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
                     })
                     userService.GetAll()
                         .then((res: User[]) => {
                             dispatch(loadUsers(res))
-                            onClose()
                         })
-                })
+                } else {
+                    Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                }
+            })
         }
 
     }
@@ -84,10 +123,14 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
             <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
-                <h3>{obj ? 'Edit User' : 'New User'}</h3>
+                <h3>{watch ? `Info ${userEmployee}` : obj ? `Edit ${userEmployee}` : `New ${userEmployee}`}</h3>
                 <Formik
                     initialValues={
-                        obj ? obj : {
+                        obj ? {
+                            ...obj ,
+                            rol: JSON.stringify(obj.rol)
+                        }
+                        : {
                             firstName: String,
                             lastName: String,
                             mail: String,
@@ -106,65 +149,49 @@ const UserForm = ({ obj: obj, open, onClose }: Props) => {
 
                             <div className="field">
                                 <label htmlFor='firstName'>First Name</label>
-                                <Field name='firstName' type='text' className='input input-sm' />
+                                <Field name='firstName' type='text' className='input input-sm' disabled={watch}/>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='lastName'>Last Name</label>
-                                <Field name='lastName' type='text' className='input input-sm' />
+                                <Field name='lastName' type='text' className='input input-sm' disabled={watch}/>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='telephone'>telephone</label>
-                                <Field name='telephone' type='number' className='input input-sm' />
+                                <Field name='telephone' type='number' className='input input-sm' disabled={watch}/>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='mail'>Mail</label>
-                                <Field name='mail' type='text' className='input input-sm' />
+                                <Field name='mail' type='text' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="mail">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='password'>Password</label>
-                                <Field name='password' type='text' className='input input-sm' />
+                                <Field name='password' type='text' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="password">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                             <label htmlFor='rol'>Rol</label>
-
                                 <ComboBoxModel
                                     list={rolsOptions}
                                     name='rol'
                                     title='Rol'
                                     value='rol'
+                                    watch={watch}
                                 />
                             </div>
-
-
-                            {/* <div className="field">
-                              <label htmlFor='rol'>Rol</label>
-                              <Field name='rol' type='text' className='input-text' />
-                        </div> */}
-
-
-
-                            {/* <div className="field">
-                            <label htmlFor='macrouser'>Macrouser</label>
-                            <Field name="macrouser" as="select">
-                                <option value='1'>Comida</option>
-                                <option value='2'>Bebida</option>
-                            </Field>
-                        </div> */}
                         </div>
-                        <div className="flex justify-around my-3">
+                        { !watch && <div className="flex justify-around my-3">
                             <button
                                 type="submit"
                                 className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
                             <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
-                        </div>
+                        </div> }
                     </Form>
                 </Formik>
             </div>

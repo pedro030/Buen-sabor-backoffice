@@ -25,6 +25,7 @@ const Product = () => {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product>();
+  const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
   //Filters
   const [filters, setFilters] = useState({
@@ -154,6 +155,12 @@ const Product = () => {
     deleteObjectAlerts();
   }
 
+  const handleWatch = (product: Product) => {
+    setWatchInfo(true);
+    setSelectedItem(product);
+    setIsEditModalOpen(true);
+  }
+
 
   return (
     <div className="m-4 h-[90vh]">
@@ -163,6 +170,7 @@ const Product = () => {
         obj={selectedItem}
         open={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
+        watch={watchInfo}
       />
       
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Products</h2>
@@ -210,7 +218,7 @@ const Product = () => {
                 <td><div className={`${product.active ? 'badge badge-success text-white' : 'badge badge-primary'}`}>{product.active ? "Active" : "No Active"}</div></td>
                 <td>
                   <div className='flex gap-2'>
-                    <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                    <button onClick={() => handleWatch(product)}><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
                     <button onClick={() => openEditModal(product)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
                     <button onClick={() => handleDelete(product)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                   </div>

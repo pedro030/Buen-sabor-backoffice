@@ -5,9 +5,10 @@ interface Props {
     name: string,
     title: string,
     value: string,
+    watch: boolean
 }
 
-const ComboBoxModel = ({ list, name, title, value}: Props) => {
+const ComboBoxModel = ({ list, name, title, value, watch}: Props) => {
 
 const handleSelect = (e:any) => {
     console.log(e.target.value)
@@ -15,7 +16,7 @@ const handleSelect = (e:any) => {
 
     return (
         <>
-            <Field name={name} as="select" className="input input-sm">
+            <Field name={name} as="select" className="input input-sm" disabled={watch}>
                 <option onChange={handleSelect} value="-1" key={-1}>Select {value == 'category' ? 'parent category' : value}</option>
                 {
                     list.map((e, index) => (

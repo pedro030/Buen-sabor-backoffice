@@ -5,7 +5,8 @@ import { IoIosAddCircleOutline } from 'react-icons/io'
 
 interface PropsModal {
   open: boolean,
-  onClose: () => void
+  onClose: () => void,
+  watch: boolean
 }
 interface Props {
   Modal: FC<PropsModal>
@@ -21,7 +22,7 @@ const CrudCreateButton = ({ Modal, Title }: Props) => {
       <button className={`btn ${aux ? 'btn-secondary' : 'btn-primary'}`} onClick={() => setOpen(true)}>
         {(aux) ? <><AiOutlineReload /> {Title}</> : <><IoIosAddCircleOutline className="w-5 h-5" />Add {Title}</>}
       </button>
-      <Modal open={open} onClose={() => setOpen(false)} />
+      <Modal open={open} onClose={() => setOpen(false)} watch={false}/>
     </div>
   )
 }

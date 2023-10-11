@@ -34,6 +34,7 @@ function CategoriesCRUD() {
 
   const [selectedItem, setSelectedItem] = useState<Category>()
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
   //Filters
   const [filters, setFilters] = useState({
@@ -108,6 +109,12 @@ function CategoriesCRUD() {
     setEditModalOpen(true);
   }
 
+  const handleWatch = (category: Category) => {
+    setWatchInfo(true);
+    setSelectedItem(category);
+    setEditModalOpen(true);
+  }
+
   return (
     <div className="mx-4 mt-4">
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
@@ -115,6 +122,7 @@ function CategoriesCRUD() {
         obj={selectedItem}
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
+        watch={watchInfo}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
       <div className="flex items-center justify-center w-full gap-5 my-2">
@@ -146,7 +154,7 @@ function CategoriesCRUD() {
                 <td>{cat.parentCategory?.name}</td>
                 <td>
                   <div className='flex gap-2'>
-                    <button className="cursor-pointer"><RiEyeLine className='w-5 h-5 eye-icon' /></button>
+                    <button onClick={() => handleWatch(cat)} className="cursor-pointer"><RiEyeLine className='w-5 h-5 eye-icon' /></button>
                     <button onClick={() => handleEdit(cat)} className="cursor-pointer"><FiEdit2 className='w-5 h-5 edit-icon' /></button>
                     <button onClick={() => handleDelete(cat)} className="cursor-pointer"><RiDeleteBin6Line className='w-5 h-5 delete-icon' /></button>
                   </div>

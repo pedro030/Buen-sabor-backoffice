@@ -26,6 +26,7 @@ const Ingredient = () => {
   //modals states
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Ingredient>();
+  const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
   const handleDelete = (ingredient: Ingredient) => {
     const { deleteObjectAlerts } = useCrudActions(ingredient, ingredientService, 'ingredient', dispatch, loadIngredients, () => setEditModalOpen(false));
@@ -35,6 +36,12 @@ const Ingredient = () => {
   const openEditModal = (i: Ingredient) => {
     setSelectedItem(i);
     setEditModalOpen(true)
+  }
+
+  const handleWatch = (ingredient: Ingredient) => {
+    setWatchInfo(true);
+    setSelectedItem(ingredient);
+    setEditModalOpen(true);
   }
 
   //Filters
@@ -126,6 +133,7 @@ const Ingredient = () => {
         obj={selectedItem}
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
+        watch={watchInfo}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Ingredients</h2>
       <div className="flex items-center justify-center w-full gap-5 my-2">
@@ -140,13 +148,13 @@ const Ingredient = () => {
           }
         </select>
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
-          <option selected value={1}>SORT BY: FEATURED</option>
-          <option value={2}>SORT BY STOCK: LOW to HIGH</option>
-          <option value={3}>SORT BY STOCK: HIGH to LOW</option>
-          <option value={4}>SORT BY COST: LOW to HIGH</option>
-          <option value={5}>SORT BY COST: HIGH to LOW</option>
-          <option value={6}>SORT BY NAME: A - Z</option>
-          <option value={7}>SORT BY NAME: Z - A</option>
+          <option selected value="id true">SORT BY: FEATURED</option>
+          <option value="stock true">SORT BY STOCK: LOW to HIGH</option>
+          <option value="stock false">SORT BY STOCK: HIGH to LOW</option>
+          <option value="cost true">SORT BY COST: LOW to HIGH</option>
+          <option value="cost false">SORT BY COST: HIGH to LOW</option>
+          <option value="name true">SORT BY NAME: A - Z</option>
+          <option value="name false">SORT BY NAME: Z - A</option>
         </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
@@ -172,7 +180,7 @@ const Ingredient = () => {
                   <td>{ingredient.measure?.measure}</td>
                   <td>
                     <div className='flex gap-2'>
-                      <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
+                      <button onClick={() => handleWatch(ingredient)}><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
                       <button onClick={() => openEditModal(ingredient)}><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
                       <button onClick={() => handleDelete(ingredient)}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
                     </div>

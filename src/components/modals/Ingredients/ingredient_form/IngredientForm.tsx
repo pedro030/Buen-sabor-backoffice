@@ -14,9 +14,10 @@ import { useCrudActions } from '../../../../hooks/useCrudActions'
 interface Props {
     obj?: Ingredient,
     open: boolean,
-    onClose: () => void
+    onClose: () => void,
+    watch: boolean
 }
-const IngredientForm = ({ obj, open, onClose }: Props) => {
+const IngredientForm = ({ obj, open, onClose, watch }: Props) => {
     if (!open) return null
     const ingredientService = new IngredientService()
     const dispatch = useDispatch()
@@ -48,7 +49,7 @@ const IngredientForm = ({ obj, open, onClose }: Props) => {
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
-                <h3>{obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
+                <h3>{watch ? `Info Ingredient` : obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
                 <Formik
                     initialValues={
                         obj?
@@ -71,25 +72,25 @@ const IngredientForm = ({ obj, open, onClose }: Props) => {
                         <div className="gap-2 inputs-form">
                             <div className="field">
                                 <label htmlFor='ingredient'>Ingredient Name</label>
-                                <Field name='name' type='text' className='input input-sm' />
+                                <Field name='name' type='text' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='cost'>Cost</label>
-                                <Field name='cost' type='number' className='input input-sm' />
+                                <Field name='cost' type='number' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='stock'>Stock</label>
-                                <Field name='stock' type='number' className='input input-sm' />
+                                <Field name='stock' type='number' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='stockMin'>Stock Min.</label>
-                                <Field name='stockMin' type='number' className='input input-sm' />
+                                <Field name='stockMin' type='number' className='input input-sm' disabled={watch}/>
                                 <ErrorMessage name="stockMin">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
@@ -100,20 +101,17 @@ const IngredientForm = ({ obj, open, onClose }: Props) => {
                                     name='measure'
                                     title='Measure'
                                     value='measure'
+                                    watch={watch}
                                 />
                             </div>
-
-
-
-
                         </div>
-                        <div className="flex justify-around my-3">
+                        { !watch && <div className="flex justify-around my-3">
                             <button
                                 type="submit"
                                 className="btn btn-primary btn-wide btn-sm"
                             >Save</button>
                             <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
-                        </div>
+                        </div> }
                     </Form>
                 </Formik>
             </div>

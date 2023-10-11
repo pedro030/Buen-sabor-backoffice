@@ -1,6 +1,6 @@
 import UserForm from "../../components/modals/user_form/UserForm"
 import { User } from "../../models/User"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { loadUsers } from "../../state/actions/userActions"
 import { rolSelector, userSelector } from "../../state/selectors"
 import CrudCard from "../../components/crud_components/crud_card/CrudCard"
@@ -14,12 +14,17 @@ import { useSorting } from "../../hooks/useSorting"
 import { usePagination } from "../../hooks/usePagination"
 import Pagination from "../../components/pagination/Pagination"
 import { useSortingStates } from "../../hooks/useSortingStates"
+import { IoIosAddCircleOutline } from "react-icons/io"
+import { useCrudActions } from "../../hooks/useCrudActions"
 
 function User() {
-
+  const dispatch = useDispatch();
   const user: User[] = useSelector(userSelector)
   const rols = useSelector(rolSelector)
   const userService = new UserService()
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
+  const [selectedItem, setSelectedItem] = useState<User>()
+  const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
   //Filters
   const [filters, setFilters] = useState({
@@ -97,17 +102,44 @@ function User() {
   const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(usersFilter, 'id');
 
   //Pagination
-  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems)
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
+
+  const handleDelete = (user: User) => {
+    const { deleteObjectAlerts } = useCrudActions(user, userService, 'user', dispatch, loadUsers, () => setEditModalOpen(false))
+    deleteObjectAlerts()
+  }
+
+  const handleEdit = (user: User) => {
+    setSelectedItem(user);
+    setEditModalOpen(true);
+  }
+
+  const handleAddNew = () => {
+    setSelectedItem(undefined);
+    setEditModalOpen(true);
+  }
+
+  const handleWatch = (user: User) => {
+    setWatchInfo(true);
+    setSelectedItem(user);
+    setEditModalOpen(true);
+  }
 
 
   useEffect(() => {
     setCurrentPage(1);
     setSortedItems(useSorting(usersFilter, currentSorting, isAsc));
-  }, [filters])
+  }, [filters, user])
 
   return (
     <div className="m-4">
-      <CrudCreateButton Modal={UserForm} Title='Users' />
+      <UserForm
+        obj={selectedItem}
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        employee={false}
+        watch={watchInfo}
+      />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Users</h2>
       <div className="flex items-center justify-center w-full gap-5 my-5">
         <input type="text" placeholder='FIRST NAME' className=" input input-sm" onChange={handleChangeFirstName} onKeyDown={searchFirstNameOnEnter}/>
@@ -148,9 +180,7 @@ function User() {
                 <td>{userItem.rol?.rol}</td>
                 <td>
                   <div className='flex gap-2'>
-                  <button><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                    <button><FiEdit2 className='w-5 h-5 edit-icon' /> </button>
-                    <button onClick={() => alert('coming soon')}><RiDeleteBin6Line className='w-5 h-5 delete-icon' /> </button>
+                    <button onClick={() => handleWatch(userItem)}><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
                   </div>
                 </td>
               </tr>))}
@@ -161,29 +191,6 @@ function User() {
         </table>
       </div>
     </div>
-    // <>
-    //       {/* <CrudHead/> */}
-    //       <CrudCreateButton Modal={UserForm} Title='User'/>
-    //       <div className="th-container">
-    //         <span>FIRST_NAME</span>
-    //         <span>LAST_NAME</span>
-    //         <span></span>
-    //         <span>MAIL</span>
-    //         <span>PASSWORD</span>
-    //         <span>ROL</span>
-    //       </div>
-    //       { user && user[0] && user.map((cat:User) => {
-    //         return <CrudCard
-    //         key={cat.id}
-    //         obj={cat}
-    //         EditModal={UserForm}
-    //         loadAction={loadUsers}
-    //         apiServ={userService}
-    //         DeleteModal={CrudDeleteModal}
-    //         modelo='User'
-    //         />
-    //       })}
-    // </>
   )
 }
 

@@ -14,9 +14,10 @@ import Swal from 'sweetalert2'
 interface Props {
     obj?: any,
     open: boolean,
-    onClose: () => void
+    onClose: () => void,
+    watch: boolean
 }
-const ProductForm = ({ obj: obj, open, onClose }: Props) => {
+const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
     if (!open) return null
     const dispatch = useDispatch()
     const productService = new ProductService();
@@ -129,7 +130,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
-                <h3>{obj ? 'Edit Product' : 'New Product'}</h3>
+                <h3>{watch ? `Info Product` : obj ? 'Edit Product' : 'New Product'}</h3>
                 <Formik
                     initialValues={
                         obj ? obj : {
@@ -151,32 +152,32 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                             <div className="inputs-form">
                                 <div className="field">
                                     <label htmlFor='name'>Name</label>
-                                    <Field name='name' type='text' className='input input-sm' />
+                                    <Field name='name' type='text' className='input input-sm' disabled={watch}/>
                                     <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='price'>Price</label>
-                                    <Field name='price' type='number' className='input input-sm' />
+                                    <Field name='price' type='number' className='input input-sm' disabled={watch}/>
                                     <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='image'>Image</label>
-                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: any) => handleImageChange(e)} />
+                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: any) => handleImageChange(e)} disabled={watch}/>
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='cookingTime'>Cooking Time</label>
-                                    <Field name='cookingTime' type='number' className='input input-sm' />
+                                    <Field name='cookingTime' type='number' className='input input-sm' disabled={watch}/>
                                     <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
 
                                 <div className="field">
                                     <label htmlFor='active'>Status</label>
-                                    <Field name='active' as='select' className="input input-sm">
+                                    <Field name='active' as='select' className="input input-sm" disabled={watch}>
                                         <option value="true">Active</option>
                                         <option value="false">Unactive</option>
                                     </Field>
@@ -189,7 +190,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                         const selectedCategory = JSON.parse(e.target.value);
                                         setSubcategoryChange(selectedCategory)
                                         setFieldValue('subcategory', selectedCategory);
-                                    }}>
+                                    }} disabled={watch}>
                                         <option value='' label='Select Category' />
                                         {categories.filter((item: Category) => item?.parentCategory !== null).map((cat: Category, ind: number) => {
                                             return <option key={ind} value={JSON.stringify(cat)} label={cat.name} />
@@ -201,7 +202,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                 {((subcategoryChange?.parentCategory?.name === "Bebidas") || (values.subcategory.parentCategory?.name === "Bebidas")) &&
                                     <div className="field">
                                         <label htmlFor='cost'>Cost</label>
-                                        <Field name='cost' type='number' className='input input-sm' />
+                                        <Field name='cost' type='number' className='input input-sm' disabled={watch}/>
                                         <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                     </div>
                                 }
@@ -215,7 +216,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                 <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
                                 <div className='flex flex-row'>
 
-                                    <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)}>+</button>
+                                    <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)} disabled={watch}>+</button>
 
                                     <div className='flex flex-row ml-5 w-[70%]  h-36 overflow-y-auto'>
                                         <div className='flex flex-col gap-5 m-1'>
@@ -224,7 +225,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                     <div className='flex flex-row w-full gap-5'>
                                                         <div className='flex flex-col'>
                                                             <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
-                                                                <option value='' label='Select Ingredient' />
+                                                                <option value='' label='Select Ingredient' disabled={watch}/>
                                                                 {ingredientsOptions.map((i: any, ind: any) => {
                                                                     return <option key={ind} value={JSON.stringify(i)} label={i.name} />
                                                                 })}
@@ -232,7 +233,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                         </div>
 
                                                         <div className="flex flex-col field">
-                                                            <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} />
+                                                            <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} disabled={watch}/>
                                                             {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
                                                         </div>
 
@@ -240,7 +241,7 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                                             <label>{values.ingredients[index].ingredient.measure.measure}</label>
                                                         </div>
 
-                                                        <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)}>-</button>
+                                                        <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)} disabled={watch}>-</button>
                                                     </div>
                                                 </>
                                             })}
@@ -250,13 +251,13 @@ const ProductForm = ({ obj: obj, open, onClose }: Props) => {
                                 </div>
                             </div>
 
-                            <div className="flex justify-around my-3">
+                            { !watch && <div className="flex justify-around my-3">
                                 <button
                                     type="submit"
                                     className="btn btn-primary btn-wide btn-sm"
                                 >Save</button>
                                 <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
-                            </div>
+                            </div> }
                         </Form>)}
                 </Formik>
             </div>
