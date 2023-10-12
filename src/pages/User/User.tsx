@@ -16,8 +16,15 @@ import Pagination from "../../components/pagination/Pagination"
 import { useSortingStates } from "../../hooks/useSortingStates"
 import { IoIosAddCircleOutline } from "react-icons/io"
 import { useCrudActions } from "../../hooks/useCrudActions"
+import { AiOutlineCheckSquare } from "react-icons/ai"
+import { MdOutlineDisabledByDefault } from 'react-icons/md'
+import Swal from "sweetalert2"
+import store from "../../state/store/store"
 
 function User() {
+  // Token
+  const token: string = store.getState().userSession.token
+  const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
   const dispatch = useDispatch();
   const user: User[] = useSelector(userSelector)
   const rols = useSelector(rolSelector)
@@ -25,6 +32,16 @@ function User() {
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false)
   const [selectedItem, setSelectedItem] = useState<User>()
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
+
+  const fetchBlacklist = async (id: number) => {
+    const response = await fetch(`${apiURL}/users/changeBlacklist/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${(token).trim()}`
+      }
+    })
+
+    return response;
+  }
 
   //Filters
   const [filters, setFilters] = useState({
@@ -104,6 +121,7 @@ function User() {
   //Pagination
   const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
 
+  // Handlers
   const handleDelete = (user: User) => {
     const { deleteObjectAlerts } = useCrudActions(user, userService, 'user', dispatch, loadUsers, () => setEditModalOpen(false))
     deleteObjectAlerts()
@@ -123,6 +141,49 @@ function User() {
     setWatchInfo(true);
     setSelectedItem(user);
     setEditModalOpen(true);
+  }
+
+  const handleBlacklist = (user: User) => {
+    Swal.fire({
+      icon: "warning",
+      title: `${user.blacklist === 'Enabled' ? 'Disabled User' : 'Enabled User'}`,
+      text: `Are you sure you want to ${user.blacklist === 'Enabled' ? 'disabled' : 'enabled'} this user?`,
+      showCancelButton: true,
+      reverseButtons: true,
+      confirmButtonColor: '#E73636',
+      confirmButtonText: `${user.blacklist === 'Enabled' ? 'Disable User' : 'Enable User'}`
+    })
+      .then((result) => {
+        if(result.isConfirmed) {
+          Swal.fire({
+            title: `${user.blacklist === 'Enabled' ? 'Disabling...' : 'Enabling...'}`,
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+          })
+          fetchBlacklist(+user.id)
+          .then((response) => {
+            if(response?.ok) {
+              userService.GetAll()
+              .then((res: User[]) => {
+                dispatch(loadUsers(res))
+              })
+              Swal.fire({
+                icon: 'success',
+                title: `The user was ${user.blacklist === 'Enabled' ? 'disabled' : 'enabled'}`,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+              })
+            } else Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+          })
+        }
+      })
   }
 
 
@@ -162,26 +223,26 @@ function User() {
         <table className="table table-xs table-pin-rows ">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Full Name</th>
               <th>Mail</th>
-              <th>Password</th>
               <th>Rol</th>
-              <th></th>
+              <td>State</td>
+              <th>View</th>
+              <th>Blacklist</th>
             </tr>
           </thead>
           <tbody>
             {currentObjects.map((userItem: User, i: number) => (
               <tr key={i}>
-                <td>{userItem.firstName}</td>
-                <td>{userItem.lastName}</td>
+                <td>{userItem.firstName + '  ' + userItem.lastName}</td>
                 <td>{userItem.mail}</td>
-                <td>{userItem.password}</td>
                 <td>{userItem.rol?.rol}</td>
+                <td className={userItem.blacklist === 'Enabled' ? 'text-green-500' : 'text-red-500'}>{userItem.blacklist}</td>
                 <td>
-                  <div className='flex gap-2'>
-                    <button onClick={() => handleWatch(userItem)}><RiEyeLine className='w-5 h-5 eye-icon' /> </button>
-                  </div>
+                  <button onClick={() => handleWatch(userItem)}><RiEyeLine className='w-5 h-5 eye-icon' /></button>
+                </td>
+                <td>
+                  <button onClick={() => handleBlacklist(userItem)}>{userItem.blacklist === 'Enabled' ? <MdOutlineDisabledByDefault className="w-5 h-5 text-red-500"/> : <AiOutlineCheckSquare className="w-5 h-5 text-green-500"/>}</button>
                 </td>
               </tr>))}
           </tbody>
