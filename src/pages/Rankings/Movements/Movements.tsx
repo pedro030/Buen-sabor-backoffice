@@ -187,7 +187,7 @@ const Movements = () => {
               </div>
           </div>
           <div className="w-[50vw] h-[60vh] overflow-y-auto">
-            <table className="table table-pin-rows">
+            <table className="table">
               <thead>
                 <tr>
                   <th className="text-center">ID</th>

@@ -62,10 +62,10 @@ const CategoryForm = ({ obj, open, onClose, watch }: Props) => {
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     <Form>
-                        <div className="inputs-form">
-                            <div className="field">
+                        <div className=" inputs-form w-96">
+                            <div className="field ">
                                 <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='w-full max-w-xs input input-sm' disabled={watch}/>
+                                <Field name='name' type='text' className='w-full max-w-xs input ' disabled={watch}/>
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                             <div className="field">
@@ -82,9 +82,9 @@ const CategoryForm = ({ obj, open, onClose, watch }: Props) => {
                         { !watch && <div className="flex items-baseline justify-around my-3">
                             <button
                                 type="submit"
-                                className="btn btn-primary btn-sm btn-wide "
+                                className="btn btn-primary btn-sm w-[10rem] "
                             >Save</button>
-                            <span className='btn btn-secondary btn-sm btn-wide ' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary btn-sm w-[10rem]' onClick={() => onClose()}>Cancel</span>
                         </div> }
                     </Form>
                 </Formik>

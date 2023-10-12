@@ -125,7 +125,23 @@ function CategoriesCRUD() {
         watch={watchInfo}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Categories</h2>
-      <div className="flex items-center justify-center w-full gap-5 my-2">
+      <details className="mb-10 dropdown lg:hidden">
+  <summary className="m-1 btn btn-primary btn-wide btn-sm">Filter</summary>
+  <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  ">
+    <li><input type="text" placeholder='NAME' className=" input" onChange={handleChangeSearch} value={search} onKeyDown={searchOnEnter} />
+</li>
+    <li><select className="w-full h-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+          <option selected value={'id true'}>SORT BY: FEATURED</option>
+          <option value={'name true'}>SORT BY NAME: A - Z</option>
+          <option value={'name false'}>SORT BY NAME: Z - A</option>
+        </select></li>
+        <li><select className="w-full h-full max-w-xs select select-bordered select-sm" onChange={handleChangeSubcategory}>
+          <option selected value={1}>SUBCATEGORY: STANDARD</option>
+          <option value={2}>SUBCATEGORY: EMPTY</option>
+        </select></li>
+  </ul>
+</details>
+      <div className="flex items-center justify-center w-full gap-5 my-2 max-lg:hidden">
         <input type="text" placeholder='NAME' className=" input w-[60%] input-sm" onChange={handleChangeSearch} value={search} onKeyDown={searchOnEnter} />
         <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
           <option selected value={'id true'}>SORT BY: FEATURED</option>
@@ -139,7 +155,7 @@ function CategoriesCRUD() {
         </select>
       </div>
       <div className="overflow-x-auto h-[35rem]">
-        <table className="table table-xs table-pin-rows ">
+        <table className="z-0 table table-xs table-pin-rows ">
           <thead>
             <tr>
               <th>Name</th>

@@ -16,8 +16,8 @@ const handleSelect = (e:any) => {
 
     return (
         <>
-            <Field name={name} as="select" className="input input-sm" disabled={watch}>
-                <option onChange={handleSelect} value="-1" key={-1}>Select {value == 'category' ? 'parent category' : value}</option>
+            <Field name={name} as="select" className="input" disabled={watch}>
+                <option onChange={handleSelect} value="-1" key={-1}>Select {value == 'category' ? 'category' : value}</option>
                 {
                     list.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>

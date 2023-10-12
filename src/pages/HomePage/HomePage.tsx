@@ -16,15 +16,15 @@ function HomePage() {
     }
 
     return (
-        <div className="flex flex-row flex-wrap items-center justify-center gap-5 m-5">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-5 p-5">
             { cards[rol].map((element: any, index:number) => (
-             <NavLink key={index} className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to={element}>{element[0].toUpperCase() + element.substring(1)}</NavLink>
+             <NavLink key={index} className="flex items-center justify-center w-full h-10 tracking-widest text-white transition-all sm:w-56 sm:h-32 bg-primary hover:shadow hover:opacity-70 rounded-2xl" to={element}>{element[0].toUpperCase() + element.substring(1)}</NavLink>
             )
             )}
             { (rol === '_admin' || rol === '_superAdmin') && <>
-                <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/products">Products Ranking</NavLink>
-                <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/clients">Clients Ranking</NavLink>
-                <NavLink className="flex items-center justify-center tracking-widest text-white transition-all bg-red-500 hover:shadow hover:bg-red-400 rounded-2xl w-72 h-52" to="statistics/movements">Monetary Movements</NavLink>
+                <NavLink className="flex items-center justify-center w-full h-10 tracking-widest text-white transition-all sm:w-56 sm:h-32 bg-primary hover:shadow hover:opacity-70 rounded-2xl" to="statistics/products">Products Ranking</NavLink>
+                <NavLink className="flex items-center justify-center w-full h-10 tracking-widest text-white transition-all sm:w-56 sm:h-32 bg-primary hover:shadow hover:opacity-70 rounded-2xl" to="statistics/clients">Clients Ranking</NavLink>
+                <NavLink className="flex items-center justify-center w-full h-10 tracking-widest text-white transition-all sm:w-56 sm:h-32 bg-primary hover:shadow hover:opacity-70 rounded-2xl" to="statistics/movements">Monetary Movements</NavLink>
             </>}
         </div>
     )

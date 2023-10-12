@@ -56,7 +56,7 @@ const PersonalInfo = () => {
                 </div>
             </div>
             <div className="flex items-center justify-center">
-                <button className="w-[30rem] my-5 btn btn-primary">Save Info</button>
+                <button className="my-5 btn-wide btn btn-primary">Save Info</button>
             </div>
         </>
     )
