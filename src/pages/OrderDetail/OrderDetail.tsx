@@ -25,18 +25,18 @@ const OrderDetail = () => {
     // Api URL
     const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
+    // URL Params
+    const { idOrder } = useParams()
+
     // Redux
     const dispatch = useDispatch();
     const { token } = useSelector(userSessionSelector);
-    const orders: Order[] = useSelector(orderSelector);
-    const order = orders.filter((item: Order) => item.id == idOrder);
+    let order: Order[] = useSelector(orderSelector);
+    order = order.filter((item: Order) => item.id == idOrder);
     const status = useSelector(statusSelector);
 
     // Navigation
     const navigate: NavigateFunction = useNavigate();
-
-    // URL Params
-    const { idOrder } = useParams()
 
     // States
     const [minutes, setMinutes] = useState<number>(0)
@@ -161,8 +161,8 @@ const OrderDetail = () => {
             .catch((e) => console.error(e));
 
         if (res?.ok) {
-            const updatedOrder = { ...orders[0], statusOrder: statusType }
-            dispatch(updateOrder(id, updatedOrder))
+            const updatedOrder = { ...order[0], statusOrder: statusType }
+            dispatch(updateOrder(id, updatedOrder));
             Swal.fire({
                 title: 'The status was changed',
                 icon: 'success',
@@ -194,7 +194,7 @@ const OrderDetail = () => {
             .catch((e) => console.error(e));
 
         if (res?.ok) {
-            const updatedOrder = { ...orders[0], totalCookingTime: (totalCookingTime + minutes) }
+            const updatedOrder = { ...order[0], totalCookingTime: (totalCookingTime + minutes) }
             dispatch(updateOrder(id, updatedOrder))
             Swal.fire({
                 title: 'The minutes were added',
@@ -224,7 +224,7 @@ const OrderDetail = () => {
             .catch((e) => console.error(e));
 
         if (res?.ok) {
-            const updatedOrder = { ...orders[0], statusOrder: statusType }
+            const updatedOrder = { ...order[0], statusOrder: statusType }
             dispatch(updateOrder(id, updatedOrder))
             Swal.fire({
                 title: 'The order was cancelled',
