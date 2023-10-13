@@ -29,7 +29,7 @@ function Sidebar() {
 
     // STRUCTURE
     <>
-<details className='mt-3 ml-3 md:hidden dropdown'>
+<details className='mt-3 ml-3 lg:hidden dropdown'>
             <summary className='m-1 btn btn-circle btn-secondary'><FaBars className="w-5 h-5"/></summary>
             <ul className='p-2 shadow menu dropdown-content z-[1] bg-secondary rounded-box w-80'>
               {/* AVATAR */}
@@ -114,7 +114,7 @@ function Sidebar() {
             </ul>
           </details>
       {/* SIDEBAR */}
-      <div className="w-[260px] bg-white h-[100vh] border shadow menu max-md:hidden">
+      <div className="w-56 bg-white h-[100vh] border shadow menu max-lg:hidden">
 
         {/* <h1 className='font-bold font-red-600'>Buen Sabor</h1> */}
 
@@ -129,7 +129,7 @@ function Sidebar() {
         <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
 
         {/* OPTIONS */}
-        <div className='flex flex-col justify-between h-[75%]'>
+        <div className='flex flex-col'>
           <div>
             <li>
               <NavLink to="/" end>

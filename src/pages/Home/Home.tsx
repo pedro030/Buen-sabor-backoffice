@@ -93,9 +93,9 @@ function Home() {
       }
 
     return (
-        <div className="flex max-md:flex-col">
+        <div className="flex max-lg:flex-col">
             <Sidebar />
-            <div className="w-[85vw]">
+            <div className="w-full">
                 <HomeRoutes />
             </div>
         </div>

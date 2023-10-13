@@ -146,14 +146,51 @@ const Movements = () => {
   }, [movements])
 
   return (
-    <div className="h-[100vh] overflow-y-auto">
+    <div>
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Movements</h1>
       <hr />
 
       <div className="flex justify-center">
-        <div className="">
-
-          <div className="flex justify-center gap-5 my-2">
+        <div>
+        <details className='mb-10 dropdown md:hidden'>
+        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+          Filter
+        </summary>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  '>
+          <li>
+            <DatePicker
+                    isClearable
+                    withPortal
+                    selectsRange
+                    selected={startDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={handleChangeDate}
+                    placeholderText="Date: From - To"
+                    dateFormat="yyyy/MM/dd"
+                    className="input input-sm input-bordered"
+                    maxDate={new Date(Date.now())}
+                  />
+          </li>
+          <li>
+            <select className="w-full h-full select select-bordered select-sm" onChange={handleChangeType}>
+                  <option selected value="">TYPE: ALL</option>
+                  <option value="Restocking">TYPE: RESTOCKING</option>
+                  <option value="Bill">TYPE: BILL</option>
+                  <option value="Credit_Note">TYPE: CREDIT NOTE</option>
+                </select>
+          </li>
+          <li>
+            <select className="w-full h-full select select-bordered select-sm" onChange={handleChangeSorting}>
+                  <option value='date true'>SORT BY DATE: OLD to NEW</option>
+                  <option value='date false'>SORT BY DATE: NEW to OLD</option>
+                  <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
+                  <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
+                </select>
+          </li>
+        </ul>
+      </details>
+          <div className="flex justify-center gap-5 my-2 max-md:hidden">
             <div>
                 <DatePicker
                     isClearable
@@ -186,11 +223,11 @@ const Movements = () => {
                 </select>
               </div>
           </div>
-          <div className="w-[50vw] h-[60vh] overflow-y-auto">
-            <table className="table">
+          <div className="h-[60vh] overflow-y-auto">
+            <table className="z-0 table max-sm:table-xs table-sm table-pin-rows">
               <thead>
                 <tr>
-                  <th className="text-center">ID</th>
+                  {/* <th className="text-center">ID</th> */}
                   <th className="text-center">TYPE</th>
                   <th className="text-center">DATE / HOUR</th>
                   <th className="text-center">DESCRIPTION</th>
@@ -201,7 +238,7 @@ const Movements = () => {
                 {
                   currentObjects.map((movement: Movement, index: number) => (
                     <tr key={index}>
-                      <th className="text-center">{movement.id}</th>
+                      {/* <th className="text-center">{movement.id}</th> */}
                       <th className="text-center">{movement.type.replace("_", " ")}</th>
                       <th className="text-center">{movement.date.replace(" ", " / ")}</th>
                       <th className="text-center">{movement.description.replaceAll(`"`, "")}</th>

@@ -91,14 +91,45 @@ const RankingsClients = () => {
   }, [clients])
 
   return (
-    <div className=" grid grid-rows-[80px_0.9fr_50px] overflow-y-auto h-[99vh]">
+    <div className=" grid grid-rows-[80px_1fr]">
       <div>
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Client Ranking</h1>
       <hr />
       </div>
-      <div className="flex justify-center overflow-y-auto">
-        <div className="w-[60vw]">
-          <div className="flex justify-center gap-5 my-2">
+      <details className='mb-10 dropdown md:hidden'>
+          <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+            Filter
+          </summary>
+          <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+            <li><select className="w-full h-full select select-bordered select-sm" onChange={handleChangeSorting}>
+                <option selected value={'id true'}>SORT BY: ID CLIENT</option>
+                <option value={'orders_quantity false'}>SORT BY: + QTY</option>
+                <option value={'orders_quantity true'}>SORT BY: - QTY</option>
+                <option value={'total_sum false'}>SORT BY: + TOTAL</option>
+                <option value={'total_sum true'}>SORT BY: - TOTAL</option>
+              </select></li>
+            <li><DatePicker
+                  isClearable
+                  withPortal
+                  selectsRange
+                  selected={startDate}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={handleChangeDate}
+                  placeholderText="Date: From - To"
+                  dateFormat="yyyy/MM/dd"
+                  className="cursor-pointer input input-sm input-bordered"
+                  maxDate={new Date(Date.now())}
+                /></li>
+            <li>
+            <button className="btn btn-primary btn-sm" onClick={handleClickGetRankingByDate}>Get Ranking by Date</button>
+            </li>
+            <ExportCSV csvData={sortedItems} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
+            <li></li>
+          </ul>
+        </details>
+
+          <div className="flex justify-center gap-5 my-2 max-md:hidden">
             <div>
               <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
                 <option selected value={'id true'}>SORT BY: ID CLIENT</option>
@@ -119,7 +150,7 @@ const RankingsClients = () => {
                   onChange={handleChangeDate}
                   placeholderText="Date: From - To"
                   dateFormat="yyyy/MM/dd"
-                  className="input input-sm input-bordered cursor-pointer"
+                  className="cursor-pointer input input-sm input-bordered"
                   maxDate={new Date(Date.now())}
                 />
             </div>
@@ -128,7 +159,7 @@ const RankingsClients = () => {
             </div>
             <ExportCSV csvData={sortedItems} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
           </div>
-          <table className="table table-xs">
+          <table className="z-0 table table-xs">
             <thead>
               <tr>
                 <th>ID</th>
@@ -156,8 +187,6 @@ const RankingsClients = () => {
             </tfoot>
           </table>
         </div>
-      </div>
-    </div>
   )
 }
 

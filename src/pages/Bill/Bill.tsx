@@ -47,16 +47,16 @@ function Bill() {
   const [filters, setFilters] = useState({
     startDate: "",
     endDate: "",
-    type:"Bill"
+    type: "Bill",
   });
 
   const filterBills = (movements: Movement[]) => {
     return movements.filter((movement: Movement) => {
-      return (movement.type === filters.type)
-    })
-  }
+      return movement.type === filters.type;
+    });
+  };
 
-  const filteredBills =  filterBills(movements);
+  const filteredBills = filterBills(movements);
 
   // Handlers
   const handleChangeDate = (range: [Date, Date]) => {
@@ -67,65 +67,109 @@ function Bill() {
     const stDate = dateToString(startDate);
     const edDate = dateToString(endDate);
 
-    if(startDate && endDate) {
+    if (startDate && endDate) {
       setFilters({
         ...filters,
-        startDate: stDate ? stDate : '',
-        endDate: edDate ? edDate : '',
-      })
+        startDate: stDate ? stDate : "",
+        endDate: edDate ? edDate : "",
+      });
     } else {
       setFilters({
         ...filters,
-        startDate: '',
-        endDate: ''
-      })
+        startDate: "",
+        endDate: "",
+      });
     }
   };
 
   // Sorting
-  const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredBills, 'date');
+  const {
+    sortedItems,
+    setSortedItems,
+    currentSorting,
+    isAsc,
+    handleChangeSorting,
+  } = useSortingStates(filteredBills, "date");
 
   //Pagination
-  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
+  const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } =
+    usePagination(sortedItems);
 
   // UseEffect inicial
   useEffect(() => {
-    movementServ.GetAll()
-    .then(data => {
+    movementServ.GetAll().then((data) => {
       dispatch(loadMovements(data));
-    })
-  }, [])
+    });
+  }, []);
 
   // UseEffect que se ejecuta cuando cambia el estado de filters así se realiza el filtrado
   useEffect(() => {
-    if(filters.startDate && filters.endDate && filters.type){
-      movementServ.GetByDates(filters.startDate,filters.endDate,filters.type)
-      .then(data => {
+    if (filters.startDate && filters.endDate && filters.type) {
+      movementServ
+        .GetByDates(filters.startDate, filters.endDate, filters.type)
+        .then((data) => {
+          dispatch(loadMovements(data));
+        });
+    } else if (filters.startDate && filters.endDate) {
+      movementServ
+        .GetByDates(filters.startDate, filters.endDate)
+        .then((data) => {
+          dispatch(loadMovements(data));
+        });
+    } else {
+      movementServ.GetAll().then((data) => {
         dispatch(loadMovements(data));
-      })
-    }else if (filters.startDate && filters.endDate){
-      movementServ.GetByDates(filters.startDate,filters.endDate)
-      .then(data => {
-        dispatch(loadMovements(data));
-      })
-    }else{
-      movementServ.GetAll()
-      .then(data => {
-        dispatch(loadMovements(data));
-      })
+      });
     }
-  }, [filters])
+  }, [filters]);
 
   // UseEffect que se ejecuta cada vez que cambia el estado de movements
   useEffect(() => {
     setCurrentPage(1);
     setSortedItems(useSorting(filteredBills, currentSorting, isAsc));
-  }, [movements])
+  }, [movements]);
 
   return (
-    <div className="m-4">
-      <h2 className="my-2 text-lg font-bold text-center stat-title">Bills</h2>
-      <div className="flex items-center justify-center w-full gap-5 my-5">
+    <div className='m-4'>
+      <h2 className='my-2 text-lg font-bold text-center stat-title'>Bills</h2>
+
+      <details className='mb-10 dropdown md:hidden'>
+        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+          Filter
+        </summary>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+          <li>
+            <div>
+              <DatePicker
+                isClearable
+                withPortal
+                selectsRange
+                selected={startDate}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={handleChangeDate}
+                placeholderText='Date: From - To'
+                dateFormat='yyyy/MM/dd'
+                className=' input input-sm input-bordered'
+                maxDate={new Date(Date.now())}
+              />
+            </div>
+          </li>
+          <li>
+            <select
+              className='w-full h-full select select-bordered select-sm'
+              onChange={handleChangeSorting}
+            >
+              <option value='date true'>SORT BY DATE: OLD to NEW</option>
+              <option value='date false'>SORT BY DATE: NEW to OLD</option>
+              <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
+              <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
+            </select>
+          </li>
+        </ul>
+      </details>
+
+      <div className='flex items-center justify-center w-full gap-5 my-5 max-md:hidden'>
         <div>
           <DatePicker
             isClearable
@@ -135,14 +179,17 @@ function Bill() {
             startDate={startDate}
             endDate={endDate}
             onChange={handleChangeDate}
-            placeholderText="Date: From - To"
-            dateFormat="yyyy/MM/dd"
-            className="input input-sm input-bordered"
+            placeholderText='Date: From - To'
+            dateFormat='yyyy/MM/dd'
+            className='input input-sm input-bordered'
             maxDate={new Date(Date.now())}
           />
         </div>
         <div>
-          <select className="w-full max-w-xs select select-bordered select-sm" onChange={handleChangeSorting}>
+          <select
+            className='w-full max-w-xs select select-bordered select-sm'
+            onChange={handleChangeSorting}
+          >
             <option value='date true'>SORT BY DATE: OLD to NEW</option>
             <option value='date false'>SORT BY DATE: NEW to OLD</option>
             <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
@@ -150,8 +197,8 @@ function Bill() {
           </select>
         </div>
       </div>
-      <div className="overflow-x-auto h-[35rem]">
-        <table className="table table-xs table-pin-rows ">
+      <div className='overflow-x-auto h-[35rem]'>
+        <table className='z-0 table table-xs table-pin-rows'>
           <thead>
             <tr>
               <th>DATE</th>
@@ -167,13 +214,21 @@ function Bill() {
                 <td>{item.order?.id}</td>
                 <td>{item.total}</td>
                 <td>
-                  <NavLink to={`${item.order?.id}`}><RiEyeLine className='w-5 h-5 eye-icon' /></NavLink>
+                  <NavLink to={`${item.order?.id}`}>
+                    <RiEyeLine className='w-5 h-5 eye-icon' />
+                  </NavLink>
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot>
-            <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
+            <Pagination
+              items={sortedItems}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              pages={pages}
+              objetsPerPage={objetsPerPage}
+            />
           </tfoot>
         </table>
       </div>
