@@ -1,17 +1,18 @@
+// USER ACTIONS
 export const SIGN_IN = "SIGN_IN";
 export const LOAD_TOKEN = "LOAD_TOKEN";
 export const LOAD_ROL = "LOAD_ROL";
 
-// unit of measure
+// MEASURE UNIT
 export const LOAD_MEASURE = "LOAD_UNITS_OF_MEASURE";
 
-// categories
+// CATEGORY
 export const LOAD_CATEGORIES = "LOAD_CATEGORIES";
 
-// ingredient
+// INGREDIENT
 export const LOAD_INGREDIENTS = "LOAD_INGREDIENTS";
 
-// product
+// PRODUCT
 export const LOAD_PRODUCTS = "LOAD_PRODUCTS";
 
 // ORDERS
@@ -36,8 +37,8 @@ export const LOAD_ADDRESSES = "LOAD_ADDRESSES";
 // ROLS
 export const LOAD_ROLS = "LOAD_ROLS";
 
-// STATUES
-export const LOAD_STATUES = "LOAD_STATUES";
+// STATUSES
+export const LOAD_STATUSES = "LOAD_STATUSES";
 
 // MOVEMENTS
 export const LOAD_MOVEMENTS = "LOAD_MOVEMENTS";

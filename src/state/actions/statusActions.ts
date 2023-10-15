@@ -1,9 +1,9 @@
 import { Status } from "../../models/Status"
-import { LOAD_STATUES } from "../types"
+import { LOAD_STATUSES } from "../types"
 
-export const loadStatues = (statues: Status[]) => {
+export const loadStatuses = (statuses: Status[]) => {
     return {
-        type: LOAD_STATUES,
-        payload: statues
+        type: LOAD_STATUSES,
+        payload: statuses
     }
 }

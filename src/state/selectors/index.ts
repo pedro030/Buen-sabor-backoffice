@@ -1,43 +1,44 @@
-// Category
-export const categoriesSelector = (state:any) => state.categories.categories
+import { IRootState } from "../../interfaces/IRootState"
 
-// Measure
-export const measureSelector = (state: any) => state.measures.measures
+// CATEGORIES
+export const categoriesSelector = (state:IRootState) => state.categories.categories
 
-// Ingredient
-export const ingredientSelector = (state: any) => state.ingredients.ingredients
+// MEASURES
+export const measureSelector = (state: IRootState) => state.measures.measures
 
-// Product
-export const productSelector = (state: any) => state.products.products
+// INGREDIENTS
+export const ingredientSelector = (state: IRootState) => state.ingredients.ingredients
 
-// Order
-export const orderSelector = (state: any) => state.orders.orders
+// PRODUCTS
+export const productSelector = (state: IRootState) => state.products.products
+
+// ORDERS
+export const orderSelector = (state: IRootState) => state.orders.orders
 
 // BILL
-export const billSelector = (state: any) => state.bills.bills
+export const billSelector = (state: IRootState) => state.bills.bills
 
 // USER
-export const userSelector = (state: any) => state.users.users
+export const userSelector = (state: IRootState) => state.users.users
 
 // SECTION
-export const sectionSelector = (state: any) => state.sections.sections
+export const sectionSelector = (state: IRootState) => state.sections.sections
 
 // LOCATION
-export const locationSelector = (state: any) => state.locations.locations
+export const locationSelector = (state: IRootState) => state.locations.locations
 
 // ADDRESS
-export const addressSelector = (state: any) => state.addresses.addresses
+export const addressSelector = (state: IRootState) => state.addresses.addresses
 
 // ROLS
-export const rolSelector = (state: any) => state.rols.rols
+export const rolSelector = (state: IRootState) => state.rols.rols
 
-// STATUES
-export const statusSelector = (state: any) => state.statues.statues
+// STATUSES
+export const statusSelector = (state: IRootState) => state.statuses.statuses
 
+// USER SESSION INFO
+export const userSessionSelector = (state: IRootState) => state.userSession
 
-// User Info
-export const userSessionSelector = (state: any) => state.userSession
-
-// Movements
-export const movementsSelector = (state: any) => state.movements
+// MOVEMENTS
+export const movementsSelector = (state: IRootState) => state.movements.movements
 

@@ -1,32 +1,28 @@
-import { User } from "../../models/User";
+import { ReduxAction } from "../../interfaces/ReduxAction";
+import { UserSession } from "../../models/UserSession";
 import { LOAD_ROL, LOAD_TOKEN, SIGN_IN } from "../types";
 
-interface userSession {
-    token: string,
-    user?: User,
-    rol:string
-}
-const initialState:userSession = {
+const initialState: UserSession = {
     token: "",
-    rol:""
+    rol: ""
 }
 
-export default function userSessionReducer(state = initialState, action: any){
+export default function userSessionReducer(state = initialState, action: ReduxAction){
     switch (action.type) {
         case LOAD_TOKEN:
             return{
                 ...state,
-                token: action.payload.token
+                token: action.payload
             }
         case LOAD_ROL:
             return{
                 ...state,
-                rol: action.payload.rol
+                rol: action.payload
             }
         case SIGN_IN:
             return{
                 ...state,
-                user: action.payload.user
+                user: action.payload
             }
         default:
             return state;

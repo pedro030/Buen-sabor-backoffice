@@ -147,7 +147,7 @@ const OrderDetail = () => {
 
     // Fetchs
     const fetchChangeStatus = async (type: string) => {
-        const statusType = status.find((status: Status) => status.statusType === type)
+        const statusType = status.filter((status: Status) => status.statusType === type)
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -161,7 +161,7 @@ const OrderDetail = () => {
             .catch((e) => console.error(e));
 
         if (res?.ok) {
-            const updatedOrder = { ...order[0], statusOrder: statusType }
+            const updatedOrder = { ...order[0], statusOrder: statusType[0] }
             dispatch(updateOrder(id, updatedOrder));
             Swal.fire({
                 title: 'The status was changed',
@@ -210,7 +210,7 @@ const OrderDetail = () => {
     }
 
     const fetchCancelOrder = async () => {
-        const statusType = status.find((status: Status) => status.statusType === 'Cancelled')
+        const statusType = status.filter((status: Status) => status.statusType === 'Cancelled')
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -224,7 +224,7 @@ const OrderDetail = () => {
             .catch((e) => console.error(e));
 
         if (res?.ok) {
-            const updatedOrder = { ...order[0], statusOrder: statusType }
+            const updatedOrder = { ...order[0], statusOrder: statusType[0] }
             dispatch(updateOrder(id, updatedOrder))
             Swal.fire({
                 title: 'The order was cancelled',

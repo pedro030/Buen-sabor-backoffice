@@ -26,7 +26,7 @@ const reducer = combineReducers({
     locations: locationReducer,
     addresses: addressReducer,
     rols: rolReducer,
-    statues: statusReducer,
+    statuses: statusReducer,
     userSession: userSessionReducer,
     movements: movementReducer
 })

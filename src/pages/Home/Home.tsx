@@ -18,7 +18,7 @@ import { ProductService } from "../../services/Product"
 import { loadProducts } from "../../state/actions/productActions"
 import { userSessionSelector } from "../../state/selectors"
 import { StatusService } from "../../services/Status"
-import { loadStatues } from "../../state/actions/statusActions"
+import { loadStatuses } from "../../state/actions/statusActions"
 import { RolService } from "../../services/Rol"
 import { loadRols } from "../../state/actions/rolActions"
 import { OrderService } from "../../services/Order"
@@ -74,7 +74,7 @@ function Home() {
                     new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
                     new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
                     new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
-                    new StatusService().GetAll().then((statueses) => { dispatch(loadStatues(statueses)) }),
+                    new StatusService().GetAll().then((statuses) => { dispatch(loadStatuses(statuses)) })
                     new MovementsService().GetAll().then((movements) => { dispatch(loadMovements(movements)) })
                     //new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             })

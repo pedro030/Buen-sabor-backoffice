@@ -1,15 +1,16 @@
-import { LOAD_STATUES } from "../types";
+import { ReduxAction } from "../../interfaces/ReduxAction";
+import { LOAD_STATUSES } from "../types";
 
 const initialState = {
-    statues: []
+    statuses: []
 }
 
-export default function statusReducer(state = initialState, action: any) {
+export default function statusReducer(state = initialState, action: ReduxAction) {
     switch (action.type) {
-        case LOAD_STATUES:
+        case LOAD_STATUSES:
             return {
                 ...state,
-                statues: action.payload
+                statuses: action.payload
             }
         default:
             return state;

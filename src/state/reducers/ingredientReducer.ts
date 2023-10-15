@@ -1,10 +1,11 @@
+import { ReduxAction } from "../../interfaces/ReduxAction";
 import { LOAD_INGREDIENTS } from "../types";
 
 const initialState = {
-    categories: []
+    ingredients: []
 }
 
-export default function ingredientReducer(state = initialState, action: any) {
+export default function ingredientReducer(state = initialState, action: ReduxAction) {
     switch (action.type) {
         case LOAD_INGREDIENTS:
             return {

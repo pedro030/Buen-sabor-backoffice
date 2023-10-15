@@ -36,7 +36,7 @@ const Movements = () => {
 
   // Redux
   const dispatch = useDispatch();
-  const { movements } = useSelector(movementsSelector);
+  const movements: Movement[] = useSelector(movementsSelector);
   
   //Filters
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -58,7 +58,7 @@ const Movements = () => {
     })
   }
 
-  const filteredMovements =  filterMovements(movements);
+  const filteredMovements: Movement[] =  filterMovements(movements);
 
   // Sorting
   const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredMovements, 'date');
