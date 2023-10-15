@@ -1,61 +1,47 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { orderSelector } from "../../state/selectors";
+import { useEffect, useState, ChangeEvent } from "react";
+import { userSessionSelector } from "../../state/selectors";
 import { OrderService } from "../../services/Order";
-import { loadOrders } from "../../state/actions/orderActions";
 import { Order as Order } from "../../models/Order";
-import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
+import { RiEyeLine } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import SockJS from "sockjs-client";
-import Stomp, { Client, over } from "stompjs";
+import { Client, over } from "stompjs";
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { useSorting } from "../../hooks/useSorting";
 
 const Order = () => {
   // selecciona el listados de orders del reducer
   const dispatch = useDispatch();
-  const orders: Order[] = useSelector(orderSelector);
+  const { rol } = useSelector(userSessionSelector)
   const orderService = new OrderService();
 
-  const handleDelete = (state: Order) => {
-    if (confirm(`You want to delete this item?`)) {
-      orderService.deleteObj(state).then(() => {
-        orderService.GetAll().then((res: Order[]) => {
-          dispatch(loadOrders(res));
-        });
-      });
-    }
-  };
-
-  //let stompClient: any = null;
-  const [orderslist, setOrdersList] = useState<Order[]>([]);
-  const [stompClient, setStompClient] = useState<any>(
+  // WebSocket
+  const [ordersList, setOrdersList] = useState<Order[]>([]);
+  const [stompClient, setStompClient] = useState<Client>(
     over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"))
   );
+  const rols: any = {
+    _cashier: "cashiers",
+    _chef: "chefs",
+    _delivery: "deliveries"
+  }
 
-  // // CONNECTION
-  const conn = () => {
+  // CONNECTION
+  const connection = () => {
     stompClient.connect({}, onConnected, onError);
   };
 
-  const onConnected = async (e: any) => {
-    let value: number = e.target.value;
-
-    let rols = [
-      { id: 1, rol: "SuperAdmin", topic: "" },
-      { id: 2, rol: "Admin", topic: "" },
-      { id: 3, rol: "Cashier", topic: "cashiers" },
-      { id: 4, rol: "Chef", topic: "chefs" },
-      { id: 5, rol: "Delivery", topic: "deliveries" },
-      { id: 6, rol: "Client", topic: "" },
-    ];
+  const onConnected = async () => {
 
     await stompClient.subscribe(
-      `/topic/${rols[value].topic}`,
+      `/topic/${rols[rol]}`,
       onMessageReceived
     );
 
     if (stompClient && stompClient.connected) {
       try {
-        await stompClient.send(`/app/${rols[value].topic}`, {});
+        await stompClient.send(`/app/${rols[rol]}`, {});
       } catch (error) {
         console.log(error);
       }
@@ -74,34 +60,26 @@ const Order = () => {
   };
 
   useEffect(() => {
-    conn();
+    connection();
 
     return () => {
-      stompClient?.disconnect();
+      stompClient.connected ? stompClient?.disconnect(() => { }) : '';
     };
   }, []);
-
-  // Format Date. Example: 2023-6-2 to 2023-06-02
-  /*const formatToConsistentDate = (inputDate: string) => {
-    const parts = inputDate.split("-");
-    const year = parts[0];
-    const month = parts[1].length === 1 ? `0${parts[1]}` : parts[1];
-    const day = parts[2].length === 1 ? `0${parts[2]}` : parts[2];
-
-    return `${year}-${month}-${day}`;
-  }*/
 
   //Filters
   const [filters, setFilters] = useState({
     id: 0,
     total: 0,
+    status: "",
   });
 
-  const filterOrder = (orders: any) => {
-    return orders.filter((o: any) => {
+  const filterOrder = (orders: Order[]) => {
+    return orders.filter((o: Order) => {
       return (
-        (filters.id === 0 || o.id === filters.id) &&
-        o.totalPrice >= filters.total
+        (filters.id === 0 || +o.id === filters.id) &&
+        o.totalPrice >= filters.total &&
+        (filters.status === "" || filters.status === o.statusOrder.statusType)
       );
     });
   };
@@ -120,7 +98,7 @@ const Order = () => {
       }));
   };
 
-  const ordersFilter = filterOrder(orderslist);
+  const ordersFilter = filterOrder(ordersList);
 
   //Search
   const [totalPrice, setTotalPrice] = useState(0);
@@ -148,60 +126,31 @@ const Order = () => {
   };
 
   //Sorting
-  const [sortedOrders, setSortedOrders] = useState([]);
-  const [currentSorting, setCurrentSorting] = useState(1);
-
-  const sortOrders = (orders: any, sortOp: number) => {
-    switch (sortOp) {
-      case 1:
-        setSortedOrders(orders);
-        break;
-
-      case 2:
-        setSortedOrders(
-          orders.sort((a: any, b: any) =>
-            a.totalPrice > b.totalPrice ? 1 : -1
-          )
-        );
-        break;
-
-      case 3:
-        setSortedOrders(
-          orders.sort((a: any, b: any) =>
-            a.totalPrice < b.totalPrice ? 1 : -1
-          )
-        );
-        break;
-
-      case 4:
-        setSortedOrders(
-          orders.sort((a: any, b: any) => (a.date > b.date ? 1 : -1))
-        );
-        break;
-
-      case 5:
-        setSortedOrders(
-          orders.sort((a: any, b: any) => (a.date < b.date ? 1 : -1))
-        );
-        break;
-    }
-  };
-
-  const handleChangeSorting = (e: any) => {
-    const sortOp = +e.target.value;
-    setCurrentSorting(sortOp);
-    sortOrders(ordersFilter, sortOp);
-  };
+  const {
+    sortedItems,
+    setSortedItems,
+    currentSorting,
+    isAsc,
+    handleChangeSorting,
+  } = useSortingStates(ordersFilter, "id");
 
   useEffect(() => {
-    sortOrders(ordersFilter, currentSorting);
-  }, [filters, orderslist]);
+    setSortedItems(useSorting(ordersFilter, currentSorting, isAsc));
+  }, [filters, ordersList]);
+
+  const handleChangeStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setFilters((prevState) => {
+      return {
+        ...prevState,
+        status: value
+      }
+    })
+  }
 
   return (
     <div className='m-4'>
-      {/* <CrudCreateButton Modal={OrderForm} Title='Orders' /> */}
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
-
       <details className='mb-10 dropdown md:hidden'>
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
@@ -218,7 +167,7 @@ const Order = () => {
           <li>
             <input
               type='number'
-              placeholder='TOTAL MIN.'
+              placeholder='MIN. TOTAL.'
               className='input input-sm'
               onChange={handleChangeTotalPrice}
               onKeyDown={searchTotalPriceOnEnter}
@@ -229,28 +178,25 @@ const Order = () => {
               className='w-full h-full select select-bordered select-sm'
               onChange={handleChangeSorting}
             >
-              <option selected value={1}>
-                SORT BY: FEATURED
+              <option selected value="id true">
+                SORT BY: ID
               </option>
-              <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-              <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-              <option value={4}>SORT BY DATE: ASC.</option>
-              <option value={5}>SORT BY DATE: DESC.</option>
+              <option value="totalPrice true">SORT BY TOTAL PRICE: LOW to HIGH</option>
+              <option value="totalPrice false">SORT BY TOTAL PRICE: HIGH to LOW</option>
+              <option value="creationDate true">SORT BY DATE: ASC.</option>
+              <option value="creationDate false">SORT BY DATE: DESC.</option>
             </select>
           </li>
-          <li>
+          { rol === "_cashier" && <li>
             <select
               className='w-full h-full select select-bordered select-sm'
-              onChange={onConnected}
+              onChange={handleChangeStatus}
             >
-              <option defaultValue={0}>Super Admin</option>
-              <option value={1}>Admin</option>
-              <option value={2}>Casher</option>
-              <option value={3}>Chef</option>
-              <option value={4}>Delivery</option>
-              <option value={5}>Client</option>
+              <option selected value="">STATUS: ALL</option>
+              <option value="In_Queue">STATUS: IN QUEUE</option>
+              <option value="Ready">STATUS: READY</option>
             </select>
-          </li>
+          </li> }
         </ul>
       </details>
 
@@ -280,36 +226,32 @@ const Order = () => {
           <option value={4}>SORT BY DATE: ASC.</option>
           <option value={5}>SORT BY DATE: DESC.</option>
         </select>
-
-        <select
-          className='w-full max-w-xs select select-bordered select-sm'
-          onChange={onConnected}
-        >
-          <option defaultValue={0}>Super Admin</option>
-          <option value={1}>Admin</option>
-          <option value={2}>Casher</option>
-          <option value={3}>Chef</option>
-          <option value={4}>Delivery</option>
-          <option value={5}>Client</option>
-        </select>
+        { rol === "_cashier" && <select
+              className='w-full max-w-xs select select-bordered select-sm'
+              onChange={handleChangeStatus}
+            >
+              <option selected value="">STATUS: ALL</option>
+              <option value="In_Queue">STATUS: IN QUEUE</option>
+              <option value="Ready">STATUS: READY</option>
+            </select> }
       </div>
       <div className='overflow-x-auto h-[35rem]'>
         <table className='z-0 table table-xs table-pin-rows'>
           <thead>
             <tr>
-              {/* <th>ID</th> */}
+              <th>ID</th>
               <th>Date</th>
               <th>Withdrawal Mode</th>
               <th>Status</th>
               <th>Total</th>
-              <th>User</th>
+              <th>User ID</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {sortedOrders.map((order: Order, i: number) => (
+            { sortedItems.map((order: Order, i: number) => (
               <tr key={i}>
-                {/* <td>{order.id}</td> */}
+                <td>{order.id}</td>
                 <td>{order.creationDate}</td>
                 <td>{order.withdrawalMode}</td>
                 <td>{order.statusOrder?.statusType}</td>

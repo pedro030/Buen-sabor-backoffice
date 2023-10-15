@@ -56,7 +56,7 @@ function Bill() {
     });
   };
 
-  const filteredBills = filterBills(movements);
+  const filteredBills: Movement[] = filterBills(movements);
 
   // Handlers
   const handleChangeDate = (range: [Date, Date]) => {

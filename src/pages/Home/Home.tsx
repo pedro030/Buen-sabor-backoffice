@@ -49,15 +49,17 @@ function Home() {
             .then(data => {
                 const decodedToken = jwtDecode(data)
                 const rol: string = decodedToken.permissions.find((p: string) => p.charAt(0) === '_')
-                dispatch(load_rol(rol))
+                if(!rol || rol === "_client") return logout({
+                    logoutParams: {
+                        returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
+                    }
+                })
+                else {
+                    dispatch(load_rol(rol))
+                }
                 new UserService().GetAll()
                     .then(users => {
                         let userLoged = users.find(u => u.mail == user?.email);
-                        // if (userLoged?.rol.id == "6") return logout({
-                        //     logoutParams: {
-                        //         returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
-                        //     }
-                        // })
                         if (userLoged) {
                             dispatch(sign_in(userLoged));
                         }
