@@ -1,29 +1,45 @@
-import { useDispatch, useSelector } from "react-redux";
+// React
 import { useState, useEffect } from "react";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector, productSelector } from "../../state/selectors";
-import { ProductService } from "../../services/Product";
 import { loadProducts } from "../../state/actions/productActions";
-import CrudCard from "../../components/crud_components/crud_card/CrudCard";
-import { Product } from "../../models/Product";
+
+// Services
+import { ProductService } from "../../services/Product";
+
+// Hooks
+import { useSorting } from "../../hooks/useSorting";
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { usePagination } from "../../hooks/usePagination";
+import { useCrudActions } from "../../hooks/useCrudActions";
+
+// Components
 import ProductForm from "../../components/modals/product_form/ProductForm";
+import Pagination from "../../components/pagination/Pagination";
 import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
-import CrudDeleteModal from "../../components/crud_components/crud_delete_modal/CrudDeleteModal";
+
+// Types
+import { Product } from "../../models/Product";
+
+// Assets
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
-import { usePagination } from "../../hooks/usePagination";
-import { useSorting } from "../../hooks/useSorting";
-import Pagination from "../../components/pagination/Pagination";
-import { useSortingStates } from "../../hooks/useSortingStates";
-import { useCrudActions } from "../../hooks/useCrudActions";
 import { AiOutlineBars } from "react-icons/ai";
 
 const Product = () => {
-  // selecciona el listados de products del reducer
+  // Redux
   const dispatch = useDispatch();
+
+  // Obtiene los productos y las categorias
   const products: Product[] = useSelector(productSelector);
   const categories = useSelector(categoriesSelector);
+
+  // Product Service
   const productService = new ProductService();
 
+  // Modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Product>();
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
@@ -36,42 +52,44 @@ const Product = () => {
     status: "",
   });
 
-  const filterProducts = (products: any) => {
-    return products.filter((p: any) => {
+  const filterProducts = (products: Product[]) => {
+    return products.filter((p: Product) => {
       return (
         p.price >= filters.price &&
-        (filters.category === 0 || p.subcategory.id === filters.category) &&
+        (filters.category === 0 || +p.subcategory.id === filters.category) &&
         p.name.toLowerCase().includes(filters.search.toLowerCase()) &&
-        (filters.status === "" || p.active === filters.status)
+        (filters.status === "" || p.active.toString() === filters.status)
       );
     });
   };
 
+  // Handler Change Status
   const handleChangeStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const op = +e.target.value;
 
     if (op === 1) {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         status: "",
       }));
     } else if (op === 2) {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
-        status: true,
+        status: "true",
       }));
     } else if (op === 3) {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
-        status: false,
+        status: "false",
       }));
     }
   };
 
+  // Handle Change Category
   const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const op = +e.target.value;
 
-    setFilters((prevState: any) => ({
+    setFilters((prevState) => ({
       ...prevState,
       category: op,
     }));
@@ -88,7 +106,7 @@ const Product = () => {
     setSearch(s);
 
     if (s == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: "",
       }));
@@ -96,7 +114,7 @@ const Product = () => {
 
   const searchOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: search,
       }));
@@ -108,7 +126,7 @@ const Product = () => {
     setPrice(s);
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         price: 0,
       }));
@@ -116,7 +134,7 @@ const Product = () => {
 
   const searchPriceOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         price: price,
       }));
@@ -141,6 +159,7 @@ const Product = () => {
     setSortedItems(useSorting(productsFilter, currentSorting, isAsc));
   }, [filters, products]);
 
+  // Handlers
   const openEditModal = (p: Product) => {
     setSelectedItem(p);
     setIsEditModalOpen(true);
@@ -166,8 +185,9 @@ const Product = () => {
 
   return (
     <div className='m-4 h-[90vh]'>
+      {/* NEW PRODUCT */}
       <CrudCreateButton Modal={ProductForm} Title='Products' />
-
+      {/* EDIT PRODUCT */}
       <ProductForm
         obj={selectedItem}
         open={isEditModalOpen}
@@ -178,7 +198,7 @@ const Product = () => {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>
         Products
       </h2>
-
+      {/* FILTERS */}
       <details className='mb-10 dropdown lg:hidden'>
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
@@ -295,7 +315,7 @@ const Product = () => {
           <option value={"name false"}>SORT BY NAME: Z - A</option>
         </select>
       </div>
-
+      {/* PRODUCTS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
         <table className='z-0 table table-xs table-pin-rows'>
           <thead>
@@ -368,6 +388,7 @@ const Product = () => {
               </tr>
             ))}
           </tbody>
+          {/* PAGINATION */}
           <tfoot>
             <Pagination
               items={sortedItems}

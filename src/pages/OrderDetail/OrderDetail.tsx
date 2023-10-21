@@ -22,17 +22,21 @@ import pizzaSvg from '../../assets/pizza.svg'
 import { IoMdArrowRoundBack } from "react-icons/io"
 
 const OrderDetail = () => {
-    // Api URL
+    // Api URL y Token para hacer los fetch
     const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const { token } = useSelector(userSessionSelector);
 
     // URL Params
     const { idOrder } = useParams()
 
     // Redux
     const dispatch = useDispatch();
-    const { token } = useSelector(userSessionSelector);
+
+    // Obtener Order by Id
     let order: Order[] = useSelector(orderSelector);
     order = order.filter((item: Order) => item.id == idOrder);
+
+    // Obtener Statuses
     const status = useSelector(statusSelector);
 
     // Navigation

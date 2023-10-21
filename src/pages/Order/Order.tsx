@@ -1,20 +1,30 @@
-import { useDispatch, useSelector } from "react-redux";
+// React
 import { useEffect, useState, ChangeEvent } from "react";
+
+// Redux
+import { useSelector } from "react-redux";
 import { userSessionSelector } from "../../state/selectors";
-import { OrderService } from "../../services/Order";
-import { Order as Order } from "../../models/Order";
-import { RiEyeLine } from "react-icons/ri";
+
+// React Router
 import { NavLink } from "react-router-dom";
+
+// SockJS & Stomp
 import SockJS from "sockjs-client";
 import { Client, over } from "stompjs";
-import { useSortingStates } from "../../hooks/useSortingStates";
+
+// Hooks
 import { useSorting } from "../../hooks/useSorting";
+import { useSortingStates } from "../../hooks/useSortingStates";
+
+//Types
+import { Order as Order } from "../../models/Order";
+
+// Assets
+import { RiEyeLine } from "react-icons/ri";
 
 const Order = () => {
-  // selecciona el listados de orders del reducer
-  const dispatch = useDispatch();
+  // Obtiene el Rol para saber a que topico suscribirse
   const { rol } = useSelector(userSessionSelector)
-  const orderService = new OrderService();
 
   // WebSocket
   const [ordersList, setOrdersList] = useState<Order[]>([]);
@@ -27,7 +37,7 @@ const Order = () => {
     _delivery: "deliveries"
   }
 
-  // CONNECTION
+  // Connection to Socket
   const connection = () => {
     stompClient.connect({}, onConnected, onError);
   };
@@ -86,19 +96,29 @@ const Order = () => {
 
   const handleChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const d = +e.target.value;
-    setFilters((prevState: any) => ({
+    setFilters((prevState) => ({
       ...prevState,
       id: d,
     }));
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         id: 0,
       }));
   };
 
-  const ordersFilter = filterOrder(ordersList);
+  const handleChangeStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setFilters((prevState) => {
+      return {
+        ...prevState,
+        status: value
+      }
+    })
+  }
+
+  const ordersFilter: Order[] = filterOrder(ordersList);
 
   //Search
   const [totalPrice, setTotalPrice] = useState(0);
@@ -108,7 +128,7 @@ const Order = () => {
     setTotalPrice(tp);
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         total: 0,
       }));
@@ -118,7 +138,7 @@ const Order = () => {
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         total: totalPrice,
       }));
@@ -138,20 +158,11 @@ const Order = () => {
     setSortedItems(useSorting(ordersFilter, currentSorting, isAsc));
   }, [filters, ordersList]);
 
-  const handleChangeStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setFilters((prevState) => {
-      return {
-        ...prevState,
-        status: value
-      }
-    })
-  }
-
   return (
     <div className='m-4'>
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <details className='mb-10 dropdown md:hidden'>
+        {/* FILTERS */}
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
         </summary>
@@ -199,7 +210,6 @@ const Order = () => {
           </li> }
         </ul>
       </details>
-
       <div className='flex items-center justify-center w-full gap-5 my-5 max-md:hidden'>
         <input
           type='number'
@@ -226,6 +236,7 @@ const Order = () => {
           <option value={4}>SORT BY DATE: ASC.</option>
           <option value={5}>SORT BY DATE: DESC.</option>
         </select>
+        {/* SI ES CASHIER SE LE MUESTRA FILTRADO POR STATUS */}
         { rol === "_cashier" && <select
               className='w-full max-w-xs select select-bordered select-sm'
               onChange={handleChangeStatus}
@@ -248,6 +259,7 @@ const Order = () => {
               <th></th>
             </tr>
           </thead>
+          {/* PENDING ORDERS TABLE */}
           <tbody>
             { sortedItems.map((order: Order, i: number) => (
               <tr key={i}>
