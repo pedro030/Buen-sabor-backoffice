@@ -1,42 +1,76 @@
-import * as Yup from 'yup';
-import { ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik'
-import { useAuth0 } from '@auth0/auth0-react';
+// React
 import { useEffect, useState } from 'react';
+
+// Auth0
+import { useAuth0 } from '@auth0/auth0-react';
+
+// Formik & Yup
+import { object, string, ref } from 'yup';
+import { ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik'
+
+// Services
 import { updatePassword } from '../../services/Auth0Service';
 
+// Sweet Alert 2
+import Swal from 'sweetalert2';
+
 const ChangePassword = () => {
-    const {user} = useAuth0();
+    // User logged from Auth0
+    const { user } = useAuth0();
+
+    // State que establece si puede cambiar o no la contraseña
     const[canChange, setCanChange] = useState<boolean>(false);
-    const validationSchema = Yup.object({
-        // oldPassword: Yup.string().required('Old password is required'),
-        newPassword: Yup.string()
+
+    // Formik Validations
+    const validationSchema = object({
+        newPassword: string()
             .required('New password is required')
             .min(8, 'Your password is too short.')
             .matches(/^(?=.*[a-z])(?=.*[A-Z])/, 'The password must have at least one uppercase and lowercase letter.')
             .matches(/(?=.*\d)/, 'The password must have at least one digit')
             .matches(/(?=.*[@$!%*?&#])/, 'The password must have a special character')
             .matches(/[A-Za-z\d@$!%*?&#]/, 'The password is invalid'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+        confirmPassword: string()
+            .oneOf([ref('newPassword')], 'Passwords must match')
     })
+
     useEffect(()=>{
         if(user?.sub){
             setCanChange(user.sub?.split('|')[0] === "auth0");
         }
     },[])
 
-    const handleSubmit = (state: any, action: FormikHelpers<any>) =>{
+    // Handle Submit Formik
+    const handleSubmit = (state: { newPassword: string, confirmPassword: string }, action: FormikHelpers<any>) => {
+        Swal.fire({
+            title: 'Updating Password...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCancelButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        })
         updatePassword(user?.sub || "", state.newPassword)
         .then(data => {
             if(data){
-                alert("Password update success")
+                Swal.fire({
+                    icon: 'success',
+                    title: `Password Updated`,
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                    confirmButtonColor: '#E73636'
+                })
                 action.resetForm();
             }else{
-                alert("An error ocurr updating password, please try later");
+                Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
                 action.resetForm();
             }
         })
     }
+
     return (
         <>
             <h1 className="m-5 mb-10 text-xl tracking-widest text-center">CHANGE PASSWORD</h1>
@@ -52,14 +86,14 @@ const ChangePassword = () => {
                     <Form className="flex flex-col gap-5 md:w-[60%]">
                         <div className="flex flex-col ">
                             <label className="label">
-                                <span className="label-text">new password</span>
+                                <span className="label-text">New Password</span>
                             </label>
                             <Field disabled={!canChange} type="password" name="newPassword" className="w-full input input-bordered" />
                             <ErrorMessage name="newPassword">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                         </div>
                         <div className="flex flex-col ">
                             <label className="label">
-                                <span className="label-text">repeat password</span>
+                                <span className="label-text">Repeat Password</span>
                             </label>
                             <Field disabled={!canChange} type="password" name="confirmPassword" className="w-full input input-bordered" />
                             <ErrorMessage name="confirmPassword">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
@@ -75,7 +109,6 @@ const ChangePassword = () => {
             </div>
         </>
     )
-
 }
 
 export default ChangePassword

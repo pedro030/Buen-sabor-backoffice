@@ -1,44 +1,61 @@
-import { useDispatch, useSelector } from "react-redux"
-import Sidebar from "../../components/sidebar_employee/Sidebar"
-import { useAuth0 } from "@auth0/auth0-react"
+//React
 import { useEffect, useState } from "react"
+
+// Auth0
+import { useAuth0 } from "@auth0/auth0-react"
+
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+import { userSessionSelector } from "../../state/selectors"
 import { load_token, sign_in, load_rol } from "../../state/actions/userSessionAction"
-import HomeRoutes from "../../router/HomeRoutes"
-import { LocationService } from "../../services/Location"
 import { loadLocations } from "../../state/actions/locationActions"
-import { AddressService } from "../../services/Address"
 import { loadAddresses } from "../../state/actions/addressActions"
-import { CategoryService } from "../../services/Category"
 import { loadCategories } from "../../state/actions/categoryActions"
 import { loadMeasures } from "../../state/actions/measureActions"
-import { MeasureService } from "../../services/Measure"
 import { loadIngredients } from "../../state/actions/ingredientActions"
+import { loadProducts } from "../../state/actions/productActions"
+import { loadRols } from "../../state/actions/rolActions"
+import { loadOrders } from "../../state/actions/orderActions"
+import { loadUsers } from "../../state/actions/userActions"
+import { loadMovements } from "../../state/actions/movementsActions"
+import { loadStatuses } from "../../state/actions/statusActions"
+
+// Services
+import { LocationService } from "../../services/Location"
+import { AddressService } from "../../services/Address"
+import { CategoryService } from "../../services/Category"
+import { MeasureService } from "../../services/Measure"
 import { IngredientService } from "../../services/Ingredient"
 import { ProductService } from "../../services/Product"
-import { loadProducts } from "../../state/actions/productActions"
-import { userSessionSelector } from "../../state/selectors"
 import { StatusService } from "../../services/Status"
-import { loadStatuses } from "../../state/actions/statusActions"
 import { RolService } from "../../services/Rol"
-import { loadRols } from "../../state/actions/rolActions"
 import { OrderService } from "../../services/Order"
-import { loadOrders } from "../../state/actions/orderActions"
 import { UserService } from "../../services/User"
-import { loadUsers } from "../../state/actions/userActions"
-import jwtDecode from "jwt-decode"
-import PageLoader from "../../components/page_loader/PageLoader"
 import { MovementsService } from "../../services/Movements"
-import { loadMovements } from "../../state/actions/movementsActions"
+
+// JWT Decode
+import jwtDecode from "jwt-decode"
+
+// Components
+import Sidebar from "../../components/sidebar_employee/Sidebar"
+import HomeRoutes from "../../router/HomeRoutes"
+import PageLoader from "../../components/page_loader/PageLoader"
 
 function Home() {
-
+    // Auth0 User, getToken & logout
     const { user, getAccessTokenSilently, logout } = useAuth0();
+
+    // Redux
     const dispatch = useDispatch();
+
+    // Obtener Rol
     const { rol } = useSelector(userSessionSelector)
+
+    // Si el rol se obtiene se setea la vista
     const [rolReady, setRolReady] = useState(false);
 
-
     useEffect(() => {
+        // Se obtiene y decodifica el token
         getAccessTokenSilently(
             {
                 authorizationParams: {
@@ -48,15 +65,19 @@ function Home() {
         )
             .then(data => {
                 const decodedToken = jwtDecode(data)
+                // Se obtiene el strinn del Rol
                 const rol: string = decodedToken.permissions.find((p: string) => p.charAt(0) === '_')
+                // Si no hay rol o el rol es Client se lo redirecciona al logout
                 if(!rol || rol === "_client") return logout({
                     logoutParams: {
                         returnTo: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_LOGOUT_URL
                     }
                 })
+                // Si hay rol y es distinto de Client se lo carga al mismo
                 else {
                     dispatch(load_rol(rol))
                 }
+                // Se obtienen todos los datos a mostrar
                 new UserService().GetAll()
                     .then(users => {
                         let userLoged = users.find(u => u.mail == user?.email);
@@ -76,16 +97,17 @@ function Home() {
                     new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
                     new StatusService().GetAll().then((statuses) => { dispatch(loadStatuses(statuses)) })
                     new MovementsService().GetAll().then((movements) => { dispatch(loadMovements(movements)) })
-                    //new SectionService().GetAll().then((sections) => { dispatch(loadSections(sections)) }),
             })
     }, [])
 
+    // UseEffect que se ejecuta cada vez que cambia de estado 'rol' para ver si se setea la vista o sigue el loader
     useEffect(() => {
         if(rol.length > 0) {
             setRolReady(true);
         }
       }, [rol])
     
+      // Loader
       if(!rolReady) {
           return (
               <div className="page-layout">

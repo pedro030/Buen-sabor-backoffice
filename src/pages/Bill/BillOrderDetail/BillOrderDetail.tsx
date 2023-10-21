@@ -128,11 +128,8 @@ export const BillOrderDetail = () => {
             <h2>Paymenth method:</h2>
             <h2>{paymode.paymode}</h2>
           </div>
-
         </div>
       </div>
-
     </div>
-
   )
 }

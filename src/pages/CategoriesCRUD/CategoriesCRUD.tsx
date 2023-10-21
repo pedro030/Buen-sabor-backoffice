@@ -26,10 +26,16 @@ import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
 import { useCrudActions } from "../../hooks/useCrudActions";
 
 function CategoriesCRUD() {
+  // Redux
   const dispatch = useDispatch();
+
+  // Obtiene todas las categorias
   const category: Category[] = useSelector(categoriesSelector);
+
+  // Category Service
   const categoryService = new CategoryService();
 
+  // Modal
   const [selectedItem, setSelectedItem] = useState<Category>();
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
@@ -41,33 +47,33 @@ function CategoriesCRUD() {
   });
 
   const filterCategories = (categories: Category[]) => {
-    return categories.filter((c: any) => {
+    return categories.filter((c: Category) => {
       return (
         c.name.toLowerCase().includes(filters.search.toLowerCase()) &&
         (filters.parentCategory === "" ||
-          c.parentCategory === filters.parentCategory)
+          (c.parentCategory == null && "null") === filters.parentCategory)
       );
     });
   };
 
-  const handleChangeSubcategory = (e: any) => {
+  const handleChangeSubcategory = (e: ChangeEvent<HTMLSelectElement>) => {
     const subcatOpc = +e.target.value;
     if (subcatOpc === 1) {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         parentCategory: "",
       }));
     } else if (subcatOpc === 2) {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
-        parentCategory: null,
+        parentCategory: "null",
       }));
     }
   };
 
   const categories: Category[] = filterCategories(category);
 
-  //Search
+  // Search
   const [search, setSearch] = useState<string>("");
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +81,7 @@ function CategoriesCRUD() {
     setSearch(s);
 
     if (s == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: "",
       }));
@@ -83,14 +89,14 @@ function CategoriesCRUD() {
 
   const searchOnEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: search,
       }));
     }
   };
 
-  //Sorting
+  // Sorting
   const {
     sortedItems,
     setSortedItems,
@@ -103,6 +109,7 @@ function CategoriesCRUD() {
     setSortedItems(useSorting(categories, currentSorting, isAsc));
   }, [filters, category]);
 
+  // Handlers
   const handleDelete = (category: Category) => {
     const { deleteObjectAlerts } = useCrudActions(
       category,
@@ -128,7 +135,9 @@ function CategoriesCRUD() {
 
   return (
     <div className='mx-4 mt-4'>
+      {/* NEW CATEGORY BUTTON */}
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
+      {/* EDIT CATEGORY */}
       <CategoryForm
         obj={selectedItem}
         open={editModalOpen}
@@ -139,6 +148,7 @@ function CategoriesCRUD() {
         <h2 className='my-2 text-lg font-bold text-center stat-title'>
           Categories
         </h2>
+        {/* FILTERS */}
         <details className='mb-10 dropdown lg:hidden'>
           <summary className='m-1 btn btn-primary btn-wide btn-sm'>
             Filter
@@ -209,6 +219,7 @@ function CategoriesCRUD() {
             <option value={2}>SUBCATEGORY: EMPTY</option>
           </select>
         </div>
+        {/* CATEGORIES TABLE */}
         <div className='overflow-x-auto h-[35rem]'>
           <table className='z-0 table table-xs table-pin-rows '>
             <thead>

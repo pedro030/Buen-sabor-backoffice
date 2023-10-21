@@ -1,12 +1,15 @@
-import { useState } from "react"
+// Redux
 import { useSelector } from "react-redux"
-import { NavLink } from "react-router-dom"
 import { userSessionSelector } from "../../state/selectors"
 
-function HomePage() {
+// React Router
+import { NavLink } from "react-router-dom"
 
+function HomePage() {
+    // Obtiene el Rol del Empleado para cargarlo unas u otras cards
     const { rol } = useSelector(userSessionSelector)
 
+    // Las cards que se le deben aparecer a cada Rol
     const cards: any = {
         '_superAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
         '_admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],

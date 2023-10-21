@@ -1,26 +1,44 @@
-import AddressForm from "../../components/modals/address_form/AddressForm";
-import { Address } from "../../models/Address";
-import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
-import { FiEdit2 } from "react-icons/fi";
-import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
-import { useDispatch, useSelector } from "react-redux";
-import { UserService } from "../../services/User";
-import { rolSelector, userSelector } from "../../state/selectors";
-import UserForm from "../../components/modals/user_form/UserForm";
+// React
 import { useState, useEffect } from "react";
-import { useSortingStates } from "../../hooks/useSortingStates";
-import { useSorting } from "../../hooks/useSorting";
-import { User } from "../../models/User";
-import { useCrudActions } from "../../hooks/useCrudActions";
+
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { rolSelector, userSelector } from "../../state/selectors";
 import { loadUsers } from "../../state/actions/userActions";
-import { IoIosAddCircleOutline } from "react-icons/io";
+
+//Hooks
+import { useSorting } from "../../hooks/useSorting";
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { useCrudActions } from "../../hooks/useCrudActions";
+
+// Services
+import { UserService } from "../../services/User";
+
+// Components
+import UserForm from "../../components/modals/user_form/UserForm";
+
+// Types
+import { User } from "../../models/User";
+import { Rol } from "../../models/Rol";
+
+// Assets
+import { RiEyeLine } from "react-icons/ri";
 
 const Employees = () => {
+  // Redux
   const dispatch = useDispatch();
+
+  // Obtener los usuarios y filtrarlos para que solo se muestren los empleados
   const user: User[] = useSelector(userSelector);
-  const rols = useSelector(rolSelector);
-  const userService = new UserService();
   const employees: User[] = user.filter((e: User) => e.rol?.rol != "Client");
+
+  // Obtiene los Rols para hacer el filtrado en la vista
+  const rols = useSelector(rolSelector);
+
+  // User Service
+  const userService = new UserService();
+
+  // Modal
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<User>();
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
@@ -32,12 +50,12 @@ const Employees = () => {
     rol: 0,
   });
 
-  const filterEmployee = (employees: any) => {
-    return employees.filter((e: any) => {
+  const filterEmployee = (employees: User[]) => {
+    return employees.filter((e: User) => {
       return (
         e.firstName?.toLowerCase().includes(filters.fn?.toLowerCase()) &&
         e.lastName?.toLowerCase().includes(filters.ln?.toLowerCase()) &&
-        (filters.rol === 0 || e.rol.id === filters.rol)
+        (filters.rol === 0 || +e.rol.id === filters.rol)
       );
     });
   };
@@ -45,7 +63,7 @@ const Employees = () => {
   const handleChangeRol = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const op = +e.target.value;
 
-    setFilters((prevState: any) => ({
+    setFilters((prevState) => ({
       ...prevState,
       rol: op,
     }));
@@ -62,7 +80,7 @@ const Employees = () => {
     setFirstName(fn);
 
     if (fn == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         fn: "",
       }));
@@ -70,7 +88,7 @@ const Employees = () => {
 
   const searchFirstNameOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         fn: firstName,
       }));
@@ -82,7 +100,7 @@ const Employees = () => {
     setLastName(ln);
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         ln: "",
       }));
@@ -90,14 +108,14 @@ const Employees = () => {
 
   const searchLastNameOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         ln: lastName,
       }));
     }
   };
 
-  //Sorting
+  // Sorting
   const {
     sortedItems,
     setSortedItems,
@@ -106,6 +124,7 @@ const Employees = () => {
     handleChangeSorting,
   } = useSortingStates(filteredEmployees, "id");
 
+  // Handlers
   const handleDelete = (employee: User) => {
     const { deleteObjectAlerts } = useCrudActions(
       employee,
@@ -143,6 +162,7 @@ const Employees = () => {
   return (
     <>
       <div className='m-4'>
+        {/* WATCH EMPLOYEE INFO */}
         <UserForm
           obj={selectedItem}
           open={editModalOpen}
@@ -153,7 +173,7 @@ const Employees = () => {
         <h2 className='my-2 text-lg font-bold text-center stat-title'>
           Employees
         </h2>
-
+        {/* FILTERS */}
         <details className='mb-10 dropdown md:hidden'>
           <summary className='m-1 btn btn-primary btn-wide btn-sm'>
             Filter
@@ -185,7 +205,7 @@ const Employees = () => {
                 <option selected value={0}>
                   ROL: ALL
                 </option>
-                {rols.map((r: any) => {
+                {rols.map((r: Rol) => {
                   if (r.rol != "Client")
                     return (
                       <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>
@@ -236,7 +256,7 @@ const Employees = () => {
             <option selected value={0}>
               ROL: ALL
             </option>
-            {rols.map((r: any) => {
+            {rols.map((r: Rol) => {
               if (r.rol != "Client")
                 return <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>;
             })}

@@ -1,35 +1,50 @@
+// React
+import { useState, useEffect } from "react";
+
+// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { ingredientSelector, measureSelector } from "../../state/selectors";
-import { IngredientService } from "../../services/Ingredient";
 import { loadIngredients } from "../../state/actions/ingredientActions";
-import CrudCard from "../../components/crud_components/crud_card/CrudCard";
-import { Ingredient } from "../../models/Ingredient";
+
+// Hooks
+import { useSorting } from "../../hooks/useSorting";
+import { useSortingStates } from "../../hooks/useSortingStates";
+import { useCrudActions } from "../../hooks/useCrudActions";
+
+// Services
+import { IngredientService } from "../../services/Ingredient";
+
+// Components
 import IngredientForm from "../../components/modals/Ingredients/ingredient_form/IngredientForm";
 import IngredientListForm from "../../components/modals/Ingredients/IngredientList_form/IngredientListForm";
 import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
-import CrudDeleteModal from "../../components/crud_components/crud_delete_modal/CrudDeleteModal";
+
+// Types
+import { Ingredient } from "../../models/Ingredient";
+import { Measure } from "../../models/Measure";
+
+// Assets
 import { FiEdit2 } from "react-icons/fi";
-import { AiOutlineReload } from "react-icons/ai";
 import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
-import { useState, useEffect } from "react";
-import { useCrudActions } from "../../hooks/useCrudActions";
-import { useSortingStates } from "../../hooks/useSortingStates";
-import { useSorting } from "../../hooks/useSorting";
 import { AiOutlineBars } from "react-icons/ai";
 
-
 const Ingredient = () => {
-  // selecciona el listados de ingredients del reducer
+  // Redux
   const dispatch = useDispatch();
+
+  // Obtiene los Ingredients y Measures
   const ingredients: Ingredient[] = useSelector(ingredientSelector);
   const measures = useSelector(measureSelector);
+
+  // Ingredient Service
   const ingredientService = new IngredientService();
 
-  //modals states
+  // Modal
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Ingredient>();
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
+  // Handlers
   const handleDelete = (ingredient: Ingredient) => {
     const { deleteObjectAlerts } = useCrudActions(
       ingredient,
@@ -60,12 +75,12 @@ const Ingredient = () => {
     measure: 0,
   });
 
-  const filterIngredients = (ingredients: any) => {
-    return ingredients.filter((i: any) => {
+  const filterIngredients = (ingredients: Ingredient[]) => {
+    return ingredients.filter((i: Ingredient) => {
       return (
         i.name.toLowerCase().includes(filters.search.toLowerCase()) &&
         i.stock >= filters.stock &&
-        (filters.measure === 0 || i.measure.id === filters.measure)
+        (filters.measure === 0 || +i.measure.id === filters.measure)
       );
     });
   };
@@ -73,7 +88,7 @@ const Ingredient = () => {
   const handleChangeMeasure = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const op = +e.target.value;
 
-    setFilters((prevState: any) => ({
+    setFilters((prevState) => ({
       ...prevState,
       measure: op,
     }));
@@ -81,7 +96,7 @@ const Ingredient = () => {
 
   const ingredientsFilter: Ingredient[] = filterIngredients(ingredients);
 
-  //Search By Name and Stock
+  // Search
   const [search, setSearch] = useState<string>("");
   const [stock, setStock] = useState<number>(0);
 
@@ -90,7 +105,7 @@ const Ingredient = () => {
     setSearch(s);
 
     if (s == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: "",
       }));
@@ -98,7 +113,7 @@ const Ingredient = () => {
 
   const searchOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         search: search,
       }));
@@ -110,7 +125,7 @@ const Ingredient = () => {
     setStock(s);
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         stock: 0,
       }));
@@ -118,14 +133,14 @@ const Ingredient = () => {
 
   const searchStockOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         stock: stock,
       }));
     }
   };
 
-  //Sorting
+  // Sorting
   const {
     sortedItems,
     setSortedItems,
@@ -140,10 +155,12 @@ const Ingredient = () => {
 
   return (
     <div className='mx-4 mt-4'>
+      {/* NEW INGREDIENT & RE-STOCK */}
       <div className='flex gap-5'>
         <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
-        <CrudCreateButton Modal={IngredientListForm} Title='Recargar Stock' />
+        <CrudCreateButton Modal={IngredientListForm} Title='Re-Stock' />
       </div>
+      {/* EDIT INGREDIENT */}
       <IngredientForm
         obj={selectedItem}
         open={editModalOpen}
@@ -153,8 +170,8 @@ const Ingredient = () => {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>
         Ingredients
       </h2>
-
       <details className='mb-10 dropdown lg:hidden'>
+        {/* FILTERS */}
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
         </summary>
@@ -169,7 +186,6 @@ const Ingredient = () => {
               onChange={handleChangeSearch}
             />
           </li>
-
           <li>
             <input
               type='number'
@@ -179,7 +195,6 @@ const Ingredient = () => {
               onChange={handleChangeStock}
             />
           </li>
-
           <li>
             <select
               className='w-full h-full select select-bordered select-sm'
@@ -188,7 +203,7 @@ const Ingredient = () => {
               <option selected value={0}>
                 MEASURE: ALL
               </option>
-              {measures.map((m: any) => {
+              {measures.map((m: Measure) => {
                 return (
                   <option value={m.id}>
                     MEASURE: {m.measure.toUpperCase()}
@@ -197,7 +212,6 @@ const Ingredient = () => {
               })}
             </select>
           </li>
-
           <li>
             <select
               className='w-full h-full select select-bordered select-sm'
@@ -216,7 +230,6 @@ const Ingredient = () => {
           </li>
         </ul>
       </details>
-
       <div className='flex items-center justify-center w-full gap-5 my-2 max-lg:hidden'>
         <input
           type='text'
@@ -240,7 +253,7 @@ const Ingredient = () => {
           <option selected value={0}>
             MEASURE: ALL
           </option>
-          {measures.map((m: any) => {
+          {measures.map((m: Measure) => {
             return (
               <option value={m.id}>MEASURE: {m.measure.toUpperCase()}</option>
             );
@@ -261,6 +274,7 @@ const Ingredient = () => {
           <option value='name false'>SORT BY NAME: Z - A</option>
         </select>
       </div>
+      {/* INGREDIENTS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
         <table className='z-0 table table-xs table-pin-rows'>
           <thead>

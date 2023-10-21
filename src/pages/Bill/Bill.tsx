@@ -39,7 +39,7 @@ function Bill() {
 
   // Redux
   const dispatch = useDispatch();
-  const { movements } = useSelector(movementsSelector);
+  const movements = useSelector(movementsSelector);
 
   //Filters
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -91,7 +91,7 @@ function Bill() {
     handleChangeSorting,
   } = useSortingStates(filteredBills, "date");
 
-  //Pagination
+  // Pagination
   const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } =
     usePagination(sortedItems);
 
@@ -132,7 +132,7 @@ function Bill() {
   return (
     <div className='m-4'>
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Bills</h2>
-
+      {/* FILTERS */}
       <details className='mb-10 dropdown md:hidden'>
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
@@ -197,6 +197,7 @@ function Bill() {
           </select>
         </div>
       </div>
+      {/* BILLS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
         <table className='z-0 table table-xs table-pin-rows'>
           <thead>
