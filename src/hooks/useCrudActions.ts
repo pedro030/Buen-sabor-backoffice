@@ -1,13 +1,16 @@
+// Redux
 import { Dispatch } from "redux";
+
+// Service
 import { ApiServ } from "../services/ApiServ";
+
+// Sweet Alert 2
 import Swal from "sweetalert2";
 
-type ReduxAction<T> = {
-    type: string;
-    payload: T[];
-};
+// Types
+import { ReduxAction } from "../interfaces/ReduxAction";
 
-export const useCrudActions = <T extends { id: string }>(item: T, service: ApiServ<T>, type: string, dispatch: Dispatch, loadAction: (data: T[]) => ReduxAction<T>, onClose: () => void) => {
+export const useCrudActions = <T extends { id: string }>(item: T, service: ApiServ<T>, type: string, dispatch: Dispatch, loadAction: (data: T[]) => ReduxAction, onClose: () => void) => {
    
     const deleteObjectAlerts = () => {
         Swal.fire({

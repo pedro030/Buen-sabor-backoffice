@@ -1,4 +1,7 @@
+// React
 import { useState, ChangeEvent } from 'react'
+
+// Hook
 import { useSorting } from './useSorting';
 
 export const useSortingStates = <T>(items: T[], keySort: keyof T) => {

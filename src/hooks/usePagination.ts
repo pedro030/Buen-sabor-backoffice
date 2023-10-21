@@ -1,3 +1,4 @@
+// React
 import { useState, useEffect } from 'react'
 
 export const usePagination = <T>(objects : T[]) => {
