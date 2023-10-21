@@ -1,12 +1,13 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { IProtectedRoute } from "../interfaces/IProtectedRouteProps";
 
 export const ProtectedRoute = ({
   isAllowed,
   children,
-}: any) => {
+}: IProtectedRoute) => {
   if (!isAllowed) {
     return <Navigate to='/' replace />;
   }
 
-  return children ? children : <Outlet />;
+  return children ? <>{ children }</> : <Outlet />;
 };

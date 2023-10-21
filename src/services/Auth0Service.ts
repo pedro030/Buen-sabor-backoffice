@@ -1,3 +1,4 @@
+// Register User with Auth0
 export async function registerUserAuth0(mail: string, pass: string) {
     const data = {
         client_id: import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_ID,
@@ -22,6 +23,7 @@ export async function registerUserAuth0(mail: string, pass: string) {
      return false
  }
 
+ // Generate Token
  function generateToken(){
     return fetch(`${import.meta.env.VITE_REACT_APP_AUTH0_MANAGMENT_API_URL}/oauth/token`,{
         method: 'POST',
@@ -43,18 +45,14 @@ export async function registerUserAuth0(mail: string, pass: string) {
     })
 }
 
+// Update User Password
 export async function updatePassword(userId: string, newPassword: string): Promise<boolean>{
     const token = await generateToken();
     const url = `${import.meta.env.VITE_REACT_APP_AUTH0_MANAGMENT_API_URL}/api/v2/users/${userId}`
 
-    var myHeaders = new Headers();
+    let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", "Bearer " + token);
-
-    var raw = JSON.stringify({
-        "password": newPassword,
-        "connection": "Username-Password-Authentication"
-      });
       
     return fetch(url, {
         headers: myHeaders,

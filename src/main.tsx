@@ -1,12 +1,22 @@
+// React DOM
 import ReactDOM from 'react-dom/client'
+
+// React Router
 import { BrowserRouter } from "react-router-dom";
-import 'normalize.css'
-import './index.scss'
+
+// Auth0
 import Auth0ProviderWithNavigate from './components/auth0/Auth0ProviderWithNavigate.jsx'
-import App from './App';
+
+// Redux
 import { Provider } from 'react-redux'
 import store from './state/store/store';
 
+// Components
+import App from './App';
+
+// Styles
+import 'normalize.css'
+import './index.scss'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <Provider store={store}>

@@ -7,20 +7,15 @@ import { userSessionSelector } from "../state/selectors"
 
 // Components
 import CategoriesCRUD from "../pages/CategoriesCRUD/CategoriesCRUD"
-import Measure from "../pages/Measure/Measure"
 import Ingredient from "../pages/Ingredient/Ingredient"
 import Product from "../pages/Product/Product"
 import Order from "../pages/Order/Order"
 import Bill from "../pages/Bill/Bill"
 import User from "../pages/User/User"
-import Section from "../pages/Section/Section"
-import Location from "../pages/Location/Location"
-import Address from "../pages/Address/Address"
 import HomePage from "../pages/HomePage/HomePage"
 import PersonalInfo from "../pages/PersonalInfo/PersonalInfo"
 import ChangePassword from "../pages/ChangePassword/ChangePassword"
 import Employees from "../pages/Employees/Employees"
-import Status from "../pages/Status/Status"
 import OrderDetail from "../pages/OrderDetail/OrderDetail"
 import RankingsProducts from "../pages/Rankings/RankingsProducts/RankingsProducts"
 import RankingsClients from "../pages/Rankings/RankingsClients/RankingsClients"
@@ -31,7 +26,7 @@ import { UserOrderDetail } from "../pages/UserDetail/UserOrderDetail/UserOrderDe
 import { BillOrderDetail } from "../pages/Bill/BillOrderDetail/BillOrderDetail"
 
 const homeRoutes = () => {
-
+  // En base al rol se dispondran unas u otras rutas y vistas
   const { rol } = useSelector(userSessionSelector)
 
   return (
@@ -74,13 +69,6 @@ const homeRoutes = () => {
         <Route path="/bills/:idOrder" element={<BillOrderDetail/>} />
       </Route>
 
-
-      <Route path="/status" element={<Status />} />
-      <Route path="/measures" element={<Measure />} />
-      <Route path="/sections" element={<Section />} />
-      <Route path="/locations" element={<Location />} />
-      <Route path="/addresses" element={<Address />} />
-
       {/* ORDER */}
       <Route element={<ProtectedRoute
         isAllowed={
@@ -90,9 +78,8 @@ const homeRoutes = () => {
           rol.includes('_delivery')
         } />}>
         <Route path="/orders" element={<Order />} />
+        <Route path="/orders/:idOrder" element={<OrderDetail />} />
       </Route>
-
-      <Route path="/orders/:idOrder" element={<OrderDetail />} />
 
       {/* RANKINGS */}
       <Route element={<ProtectedRoute

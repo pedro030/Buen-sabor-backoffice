@@ -1,39 +1,30 @@
-// import toast from 'react-hot-toast'
-// import { userSelector } from '../state/selectors';
-import axios from 'axios';
 import store from '../state/store/store';
-import { Product } from '../models/Product';
-// const axios = require('axios/dist/browser/axios.cjs');
 
+// Api Service Genérico
 export class ApiServ<T extends { id: string }> {
+    // El endpoint dependerá del tipo de service que se instancie
     endpoint: string = "";
+    // Se obtiene el token y la Api URL para poder hacer los fetch
     token = store.getState().userSession.token
-
     apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
+    // Get All
     GetAll(): Promise<T[]> {
-        // console.log(this.token)
-        // console.log('get all token')
-        // console.log(this.token)
         return fetch(`${this.apiURL}/${this.endpoint}/getAll`, {
             headers: {
                 Authorization: `Bearer ${(this.token).trim()}`
             }
         })
             .then(res => {
-                // TO DO: agregar notificación
-                //toast.success("Success got data")
-                // console.log("Load success")
-                const resouls = res.json()
-                // resouls.then(data => console.log(data))
-                return resouls
+                const response = res.json()
+                return response;
             })
             .catch(err => {
-                //toast.error("error getting data")
                 console.log(err)
             })
     }
 
+    // Get One by Id
     GetOne(id: string): Promise<T> {
         return fetch(`${this.apiURL}/${this.endpoint}/get/${id}`, {
             headers: {
@@ -41,17 +32,14 @@ export class ApiServ<T extends { id: string }> {
             }
         })
             .then(res => {
-                // TO DO: agregar notificación
-                //toast.success("Success got data")
-                console.log("Load success")
                 return res.json()
             })
             .catch(err => {
-                //toast.error("error getting data")
                 console.log(err)
             })
     }
 
+    // Crear un nuevo objeto
     async newObj(newObj: T) {
 
         const requestOptions: RequestInit = {
@@ -68,79 +56,7 @@ export class ApiServ<T extends { id: string }> {
         return response;
     }
 
-    async repoIngredients(repoIngredients: T) {
-
-        const requestOptions: RequestInit = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
-            },
-            body: JSON.stringify(repoIngredients)
-        };
-        try {
-            const response = await fetch(`${this.apiURL}/${this.endpoint}/reponerStock`, requestOptions);
-            return response;
-        } catch (error) {
-            console.error(error)
-        }
-
-
-    }
-
-    async newProduct(product: T, imagen: File | null) {
-
-        try {
-            let formData = new FormData();
-
-            formData.append(
-                'productDto',
-                new Blob([JSON.stringify(product)], {
-                    type: 'application/json',
-                })
-            );
-
-            imagen !== null && formData.append('image', imagen);
-
-            const data = await axios.post(`${this.apiURL}/${this.endpoint}/save`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: 'Bearer ' + this.token,
-                },
-            });
-            return data;
-        } catch (error) {
-            console.error(error)
-        }
-    }
-    
-    async updateProduct(product: T, imagen: File | null) {
-
-        try {
-
-            let formData = new FormData();
-
-            formData.append(
-                'productDto',
-                new Blob([JSON.stringify(product)], {
-                    type: 'application/json',
-                })
-            );
-
-            imagen !== null && formData.append('image', imagen);
-
-            const data = await axios.put(`${this.apiURL}/${this.endpoint}/update/${product.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: 'Bearer ' + this.token,
-                },
-            });
-            return data;
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+    // Actualizar Objeto
     async updateObj(updateObj: T) {
         const requestOptions: RequestInit = {
             method: 'PUT',
@@ -155,6 +71,7 @@ export class ApiServ<T extends { id: string }> {
         return response;
     }
 
+    // Eliminar Objeto
     async deleteObj(deleteObj: T) {
         const requestOptions: RequestInit = {
             method: 'DELETE',
