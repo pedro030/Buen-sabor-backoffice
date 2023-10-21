@@ -24,10 +24,14 @@ import { User } from '../../models/User'
 import { Order } from '../../models/Order'
 
 export const UserDetail = () => {
+    // Token y Api URL para los fetch
     const token = store.getState().userSession.token
     const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
+
+    // Navigation
     const navigate: NavigateFunction = useNavigate();
 
+    // State para setear el loader por si la informacion no está lista
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Para obtener y pasar Props al navegar de una pagina a otra
@@ -40,8 +44,8 @@ export const UserDetail = () => {
     const { idUser } = useParams()
 
     // Obtenemos datos del usuario
-    const user: User = useSelector(userSelector).find((item: User) => item.id == idUser)
-    const { firstName, lastName } = user
+    const user: User[] = useSelector(userSelector).filter((item: User) => item.id == idUser)
+    const { firstName, lastName } = user[0]
 
     // Orders State
     const [orders, setOrders] = useState<Order[]>([])
