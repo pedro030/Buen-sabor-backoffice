@@ -29,6 +29,7 @@ import { Movement } from "../../../models/Movement";
 
 // Assets
 import { RiFileExcel2Line } from 'react-icons/ri';
+import { ExportCSV } from "../ExportCSV";
 
 const Movements = () => {  
   // Service
@@ -63,7 +64,7 @@ const Movements = () => {
   // Sorting
   const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(filteredMovements, 'date');
 
-  //Pagination
+  // Pagination
   const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
 
   // Calcula el total que ingresa
@@ -149,7 +150,7 @@ const Movements = () => {
     <div>
       <h1 className="my-5 text-xl font-semibold tracking-widest text-center uppercase">Movements</h1>
       <hr />
-
+      {/* FILTERS */}
       <div className="flex justify-center">
         <div>
         <details className='mb-10 dropdown md:hidden'>
@@ -223,11 +224,11 @@ const Movements = () => {
                 </select>
               </div>
           </div>
+          {/* MOVEMENTS TABLE */}
           <div className="h-[60vh] overflow-y-auto">
             <table className="z-0 table max-sm:table-xs table-sm table-pin-rows">
               <thead>
                 <tr>
-                  {/* <th className="text-center">ID</th> */}
                   <th className="text-center">TYPE</th>
                   <th className="text-center">DATE / HOUR</th>
                   <th className="text-center">DESCRIPTION</th>
@@ -238,7 +239,6 @@ const Movements = () => {
                 {
                   currentObjects.map((movement: Movement, index: number) => (
                     <tr key={index}>
-                      {/* <th className="text-center">{movement.id}</th> */}
                       <th className="text-center">{movement.type.replace("_", " ")}</th>
                       <th className="text-center">{movement.date.replace(" ", " / ")}</th>
                       <th className="text-center">{movement.description.replaceAll(`"`, "")}</th>
@@ -247,20 +247,21 @@ const Movements = () => {
                   ))
                 }
               </tbody>
+              {/* PAGINATION */}
               <tfoot>
                 <Pagination items={sortedItems} currentPage={currentPage} setCurrentPage={setCurrentPage} pages={pages} objetsPerPage={objetsPerPage}/>
               </tfoot>
             </table>
           </div>
+          {/* TOTALS SUMMARY */}
           <div className='flex flex-row justify-end mr-10'><h1>TOTAL INCOME: </h1> <span className='ml-2 text-green-500'>+{totalIncome()}</span></div>
           <div className='flex flex-row justify-end mr-10'><h1>TOTAL EGRESS: </h1> <span className='ml-2 text-red-500'>-{totalEgress()}</span></div>
           <div className={`flex flex-row justify-end mr-10 `}><h1>TOTAL: </h1> <span className={`ml-2 ${(totalIncome() > totalEgress()) ? 'text-green-500' : 'text-red-500'}`}>{totalIncome() - totalEgress()}</span></div>
         </div>
       </div>
       <div className="flex justify-end w-full mt-10 mb-5 ">
-        <button className="mr-10 text-white btn btn-success btn-wide"><RiFileExcel2Line />EXPORT EXCEL</button>
+        <ExportCSV csvData={sortedItems} rankingType={'Movements'} rankingOpc={3} startDate={startDate} endDate={endDate}/>
       </div>
-
     </div>
   )
 }

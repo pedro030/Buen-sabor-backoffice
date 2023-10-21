@@ -1,24 +1,24 @@
-import { RiFileExcel2Line } from "react-icons/ri";
-import * as XLSX from "xlsx";
-import * as FileSaver from 'file-saver';
+// XLSX & FileSaver
+import { utils, WorkBook, write } from "xlsx";
+import { saveAs } from 'file-saver';
+
+// Types
 import { Product } from "../../models/Product";
 import { UserRanking } from "../../models/UserRanking";
+import { Movement } from "../../models/Movement";
+import { IExportCSVProps } from "../../interfaces/IExportCSVProps";
+
+// Functions
 import { dateToString } from "./rankingFunctions";
 
-interface Props {
-    csvData: any,
-    rankingType: string,
-    rankingOpc: number,
-    startDate: Date | null,
-    endDate: Date | null
-}
+// Assets
+import { RiFileExcel2Line } from "react-icons/ri";
 
-export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate, }: Props) => {
+export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate, }: IExportCSVProps) => {
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
 
     const handleExcelDownload = async (csvData: any, rankingType: string, rankingOpc: number, startDate: Date | null, endDate: Date | null,) => {
-
         switch (rankingOpc) {
             case 1: const fileNameProductRanking = startDate && endDate ? `${rankingType} ${dateToString(startDate)} to ${dateToString(endDate)}` : `${rankingType}`;
                 exportProductRankingToCSV(csvData, fileNameProductRanking);
@@ -80,14 +80,14 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
         const foodDataFinal = [...[{ A: "PRODUCT RANKING" }, {}], ...foodTable];
         const drinkDataFinal = [...[{ A: "DRINK RANKING" }, {}], ...drinksTable];
 
-        const foodSheet = XLSX.utils.json_to_sheet(foodDataFinal, { skipHeader: true });
-        const drinkSheet = XLSX.utils.json_to_sheet(drinkDataFinal, { skipHeader: true });
+        const foodSheet = utils.json_to_sheet(foodDataFinal, { skipHeader: true });
+        const drinkSheet = utils.json_to_sheet(drinkDataFinal, { skipHeader: true });
 
         foodSheet["!merges"] = [
-            XLSX.utils.decode_range("A1:E1"),
+            utils.decode_range("A1:E1"),
         ];
         drinkSheet["!merges"] = [
-            XLSX.utils.decode_range("A1:E1"),
+            utils.decode_range("A1:E1"),
         ];
 
         let properties: any = [];
@@ -106,8 +106,6 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
 
         saveExcel(workbook, fileName);
     }
-
-
 
     const exportClientRankingToCSV = (csvData: UserRanking[], fileName: string) => {
         let table = [
@@ -128,10 +126,10 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
 
         const dataFinal = [...[{ A: "USER RANKING" }, {}], ...table];
 
-        const sheet = XLSX.utils.json_to_sheet(dataFinal, { skipHeader: true });
+        const sheet = utils.json_to_sheet(dataFinal, { skipHeader: true });
 
         sheet["!merges"] = [
-            XLSX.utils.decode_range("A1:E1"),
+            utils.decode_range("A1:E1"),
         ];
 
         let properties: any = [];
@@ -150,25 +148,14 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
         saveExcel(workbook, fileName);
     }
 
-    const exportMovementsToCSV = (csvData: Product[], fileName: string) => {
-        const formatFoodRanking = csvData.filter((product: Product) => product.subcategory_fk?.name !== 'Bebidas' && product.subcategory_fk?.parentCategory?.name !== 'Bebidas').map((item: Product) => ({
-            NAME: item.name,
-            CATEGORY: item.subcategory_fk?.name,
-            'QTY. SOLD': item.quantity_sold,
-            ACTIVE: item.active ? 'Active' : 'Not Active',
-            PRICE: item.price
-        }));
-
-
-        const foodSheet = XLSX.utils.json_to_sheet(formatFoodRanking);
-        const workbook = { Sheets: { 'Food Ranking': foodSheet }, SheetNames: ['Food Ranking'] };
-        saveExcel(workbook, fileName);
+    const exportMovementsToCSV = (csvData: Movement[], fileName: string) => {
+        
     }
 
-    const saveExcel = (workbook: XLSX.WorkBook, fileName: string) => {
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const saveExcel = (workbook: WorkBook, fileName: string) => {
+        const excelBuffer = write(workbook, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
+        saveAs(data, fileName + fileExtension);
     }
 
 

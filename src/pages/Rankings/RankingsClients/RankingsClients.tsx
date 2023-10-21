@@ -30,10 +30,8 @@ import { UserRanking } from "../../../models/UserRanking";
 import { ExportCSV } from "../ExportCSV";
 
 const RankingsClients = () => {
-  // User Token
+  // User Token y Api URL para hacer los fetch
   const token = store.getState().userSession.token
-
-  // Api URL
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Clients Raking States
@@ -74,10 +72,10 @@ const RankingsClients = () => {
     if(startDate && endDate) fetchClientRanking();
   }
 
-  //Sorting
+  // Sorting
   const { sortedItems, setSortedItems, currentSorting, isAsc, handleChangeSorting } = useSortingStates(clients, 'id');
 
-  //Pagination
+  // Pagination
   const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } = usePagination(sortedItems);
 
   useEffect(() => {
@@ -97,6 +95,7 @@ const RankingsClients = () => {
       <hr />
       </div>
       <details className='mb-10 dropdown md:hidden'>
+        {/* FILTERS */}
           <summary className='m-1 btn btn-primary btn-wide btn-sm'>
             Filter
           </summary>
@@ -159,6 +158,7 @@ const RankingsClients = () => {
             </div>
             <ExportCSV csvData={sortedItems} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
           </div>
+          {/* CLIENT RANKING TABLE */}
           <table className="z-0 table table-xs">
             <thead>
               <tr>

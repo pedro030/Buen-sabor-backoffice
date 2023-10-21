@@ -22,10 +22,8 @@ import { dateToString } from "../rankingFunctions";
 import { ExportCSV } from "../ExportCSV";
 
 const RankingsProducts = () => {
-  // Token
+  // Token y Api URL para hacer los fetch
   const token: string = store.getState().userSession.token;
-
-  // Api URL
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
 
   // Product Ranking States
@@ -80,7 +78,7 @@ const RankingsProducts = () => {
     if (startDate && endDate) fetchProductRanking();
   };
 
-  //Pagination
+  // Pagination
   const { currentObjects, currentPage, objetsPerPage, pages, setCurrentPage } =
     usePagination(products);
 
