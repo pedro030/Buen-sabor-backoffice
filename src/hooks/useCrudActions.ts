@@ -8,9 +8,9 @@ import { ApiServ } from "../services/ApiServ";
 import Swal from "sweetalert2";
 
 // Types
-import { ReduxAction } from "../interfaces/ReduxAction";
+import { LoadAction } from "../interfaces/LoadAction";
 
-export const useCrudActions = <T extends { id: string }>(item: T, service: ApiServ<T>, type: string, dispatch: Dispatch, loadAction: (data: T[]) => ReduxAction, onClose: () => void) => {
+export const useCrudActions = <T extends { id: string }>(item: T, service: ApiServ<T>, type: string, dispatch: Dispatch, loadAction: (data: T[]) => LoadAction<T>, onClose: () => void) => {
    
     const deleteObjectAlerts = () => {
         Swal.fire({

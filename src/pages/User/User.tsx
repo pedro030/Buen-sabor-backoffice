@@ -1,46 +1,65 @@
-import UserForm from "../../components/modals/user_form/UserForm";
-import { User } from "../../models/User";
-import { useDispatch, useSelector } from "react-redux";
-import { loadUsers } from "../../state/actions/userActions";
-import { rolSelector, userSelector } from "../../state/selectors";
-import CrudCard from "../../components/crud_components/crud_card/CrudCard";
-import { UserService } from "../../services/User";
-import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
-import CrudDeleteModal from "../../components/crud_components/crud_delete_modal/CrudDeleteModal";
-import { FiEdit2 } from "react-icons/fi";
-import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
-import { AiOutlineBars } from "react-icons/ai";
+// React
 import { useState, useEffect } from "react";
+
+// Redux
+import store from "../../state/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { rolSelector, userSelector } from "../../state/selectors";
+import { loadUsers } from "../../state/actions/userActions";
+
+// Services
+import { UserService } from "../../services/User";
+
+// Hooks
 import { useSorting } from "../../hooks/useSorting";
-import { usePagination } from "../../hooks/usePagination";
-import Pagination from "../../components/pagination/Pagination";
 import { useSortingStates } from "../../hooks/useSortingStates";
-import { IoIosAddCircleOutline } from "react-icons/io";
+import { usePagination } from "../../hooks/usePagination";
 import { useCrudActions } from "../../hooks/useCrudActions";
+
+// Sweet Alert 2
+import Swal from "sweetalert2";
+
+// Components
+import UserForm from "../../components/modals/user_form/UserForm";
+import Pagination from "../../components/pagination/Pagination";
+
+// Types
+import { User } from "../../models/User";
+import { Rol } from "../../models/Rol";
+
+// Assets
+import { RiEyeLine } from "react-icons/ri";
+import { AiOutlineBars } from "react-icons/ai";
 import { AiOutlineCheckSquare } from "react-icons/ai";
 import { MdOutlineDisabledByDefault } from "react-icons/md";
-import Swal from "sweetalert2";
-import store from "../../state/store/store";
 
 function User() {
-  // Token
+  // Token y Api URL para hacer los fetch
   const token: string = store.getState().userSession.token;
   const apiURL = import.meta.env.VITE_REACT_APP_API_URL;
+
+  // Redux
   const dispatch = useDispatch();
+
+  // Obtiene los Usuarios y los Roles
   const user: User[] = useSelector(userSelector);
   const rols = useSelector(rolSelector);
+
+  // User Service
   const userService = new UserService();
+
+  // Modal
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<User>();
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
+  // Set User to Blacklist
   const fetchBlacklist = async (id: number) => {
     const response = await fetch(`${apiURL}/users/changeBlacklist/${id}`, {
       headers: {
         Authorization: `Bearer ${token.trim()}`,
       },
     });
-
     return response;
   };
 
@@ -51,12 +70,12 @@ function User() {
     rol: 0,
   });
 
-  const filterUser = (users: any) => {
-    return users.filter((u: any) => {
+  const filterUser = (users: User[]) => {
+    return users.filter((u: User) => {
       return (
         u.firstName?.toLowerCase().includes(filters.fn?.toLowerCase()) &&
         u.lastName?.toLowerCase().includes(filters.ln?.toLowerCase()) &&
-        (filters.rol === 0 || u.rol.id === filters.rol)
+        (filters.rol === 0 || +u.rol.id === filters.rol)
       );
     });
   };
@@ -64,7 +83,7 @@ function User() {
   const handleChangeRol = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const op = +e.target.value;
 
-    setFilters((prevState: any) => ({
+    setFilters((prevState) => ({
       ...prevState,
       rol: op,
     }));
@@ -81,7 +100,7 @@ function User() {
     setFirstName(fn);
 
     if (fn == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         fn: "",
       }));
@@ -89,7 +108,7 @@ function User() {
 
   const searchFirstNameOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         fn: firstName,
       }));
@@ -101,7 +120,7 @@ function User() {
     setLastName(ln);
 
     if (e.target.value == "")
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         ln: "",
       }));
@@ -109,7 +128,7 @@ function User() {
 
   const searchLastNameOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setFilters((prevState: any) => ({
+      setFilters((prevState) => ({
         ...prevState,
         ln: lastName,
       }));
@@ -229,6 +248,7 @@ function User() {
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Users</h2>
 
+      {/* FILTERS */}
       <details className='mb-10 dropdown md:hidden'>
         <summary className='m-1 btn btn-primary btn-wide btn-sm'>
           Filter
@@ -260,12 +280,13 @@ function User() {
               <option selected value={0}>
                 ROL: ALL
               </option>
-              {rols.map((r: any) => {
+              {rols.map((r: Rol) => {
                 return <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>;
               })}
             </select>
           </li>
           <li>
+            {/* SORTING TYPE */}
             <select
               className='w-full h-full select select-bordered select-sm'
               onChange={handleChangeSorting}
@@ -308,7 +329,7 @@ function User() {
           <option selected value={0}>
             ROL: ALL
           </option>
-          {rols.map((r: any) => {
+          {rols.map((r: Rol) => {
             return <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>;
           })}
         </select>
@@ -338,6 +359,7 @@ function User() {
               <th className="max-md:hidden">Blacklist</th>
             </tr>
           </thead>
+          {/* USERS TABLE */}
           <tbody>
             {currentObjects.map((userItem: User, i: number) => (
               <tr key={i}>
@@ -397,6 +419,7 @@ function User() {
               </tr>
             ))}
           </tbody>
+          {/* PAGINATION */}
           <tfoot>
             <Pagination
               items={sortedItems}
