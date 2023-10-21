@@ -28,7 +28,6 @@ import Pagination from "../../../components/pagination/Pagination";
 import { Movement } from "../../../models/Movement";
 
 // Assets
-import { RiFileExcel2Line } from 'react-icons/ri';
 import { ExportCSV } from "../ExportCSV";
 
 const Movements = () => {  
