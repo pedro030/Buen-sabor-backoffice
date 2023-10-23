@@ -1,33 +1,39 @@
-import './sidebar.scss'
+// Auth0
 import { useAuth0 } from '@auth0/auth0-react'
-import { NavLink, Route, Routes, useNavigate } from 'react-router-dom'
-import loguot_icon from '../../assets/logout_icon.svg'
-import store from '../../state/store/store'
+
+// Redux
 import { useSelector } from 'react-redux'
 import { userSessionSelector } from '../../state/selectors'
-import { Rol } from '../../models/Rol'
-import { useState, useEffect } from 'react'
-import PageLoader from '../page_loader/PageLoader'
+
+// React Router
+import { NavLink } from 'react-router-dom'
+
+// Types
+import { IButtonsByRol } from '../../interfaces/IButtonsByRol'
+
+// Assets
+import loguot_icon from '../../assets/logout_icon.svg'
 import { FaBars } from 'react-icons/fa';
 
-
+// Styles
+import './sidebar.scss'
 
 function Sidebar() {
-
+  // Obtiene la informacion del usuario logueado con Auth0
   const { user, logout } = useAuth0()
+  // A su vez se obtiene el rol para cargarle una determinada botonera a cada uno
   const { rol } = useSelector(userSessionSelector)
 
-  const crud: any = {
-    '_superAdmin': ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
-    '_admin': ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
-    '_cashier': ['orders', 'bills'],
-    '_chef': ['categories', 'ingredients', 'products', 'orders'],
-    '_delivery': ['orders']
+  // Lista de botones/opciones que tendrá acceso cada rol
+  const crud: IButtonsByRol = {
+    _superAdmin: ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
+    _admin: ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
+    _cashier: ['orders', 'bills'],
+    _chef: ['categories', 'ingredients', 'products', 'orders'],
+    _delivery: ['orders']
   }
 
   return (
-
-    // STRUCTURE
     <>
 <details className='mt-3 ml-3 lg:hidden dropdown'>
             <summary className='m-1 btn btn-circle btn-secondary'><FaBars className="w-5 h-5"/></summary>
@@ -71,7 +77,7 @@ function Sidebar() {
               <details className="dropdown dropdown-end">
                 <summary>Table</summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
-                  { crud[rol].map((element: any, index:number) =>( 
+                  { crud[rol].map((element: string, index:number) =>( 
                   <li key={index}>
                         <NavLink to={element} className={({ isActive }) => isActive ? "active" : ""}>{element[0].toUpperCase() + element.substring(1)}</NavLink>
                     </li>
@@ -116,8 +122,6 @@ function Sidebar() {
       {/* SIDEBAR */}
       <div className="w-56 bg-white h-[100vh] border shadow menu max-lg:hidden">
 
-        {/* <h1 className='font-bold font-red-600'>Buen Sabor</h1> */}
-
         {/* AVATAR */}
         <div className="flex justify-center avatar">
           <div className="w-24 rounded-full">
@@ -157,7 +161,7 @@ function Sidebar() {
               <details className="dropdown dropdown-end">
                 <summary>Table</summary>
                 <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full">
-                  { crud[rol].map((element: any, index:number) =>( 
+                  { crud[rol].map((element: string, index:number) =>( 
                   <li key={index}>
                         <NavLink to={element} className={({ isActive }) => isActive ? "active" : ""}>{element[0].toUpperCase() + element.substring(1)}</NavLink>
                     </li>
@@ -197,11 +201,8 @@ function Sidebar() {
             </li>
           </ul>
         </div>
-
       </div>
-
     </>
-
   )
 }
 
