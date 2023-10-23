@@ -1,8 +1,13 @@
+// Auth0
 import { Auth0Provider } from "@auth0/auth0-react";
-import React from "react";
+
+// React Router
 import { useNavigate } from "react-router-dom";
 
-const Auth0ProviderWithNavigate = (props:any) => {
+// Interfaces
+import { IAuth0ProviderWithNavigate } from "../../interfaces/IAuth0ProviderWithNavigate";
+
+const Auth0ProviderWithNavigate = (props: IAuth0ProviderWithNavigate) => {
   const navigate = useNavigate();
 
   const domain = import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN;

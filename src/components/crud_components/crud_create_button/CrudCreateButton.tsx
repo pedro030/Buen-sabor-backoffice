@@ -1,7 +1,9 @@
+// React
 import { useState, FC } from 'react'
+
+// Assets
 import { AiOutlineReload } from 'react-icons/ai'
 import { IoIosAddCircleOutline } from 'react-icons/io'
-// import './CrudCreateButton.scss'
 
 interface PropsModal {
   open: boolean,
@@ -15,7 +17,7 @@ interface Props {
 const CrudCreateButton = ({ Modal, Title }: Props) => {
   const [open, setOpen] = useState<boolean>(false)
 
-  const aux: boolean = (Title === "Recargar Stock")
+  const aux: boolean = (Title === "Re-Stock")
 
   return (
     <div>
