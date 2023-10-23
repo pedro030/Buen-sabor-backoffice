@@ -10,8 +10,16 @@ import Swal from "sweetalert2";
 // Types
 import { LoadAction } from "../interfaces/LoadAction";
 
+// Hook personalizado para realizar operaciones CRUD en objetos determinados y con SweetAlerts.
+// EL hook recibe el item el cual se agrega, edita o elimina.
+// El servicio que proporciona las operaciones CRUD.
+// El type es el string indicativo del tipo del objeto.
+// La función de dispatch para actualizar el estado.
+// La acción de carga para actualizar el estado con nuevos datos.
+// Función para cerrar ventanas modales u otras acciones posteriores a las operaciones CRUD.
 export const useCrudActions = <T extends { id: string }>(item: T, service: ApiServ<T>, type: string, dispatch: Dispatch, loadAction: (data: T[]) => LoadAction<T>, onClose: () => void) => {
    
+    // Elimina un objeto e informa la situacion mediante Sweet Alerts
     const deleteObjectAlerts = () => {
         Swal.fire({
             icon: 'warning',
@@ -57,6 +65,7 @@ export const useCrudActions = <T extends { id: string }>(item: T, service: ApiSe
             })
     }
 
+    // Actualiza un objeto e informa la situacion mediante Sweet Alerts
     const updateObjectAlerts = () => {
         Swal.fire({
             title: 'Updating...',
@@ -91,6 +100,7 @@ export const useCrudActions = <T extends { id: string }>(item: T, service: ApiSe
         })
     }
 
+    // Agrega un objeto e informa la situacion mediante Sweet Alerts
     const addObjectAlerts = () => {
         Swal.fire({
             title: 'Adding...',
@@ -125,6 +135,7 @@ export const useCrudActions = <T extends { id: string }>(item: T, service: ApiSe
         })
     }
 
+    // Retorna las funciones
     return { deleteObjectAlerts, updateObjectAlerts, addObjectAlerts }
     
 }
