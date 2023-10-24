@@ -1,30 +1,38 @@
-import React from 'react'
-import { Ingredient } from '../../../../models/Ingredient'
-import { IngredientService } from '../../../../services/Ingredient'
-import { loadIngredients } from '../../../../state/actions/ingredientActions'
-import ComboBoxModel from '../../_ComboBoxModel/ComboBoxModel'
-import { ingredientSelector, measureSelector } from '../../../../state/selectors'
-import Measure from '../../../../pages/Measure/Measure'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import { useDispatch, useSelector } from 'react-redux'
-import toast from 'react-hot-toast'
-import * as Yup from 'yup';
+// React
 import { useState, useEffect, ChangeEvent } from 'react';
+
+// Formik
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
+
+// Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { ingredientSelector } from '../../../../state/selectors'
+import { loadIngredients } from '../../../../state/actions/ingredientActions'
+
+// Sweet Alert 2
 import Swal from 'sweetalert2'
 
-interface Props {
-    obj?: Ingredient,
-    open: boolean,
-    onClose: () => void
-}
-const IngredientListForm = ({ obj, open, onClose }: Props) => {
-    if (!open) return null
-    const ingredientsOptions = useSelector(ingredientSelector)
-    const ingredientService = new IngredientService()
+// Service
+import { IngredientService } from '../../../../services/Ingredient'
+
+// Types
+import { Ingredient, IngredientList, IngredientsOnList } from '../../../../models/Ingredient'
+import { IIngredientListFormModal } from '../../../../interfaces/IModalCRUDProps'
+
+const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) => {
+    // Si no está abierto el modal retorna null y no se muestra
+    if (!open) return null;
+
+    // Redux
     const dispatch = useDispatch()
 
+    // Obtiene los ingredientes
+    const ingredientsOptions = useSelector(ingredientSelector)
 
+    // Service
+    const ingredientService = new IngredientService()
 
+    // Handle Submit
     const handleSubmit = (state: any) => {
         Swal.fire({
             title: 'Restocking...',
@@ -59,24 +67,22 @@ const IngredientListForm = ({ obj, open, onClose }: Props) => {
         })
     }
 
-    const handleSelect = (event: ChangeEvent<HTMLInputElement>, index: number, values: any, setFieldValue: any) => {
+    const handleSelect = (event: ChangeEvent<HTMLInputElement>, index: number, values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
         const selectedIngredient = JSON.parse(event.target.value);
-        const updatedIngredients = values.ingredients.map((ingredient: any, i: any) =>
+        const updatedIngredients = values.ingredients.map((ingredient: IngredientsOnList, i: number) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
         setFieldValue('ingredients', updatedIngredients);
     }
 
-    const handleAddIngredient = (values: any, setFieldValue: any) => {
+    const handleAddIngredient = (values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
         const newIngredient = { ingredient: { measure: { measure: '' } }, cant: 0 };
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
-    const handleRemoveIngredient = (index: number, values: any, setFieldValue: any) => {
-        const updatedIngredients = values.ingredients.filter((i: Ingredient, ind: number) => ind !== index);
+    const handleRemoveIngredient = (index: number, values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
+        const updatedIngredients = values.ingredients.filter((i: any, ind: number) => ind !== index);
         setFieldValue('ingredients', updatedIngredients);
     }
-
-
 
     return (
         <div className='overlay' onClick={() => onClose()}>
@@ -86,7 +92,7 @@ const IngredientListForm = ({ obj, open, onClose }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            ingredients: [],
+                            ingredients: []
                         }
                     }
                     onSubmit={(state) => { handleSubmit(state) }}

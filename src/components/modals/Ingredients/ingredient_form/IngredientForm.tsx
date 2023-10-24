@@ -1,40 +1,50 @@
-import './IngredientForm.scss'
-import React from 'react'
+// Formik & Yup
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import { Ingredient } from '../../../../models/Ingredient'
-import { IngredientService } from '../../../../services/Ingredient'
+import { object, string, number } from 'yup'
+
+// Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { loadIngredients } from '../../../../state/actions/ingredientActions'
-import * as Yup from 'yup'
-import ComboBoxModel from '../../_ComboBoxModel/ComboBoxModel'
 import { measureSelector } from '../../../../state/selectors'
-import Measure from '../../../../pages/Measure/Measure'
+import { loadIngredients } from '../../../../state/actions/ingredientActions'
+
+// Services
+import { IngredientService } from '../../../../services/Ingredient'
+
+// Hooks
 import { useCrudActions } from '../../../../hooks/useCrudActions'
 
-interface Props {
-    obj?: Ingredient,
-    open: boolean,
-    onClose: () => void,
-    watch: boolean
-}
-const IngredientForm = ({ obj, open, onClose, watch }: Props) => {
+// Components
+import ComboBoxModel from '../../_ComboBoxModel/ComboBoxModel'
+
+// Types
+import { Ingredient } from '../../../../models/Ingredient'
+import { IIngredientFormModal } from '../../../../interfaces/IModalCRUDProps'
+
+const IngredientForm = ({ obj, open, onClose, watch }: IIngredientFormModal) => {
+    // Si no está abierto el modal retorna null y no se muestra
     if (!open) return null
-    const ingredientService = new IngredientService()
+
+    // Redux
     const dispatch = useDispatch()
 
-    // configuracion de validacion
-    const validationSchema = Yup.object({
-        name: Yup.string()
+    // Service
+    const ingredientService = new IngredientService()
+
+    // Form Validation
+    const validationSchema = object({
+        name: string()
             .required("Ingredient name is required")
             .max(30),
-        cost: Yup.number().required("Ingredient cost is required"),
-        stock: Yup.number().required("Ingredient stock is required"),
-        stockMin: Yup.number().required("Ingredient minimum stock is required")
+        cost: number().required("Ingredient cost is required"),
+        stock: number().required("Ingredient stock is required"),
+        stockMin: number().required("Ingredient minimum stock is required")
     })
 
-    // Crea o edita dependiendo si obj es pasado como prop
+    // Handle Submit
     const handleSubmit = (state: Ingredient) => {
-        state.measure = JSON.parse(state.measure);
+        if(typeof state.measure === "string") {
+            state.measure = JSON.parse(state.measure);
+        }
 
         if (state.id) {
             const { updateObjectAlerts } = useCrudActions(state, ingredientService, 'ingredient', dispatch, loadIngredients, onClose);
@@ -58,14 +68,16 @@ const IngredientForm = ({ obj, open, onClose, watch }: Props) => {
                             measure: JSON.stringify(obj.measure)
                         }
                         : {
+                            id: "",
                             name: "",
-                            cost: "",
-                            stock: "",
-                            stockMin: ""
+                            cost: 0,
+                            stock: 0,
+                            stockMin: 0,
+                            measure: { id: "", measure: "" }
                         }
                     }
                     validationSchema={validationSchema}
-                    onSubmit={(state) => handleSubmit(state)}
+                    onSubmit={(state) => handleSubmit(state as Ingredient)}
                 >
 
                     <Form>

@@ -1,6 +1,5 @@
 export interface Category{
-    name: string;
     id: string;
-    // active:boolean;
+    name: string;
     parentCategory: Category | null;
 }

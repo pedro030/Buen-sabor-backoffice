@@ -1,44 +1,63 @@
-import { Product } from '../../../models/Product'
-import { ErrorMessage, Field, Form, Formik } from 'formik'
-import './ProductForm.scss'
-import { ProductService } from '../../../services/Product'
+// React
+import { ChangeEvent, useState } from 'react';
+
+// Formik & Yup
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
+import { object, string, number, bool } from 'yup';
+
+// Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { loadProducts } from '../../../state/actions/productActions'
-import toast from 'react-hot-toast'
 import { categoriesSelector, ingredientSelector } from '../../../state/selectors'
-import { Category } from '../../../models/Category'
-import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { loadProducts } from '../../../state/actions/productActions'
+
+// Service
+import { ProductService } from '../../../services/Product'
+
+// Sweet Alert 2
 import Swal from 'sweetalert2'
 
-interface Props {
-    obj?: any,
-    open: boolean,
-    onClose: () => void,
-    watch: boolean
-}
-const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
+// Types
+import { Product, ProductIngredient } from '../../../models/Product'
+import { Category } from '../../../models/Category'
+import { IProductFormModal } from '../../../interfaces/IModalCRUDProps'
+import { Ingredient } from '../../../models/Ingredient';
+
+const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
+    // Si no está abierto el modal retorna null y no se muestra
     if (!open) return null
+
+    // Redux
     const dispatch = useDispatch()
-    const productService = new ProductService();
-    const [imagen, setImagen] = useState<File | null>(null);
-    const [subcategoryChange, setSubcategoryChange] = useState<Category>();
 
-    const validationSchema = Yup.object({
-        name: Yup.string().max(30).required("Product name is required"),
-        price: Yup.number().required("Product price is required"),
-        //subcategory: Yup.string().required("Category is required"),
-        active: Yup.bool().required("Product status is required")
-    })
-
+    // Se obtienen las categorias y los ingredientes
     const categories = useSelector(categoriesSelector)
-    //const categoriesOptions: Category[] = categories.filter((cat: Category) => cat.parentCategory?.name)
     const ingredientsOptions = useSelector(ingredientSelector)
 
-    const handleImageChange = (e: any) => {
-        setImagen(e.target.files[0])
+    // Service
+    const productService = new ProductService();
+
+    // Imagen a cargar en el producto, en principio es null
+    const [imagen, setImagen] = useState<File | null>(null);
+
+    // Sirve para saber si la subCategory es bebida o no
+    const [subcategoryChange, setSubcategoryChange] = useState<Category>();
+
+    // Form Validation
+    const validationSchema = object({
+        name: string().max(30).required("Product name is required"),
+        price: number().required("Product price is required"),
+        subcategory: string().required("Category is required"),
+        active: bool().required("Product status is required")
+    })
+
+    // Handler Change Image
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setImagen(e.target.files[0]);
+          }
     }
 
+    // Handle Submit
     const handleOnSubmit = (state: Product) => {
         if (state?.id) {
             Swal.fire({
@@ -108,23 +127,22 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
 
     }
 
-    const handleSelect = (event: any, index: number, values: any, setFieldValue: any) => {
+    const handleSelect = (event: ChangeEvent<HTMLSelectElement>, index: number, values: Product, setFieldValue: FormikHelpers<Product>['setFieldValue']) => {
         const selectedIngredient = JSON.parse(event.target.value);
-        const updatedIngredients = values.ingredients.map((ingredient: any, i: any) =>
+        const updatedIngredients = values.ingredients.map((ingredient: ProductIngredient, i: number) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
         setFieldValue('ingredients', updatedIngredients);
     }
 
-    const handleAddIngredient = (values: any, setFieldValue: any) => {
-        const newIngredient = { ingredient: { measure: { measure: '' } }, cant: 0 }; // Nuevo objeto de ingrediente vacío
+    const handleAddIngredient = (values: Product, setFieldValue: FormikHelpers<Product>['setFieldValue']) => {
+        const newIngredient = { ingredient: { measure: { measure: '' } }, cant: 0 };
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
-    const handleRemoveIngredient = (index: number, values: any, setFieldValue: any) => {
-        const updatedIngredients = values.ingredients.filter((i: any, ind: any) => ind !== index);
+    const handleRemoveIngredient = (index: number, values: Product, setFieldValue: FormikHelpers<Product>['setFieldValue']) => {
+        const updatedIngredients = values.ingredients.filter((i: ProductIngredient, ind: number) => ind !== index);
         setFieldValue('ingredients', updatedIngredients);
     }
-
 
     return (
         <div className='overlay' onClick={() => onClose()}>
@@ -134,10 +152,12 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
+                            id: "",
                             name: "",
                             active: false,
                             cookingTime: 0,
-                            subcategory: {},
+                            quantity_sold: 0,
+                            subcategory: {id: "", name: "", parentCategory: null},
                             image: '',
                             cost: 0,
                             ingredients: [],
@@ -164,7 +184,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
 
                                 <div className="field">
                                     <label htmlFor='image'>Image</label>
-                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: any) => handleImageChange(e)} disabled={watch}/>
+                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(e)} disabled={watch}/>
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
@@ -186,7 +206,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
 
                                 <div className="field">
                                     <label htmlFor='active'>Category</label>
-                                    <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: any) => {
+                                    <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                                         const selectedCategory = JSON.parse(e.target.value);
                                         setSubcategoryChange(selectedCategory)
                                         setFieldValue('subcategory', selectedCategory);
@@ -220,13 +240,13 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
 
                                     <div className='flex flex-row ml-5 w-[70%]  h-36 overflow-y-auto'>
                                         <div className='flex flex-col gap-5 m-1'>
-                                            {values.ingredients.map((e: any, index: any) => {
+                                            {values.ingredients.map((e: ProductIngredient, index: number) => {
                                                 return <>
                                                     <div className='flex flex-row w-full gap-5'>
                                                         <div className='flex flex-col'>
-                                                            <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: any) => handleSelect(e, index, values, setFieldValue)}>
+                                                            <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
                                                                 <option value='' label='Select Ingredient' disabled={watch}/>
-                                                                {ingredientsOptions.map((i: any, ind: any) => {
+                                                                {ingredientsOptions.map((i: Ingredient, ind: number) => {
                                                                     return <option key={ind} value={JSON.stringify(i)} label={i.name} />
                                                                 })}
                                                             </Field>
@@ -234,7 +254,6 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
 
                                                         <div className="flex flex-col field">
                                                             <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} disabled={watch}/>
-                                                            {/* <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage> */}
                                                         </div>
 
                                                         <div className='flex flex-col'>
@@ -245,7 +264,6 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: Props) => {
                                                     </div>
                                                 </>
                                             })}
-
                                         </div>
                                     </div>
                                 </div>

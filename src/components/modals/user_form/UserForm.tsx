@@ -1,37 +1,49 @@
-import React from 'react'
-import { User } from '../../../models/User'
+// Formik & Yup
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import './UserForm.scss'
-import { UserService } from '../../../services/User'
+import { object, string } from 'yup'
+
+// Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { loadUsers } from '../../../state/actions/userActions'
-import toast from 'react-hot-toast'
 import { rolSelector } from '../../../state/selectors'
-import { Rol } from '../../../models/Rol'
-import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+import { loadUsers } from '../../../state/actions/userActions'
+
+// Services
+import { UserService } from '../../../services/User'
 import { registerUserAuth0 } from '../../../services/Auth0Service'
-import * as Yup from 'yup'
+
+// Components
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+
+// Sweet Alert 2
 import Swal from 'sweetalert2'
 
-interface Props {
-    obj?: any,
-    open: boolean,
-    onClose: () => void,
-    employee: boolean,
-    watch: boolean
-}
+// Types
+import { User } from '../../../models/User'
+import { Rol } from '../../../models/Rol'
+import { IUserFormModal } from '../../../interfaces/IModalCRUDProps'
 
-const UserForm = ({ obj, open, onClose, employee, watch }: Props) => {
+const UserForm = ({ obj, open, onClose, employee, watch }: IUserFormModal) => {
+    // Si no está abierto el modal retorna null y no se muestra
     if (!open) return null
-    const dispatch = useDispatch()
+
+    // Redux
+    const dispatch = useDispatch();
+
+    // Obtiene los Roles
+    const rolsOptions: Rol[] = employee ? useSelector(rolSelector).filter((item: Rol) => item.rol !== 'Client') : useSelector(rolSelector);
+
+    // Service
     const userService = new UserService();
+
+    // Const que contiene un string indicando si es Empleado o Usuario
     const userEmployee = employee ? 'Employee' : 'User';
 
-    const validationSchema = Yup.object({
-        mail: Yup.string()
+    // Form Validation
+    const validationSchema = object({
+        mail: string()
             .email("Invalid mail")
             .required("Mail is required"),
-            password: Yup.string()
+            password: string()
             .required('New password is required')
             .min(8, 'Your password is too short.')
             .matches(/^(?=.*[a-z])(?=.*[A-Z])/, 'The password must have at least one uppercase and lowercase letter.')
@@ -40,10 +52,11 @@ const UserForm = ({ obj, open, onClose, employee, watch }: Props) => {
             .matches(/[A-Za-z\d@$!%*?&#]/, 'The password is invalid'),
     })
 
-    const rolsOptions:Rol[] = employee ? useSelector(rolSelector).filter((item: Rol) => item.rol !== 'Client') : useSelector(rolSelector) // traer los registros de "rols" del Redux
-
-    const handleOnSubmit = (state: any) => {
-        state.rol = JSON.parse(state.rol)
+    // Handle Submit
+    const handleOnSubmit = (state: User) => {
+        if(typeof state.rol === "string") {
+            state.rol = JSON.parse(state.rol)
+        }
 
         if (state?.id) {
             Swal.fire({
@@ -115,9 +128,7 @@ const UserForm = ({ obj, open, onClose, employee, watch }: Props) => {
                 }
             })
         }
-
     }
-
 
     return (
         <div className='overlay' onClick={() => onClose()}>
@@ -131,18 +142,20 @@ const UserForm = ({ obj, open, onClose, employee, watch }: Props) => {
                             rol: JSON.stringify(obj.rol)
                         }
                         : {
-                            firstName: String,
-                            lastName: String,
-                            mail: String,
-                            password: String,
+                            id: "",
+                            firstName: "",
+                            lastName: "",
+                            mail: "",
+                            password: "",
+                            rol: { id: "", rol: "" },
+                            blacklist: "Enabled",
                             orders: [],
-                            telephone:Number,
+                            telephone: 0,
                             addresses: [],
-                            blacklist: "Enabled"
                         }
                     }
                     validationSchema={validationSchema}
-                    onSubmit={(state) => { handleOnSubmit(state) }}
+                    onSubmit={(state) => { handleOnSubmit(state as User) }}
                 >
                     <Form>
                         <div className="inputs-form">

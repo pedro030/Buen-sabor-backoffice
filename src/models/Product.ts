@@ -11,8 +11,14 @@ export interface Product{
     subcategory: Category,
     subcategory_fk?: Category,
     cost:number,
-    ingredients: Array<Ingredient>,
+    ingredients: ProductIngredient[],
     active: boolean
+}
+
+export interface ProductIngredient {
+    id: string,
+    ingredient: Ingredient,
+    cant: number
 }
 
 export interface ProductOrder {

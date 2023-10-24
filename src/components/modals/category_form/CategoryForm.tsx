@@ -1,36 +1,52 @@
-import React from 'react'
-import { Category } from '../../../models/Category'
+// Formik & Yup
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import './CategoryForm.scss'
-import { CategoryService } from '../../../services/Category'
+import { object, string } from 'yup'
+
+// Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { loadCategories } from '../../../state/actions/categoryActions'
 import { categoriesSelector } from '../../../state/selectors'
-import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
-import * as Yup from 'yup'
+import { loadCategories } from '../../../state/actions/categoryActions'
+
+// Hooks
 import { useCrudActions } from '../../../hooks/useCrudActions'
 
+// Services
+import { CategoryService } from '../../../services/Category'
 
-interface Props {
-    obj?: Category,
-    open: boolean,
-    onClose: () => void,
-    watch: boolean
-}
-const CategoryForm = ({ obj, open, onClose, watch }: Props) => {
+// Components
+import ComboBoxModel from '../_ComboBoxModel/ComboBoxModel'
+
+// Types
+import { Category } from '../../../models/Category'
+import { ICategoryFormModal } from '../../../interfaces/IModalCRUDProps'
+
+const CategoryForm = ({ obj, open, onClose, watch }: ICategoryFormModal) => {
+    // Si no está abierto el modal retorna null y no se muestra
     if (!open) return null
+
+    // Redux
     const dispatch = useDispatch()
+
+    // Obtiene las categorias para seleccionar a una como Parent Category si asi se desea
     const categories: Category[] = useSelector(categoriesSelector)
+
+    // Service
     const categoryService = new CategoryService();
 
-    const validationSchema = Yup.object({
-        name: Yup.string()
+    // Form Validation
+    const validationSchema = object({
+        name: string()
             .required("Name is required"),
-        subcategories: Yup.string()
+        subcategories: string()
     })
 
+    // Handle Submit
     const handleOnSubmit = (state: Category) => {
-        (state.parentCategory === '') ? state.parentCategory = null : state.parentCategory = JSON.parse(state.parentCategory)
+        if (typeof state.parentCategory === "string" && state.parentCategory === "") {
+            state.parentCategory = null;
+        } else if(typeof state.parentCategory === "string") {
+            state.parentCategory = JSON.parse(state.parentCategory);
+        }
 
         if (state?.id) {
             const { updateObjectAlerts } = useCrudActions(state, categoryService, 'category', dispatch, loadCategories, onClose)
@@ -54,12 +70,13 @@ const CategoryForm = ({ obj, open, onClose, watch }: Props) => {
                             parentCategory: JSON.stringify(obj.parentCategory)
                         } :
                         {
+                            id: "",
                             name: "",
-                            parentCategory: ""
+                            parentCategory: null
                         }
                     }
                     validationSchema={validationSchema}
-                    onSubmit={(state) => { handleOnSubmit(state) }}
+                    onSubmit={(state) => { handleOnSubmit(state as Category) }}
                 >
                     <Form>
                         <div className=" inputs-form w-96">
