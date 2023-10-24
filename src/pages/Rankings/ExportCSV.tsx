@@ -149,7 +149,44 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
     }
 
     const exportMovementsToCSV = (csvData: Movement[], fileName: string) => {
-        
+        let table = [
+            {
+                A: "MOVEMENT TYPE",
+                B: "DATE / HOUR",
+                C: "DESCRIPTION",
+                D: "AMOUNT"
+            },
+        ];
+
+        csvData.map((movement: Movement) => {
+            table.push({
+                A: String(movement.type.replace("_", " ")),
+                B: String(movement.date.replace(" ", " / ")),
+                C: String(movement.description.replaceAll(`"`, "")),
+                D: String(movement.total)
+            });
+        });
+
+        const dataFinal = [...[{ A: "MOVEMENTS" }, {}], ...table];
+        const sheet = utils.json_to_sheet(dataFinal, { skipHeader: true });
+
+        sheet["!merges"] = [
+            utils.decode_range("A1:E1"),
+        ];
+
+        let properties: any = [];
+        const longitude = [25, 25, 35, 15];
+
+        longitude.forEach((col) => {
+            properties.push({
+                width: col,
+            });
+        });
+
+        sheet["!cols"] = properties;
+
+        const workbook = { Sheets: { 'Movements': sheet }, SheetNames: ['Movements'] };
+        saveExcel(workbook, fileName);
     }
 
     const saveExcel = (workbook: WorkBook, fileName: string) => {
@@ -157,7 +194,6 @@ export const ExportCSV = ({ csvData, rankingType, rankingOpc, startDate, endDate
         const data = new Blob([excelBuffer], { type: fileType });
         saveAs(data, fileName + fileExtension);
     }
-
 
     return (
         <div>
