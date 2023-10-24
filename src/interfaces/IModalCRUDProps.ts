@@ -1,7 +1,7 @@
 import { User } from "@auth0/auth0-react";
 import { Category } from "../models/Category";
 import { Product } from "../models/Product";
-import { Ingredient } from "../models/Ingredient";
+import { Ingredient, IngredientList } from "../models/Ingredient";
 
 export interface ICategoryFormModal {
     obj?: Category,
@@ -33,7 +33,7 @@ export interface IIngredientFormModal {
 }
 
 export interface IIngredientListFormModal {
-    obj?: Ingredient[],
+    obj?: IngredientList,
     open: boolean,
     onClose: () => void,
 }

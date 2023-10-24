@@ -1,5 +1,5 @@
 // React
-import { useState, useEffect, ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 
 // Formik
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
@@ -16,7 +16,7 @@ import Swal from 'sweetalert2'
 import { IngredientService } from '../../../../services/Ingredient'
 
 // Types
-import { Ingredient, IngredientList, IngredientsOnList } from '../../../../models/Ingredient'
+import { Ingredient, IngredientInList, IngredientList } from '../../../../models/Ingredient'
 import { IIngredientListFormModal } from '../../../../interfaces/IModalCRUDProps'
 
 const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) => {
@@ -33,7 +33,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
     const ingredientService = new IngredientService()
 
     // Handle Submit
-    const handleSubmit = (state: any) => {
+    const handleSubmit = (state: IngredientList) => {
         Swal.fire({
             title: 'Restocking...',
             allowEscapeKey: false,
@@ -45,7 +45,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
             },
         })
 
-        ingredientService.repoIngredients(state.ingredients)
+        ingredientService.repoIngredients(state)
             .then((response) => {
                 if(response?.ok) {
                     onClose();
@@ -67,20 +67,20 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
         })
     }
 
-    const handleSelect = (event: ChangeEvent<HTMLInputElement>, index: number, values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
+    const handleSelect = (event: ChangeEvent<HTMLSelectElement>, index: number, values: IngredientList, setFieldValue: FormikHelpers<IngredientList>['setFieldValue']) => {
         const selectedIngredient = JSON.parse(event.target.value);
-        const updatedIngredients = values.ingredients.map((ingredient: IngredientsOnList, i: number) =>
+        const updatedIngredients = values.ingredients.map((ingredient: IngredientInList, i: number) =>
             i === index ? { ...ingredient, ingredient: selectedIngredient } : ingredient);
         setFieldValue('ingredients', updatedIngredients);
     }
 
-    const handleAddIngredient = (values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
+    const handleAddIngredient = (values: IngredientList, setFieldValue: FormikHelpers<IngredientList>['setFieldValue']) => {
         const newIngredient = { ingredient: { measure: { measure: '' } }, cant: 0 };
         setFieldValue('ingredients', [...values.ingredients, newIngredient]);
     }
 
-    const handleRemoveIngredient = (index: number, values: any, setFieldValue: FormikHelpers<any>['setFieldValue']) => {
-        const updatedIngredients = values.ingredients.filter((i: any, ind: number) => ind !== index);
+    const handleRemoveIngredient = (index: number, values: IngredientList, setFieldValue: FormikHelpers<IngredientList>['setFieldValue']) => {
+        const updatedIngredients = values.ingredients.filter((i: IngredientInList, ind: number) => ind !== index);
         setFieldValue('ingredients', updatedIngredients);
     }
 
@@ -113,7 +113,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
                                                 <h2>Minimum stock</h2>
                                                 <h2>Measure </h2>
                                             </div>
-                                            {values.ingredients.map((e: any, index: number) => (
+                                            {values.ingredients.map((e: IngredientInList, index: number) => (
                                                 <div key={index} className='grid grid-cols-[200px_100px_100px_130px_100px_100px] text-center'>
                                                     <div className='field'>
                                                         <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
@@ -145,7 +145,6 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
                                         </div>
                                     </div>
                                 </div>
-
 
                             </div>
                             <div className="flex justify-around my-3">

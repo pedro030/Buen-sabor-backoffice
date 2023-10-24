@@ -8,3 +8,12 @@ export interface Ingredient {
     stockMin: number;
     measure: Measure;
 }
+
+export interface IngredientList {
+    ingredients: IngredientInList[]
+}
+
+export interface IngredientInList {
+    ingredient: Ingredient,
+    cant: number
+}

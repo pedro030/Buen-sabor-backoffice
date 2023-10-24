@@ -20,13 +20,13 @@ import IngredientListForm from "../../components/modals/Ingredients/IngredientLi
 import CrudCreateButton from "../../components/crud_components/crud_create_button/CrudCreateButton";
 
 // Types
-import { Ingredient } from "../../models/Ingredient";
+import { Ingredient, IngredientList } from "../../models/Ingredient";
 import { Measure } from "../../models/Measure";
 
 // Assets
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line, RiEyeLine } from "react-icons/ri";
-import { AiOutlineBars } from "react-icons/ai";
+import { AiOutlineBars, AiOutlineReload } from "react-icons/ai";
 
 const Ingredient = () => {
   // Redux
@@ -40,8 +40,10 @@ const Ingredient = () => {
   const ingredientService = new IngredientService();
 
   // Modal
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [reStockModalOpen, setReStockModalOpen] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<Ingredient>();
+  const [reStockItems, setReStockItems] = useState<IngredientList>();
   const [watchInfo, setWatchInfo] = useState<boolean>(false);
 
   // Handlers
@@ -150,6 +152,15 @@ const Ingredient = () => {
   } = useSortingStates(ingredientsFilter, "id");
 
   useEffect(() => {
+    const ingredientList: IngredientList = {
+      ingredients: ingredients.filter((i: Ingredient) => i.stock <= i.stockMin).map((i: Ingredient) => {
+        return {
+          ingredient: { ...i },
+          cant: 0,
+        };
+      }),
+    };
+    setReStockItems(ingredientList);
     setSortedItems(useSorting(ingredientsFilter, currentSorting, isAsc));
   }, [filters, ingredients]);
 
@@ -158,7 +169,9 @@ const Ingredient = () => {
       {/* NEW INGREDIENT & RE-STOCK */}
       <div className='flex gap-5'>
         <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
-        <CrudCreateButton Modal={IngredientListForm} Title='Re-Stock' />
+        <button className='btn btn-primary' onClick={() => setReStockModalOpen(true)}>
+          <AiOutlineReload className="w-5 h-5" />Re - Stock
+        </button>
       </div>
       {/* EDIT INGREDIENT */}
       <IngredientForm
@@ -166,6 +179,11 @@ const Ingredient = () => {
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         watch={watchInfo}
+      />
+      <IngredientListForm
+        obj={reStockItems}
+        open={reStockModalOpen}
+        onClose={() => setReStockModalOpen(false)}
       />
       <h2 className='my-2 text-lg font-bold text-center stat-title'>
         Ingredients

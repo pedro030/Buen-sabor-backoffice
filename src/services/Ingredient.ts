@@ -1,11 +1,11 @@
-import { Ingredient } from "../models/Ingredient";
+import { Ingredient, IngredientList } from "../models/Ingredient";
 import { ApiServ } from "./ApiServ";
 
 export class IngredientService extends ApiServ<Ingredient> {
   endpoint = "ingredients";
 
   // Reposicion de ingredientes
-  async repoIngredients(repoIngredients: Ingredient[]) {
+  async repoIngredients(repoIngredients: IngredientList) {
     const requestOptions: RequestInit = {
       method: "PUT",
       headers: {
