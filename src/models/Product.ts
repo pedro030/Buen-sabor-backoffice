@@ -1,7 +1,7 @@
 import { Category } from "./Category";
 import { Ingredient } from "./Ingredient";
 
-export interface Product{
+export interface Product {
     id: string,
     name: string,
     image: string,

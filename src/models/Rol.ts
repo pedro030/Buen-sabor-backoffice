@@ -1,5 +1,4 @@
-
-export interface Rol{
+export interface Rol {
     id: string,
     rol: string
 }

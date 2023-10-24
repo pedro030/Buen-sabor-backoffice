@@ -2,7 +2,7 @@ import { User } from "@auth0/auth0-react";
 import { Status } from "./Status";
 import { ProductOrder } from "./Product";
 
-export interface Order{
+export interface Order {
     id: string,
     creationDate: string,
     totalCookingTime: number,

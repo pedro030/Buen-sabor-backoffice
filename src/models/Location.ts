@@ -1,6 +1,4 @@
-import { Section } from "./Section";
-
-export interface Location{
+export interface Location {
     id: string,
     location: string
 }
