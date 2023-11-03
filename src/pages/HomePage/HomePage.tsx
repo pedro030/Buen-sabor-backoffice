@@ -16,7 +16,7 @@ function HomePage() {
     const cards: IButtonsByRol = {
         _superAdmin: ['categories', 'ingredients', 'products', 'orders', 'bills', 'users', 'employees'],
         _admin: ['categories', 'ingredients', 'products', 'bills', 'users', 'employees'],
-        _cashier: ['orders', 'bills'],
+        _cashier: ['orders'],
         _chef: ['categories', 'ingredients', 'products', 'orders'],
         _delivery: ['orders']
     }

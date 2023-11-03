@@ -59,16 +59,6 @@ const homeRoutes = () => {
         <Route path="/users" element={<User />} />
       </Route>
 
-      <Route element={<ProtectedRoute
-        isAllowed={
-          rol.includes('_superAdmin') ||
-          rol.includes('_admin') ||
-          rol.includes('_cashier')
-        } />}>
-        <Route path="/bills" element={<Bill />} />
-        <Route path="/bills/:idOrder" element={<BillOrderDetail/>} />
-      </Route>
-
       {/* ORDER */}
       <Route element={<ProtectedRoute
         isAllowed={
@@ -87,6 +77,8 @@ const homeRoutes = () => {
           rol.includes('_superAdmin') ||
           rol.includes('_admin')
         } />}>
+        <Route path="/bills" element={<Bill />} />
+        <Route path="/bills/:idOrder" element={<BillOrderDetail/>} />
         <Route path="/statistics/products" element={<RankingsProducts />} />
         <Route path="/statistics/clients" element={<RankingsClients />} />
         <Route path="/statistics/movements" element={<Movements />} />
