@@ -169,7 +169,7 @@ function CategoriesCRUD() {
                 className='w-full h-full max-w-xs select select-bordered select-sm'
                 onChange={handleChangeSorting}
               >
-                <option selected value={"id true"}>
+                <option value={"id true"}>
                   SORT BY: FEATURED
                 </option>
                 <option value={"name true"}>SORT BY NAME: A - Z</option>
@@ -181,7 +181,7 @@ function CategoriesCRUD() {
                 className='w-full h-full max-w-xs select select-bordered select-sm'
                 onChange={handleChangeSubcategory}
               >
-                <option selected value={1}>
+                <option value={1}>
                   SUBCATEGORY: STANDARD
                 </option>
                 <option value={2}>SUBCATEGORY: EMPTY</option>
@@ -202,7 +202,7 @@ function CategoriesCRUD() {
             className='w-full max-w-xs select select-bordered select-sm'
             onChange={handleChangeSorting}
           >
-            <option selected value={"id true"}>
+            <option value={"id true"}>
               SORT BY: FEATURED
             </option>
             <option value={"name true"}>SORT BY NAME: A - Z</option>
@@ -213,7 +213,7 @@ function CategoriesCRUD() {
             className='w-full max-w-xs select select-bordered select-sm'
             onChange={handleChangeSubcategory}
           >
-            <option selected value={1}>
+            <option value={1}>
               SUBCATEGORY: STANDARD
             </option>
             <option value={2}>SUBCATEGORY: EMPTY</option>

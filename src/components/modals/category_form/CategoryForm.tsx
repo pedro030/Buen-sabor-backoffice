@@ -42,7 +42,7 @@ const CategoryForm = ({ obj, open, onClose, watch }: ICategoryFormModal) => {
 
     // Handle Submit
     const handleOnSubmit = (state: Category) => {
-        if (typeof state.parentCategory === "string" && state.parentCategory === "") {
+        if (typeof state.parentCategory === "string" && state.parentCategory === "-1") {
             state.parentCategory = null;
         } else if(typeof state.parentCategory === "string") {
             state.parentCategory = JSON.parse(state.parentCategory);
