@@ -35,9 +35,9 @@ const IngredientForm = ({ obj, open, onClose, watch }: IIngredientFormModal) => 
         name: string()
             .required("Ingredient name is required")
             .max(30),
-        cost: number().required("Ingredient cost is required"),
-        stock: number().required("Ingredient stock is required"),
-        stockMin: number().required("Ingredient minimum stock is required")
+        cost: number().required("Ingredient cost is required").moreThan(0, "Cost must be greater than 0"),
+        stock: number().required("Ingredient stock is required").moreThan(0, "Stock must be greater than 0"),
+        stockMin: number().required("Ingredient minimum stock is required").moreThan(0, "Minimum stock must be greater than 0"),
     })
 
     // Handle Submit
