@@ -12,7 +12,7 @@ export class IngredientService extends ApiServ<Ingredient> {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.token}`,
       },
-      body: JSON.stringify(repoIngredients),
+      body: JSON.stringify(repoIngredients.ingredients),
     };
     try {
       const response = await fetch(
