@@ -60,6 +60,7 @@ const Ingredient = () => {
   };
 
   const openEditModal = (i: Ingredient) => {
+    setWatchInfo(false);
     setSelectedItem(i);
     setEditModalOpen(true);
   };
@@ -207,7 +208,7 @@ const Ingredient = () => {
           <li>
             <input
               type='number'
-              placeholder='STOCK MIN.'
+              placeholder='STOCK'
               className='input input-sm '
               onKeyDown={searchStockOnEnter}
               onChange={handleChangeStock}
@@ -259,7 +260,7 @@ const Ingredient = () => {
         />
         <input
           type='number'
-          placeholder='STOCK MIN.'
+          placeholder='STOCK'
           className='input input-sm '
           onKeyDown={searchStockOnEnter}
           onChange={handleChangeStock}

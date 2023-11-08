@@ -123,6 +123,7 @@ function CategoriesCRUD() {
   };
 
   const handleEdit = (category: Category) => {
+    setWatchInfo(false);
     setSelectedItem(category);
     setEditModalOpen(true);
   };
