@@ -167,9 +167,6 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
         return findParentCategory(category.parentCategory)
     }
 
-    // Se determina el costo total del producto en base a los ingredientes del mismo
-    const totalCost = ()
-
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
