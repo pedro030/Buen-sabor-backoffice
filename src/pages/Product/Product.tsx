@@ -161,6 +161,7 @@ const Product = () => {
 
   // Handlers
   const openEditModal = (p: Product) => {
+    setWatchInfo(false);
     setSelectedItem(p);
     setIsEditModalOpen(true);
   };

@@ -2,12 +2,12 @@ import { Category } from "./Category";
 import { Ingredient } from "./Ingredient";
 
 export interface Product {
-    id: string,
+    id?: string,
     name: string,
     image: string,
     price: number,
     cookingTime: number,
-    quantity_sold: number,
+    quantity_sold?: number,
     subcategory: Category,
     subcategory_fk?: Category,
     cost:number,

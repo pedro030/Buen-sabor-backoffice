@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from 'react';
 
 // Formik & Yup
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik'
-import { object, string, number, bool } from 'yup';
+import { object, string, number, mixed } from 'yup';
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,14 +40,29 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
     const [imagen, setImagen] = useState<File | null>(null);
 
     // Sirve para saber si la subCategory es bebida o no
-    const [subcategoryChange, setSubcategoryChange] = useState<Category>();
+    const [subcategoryChange, setSubcategoryChange] = useState<Category | null>(null);
 
     // Form Validation
     const validationSchema = object({
-        name: string().max(30).required("Product name is required"),
-        price: number().required("Product price is required"),
-        subcategory: string().required("Category is required"),
-        active: bool().required("Product status is required")
+        name: string().required("Product name is required").max(30),
+        price: number().required("Product price is required").moreThan(0, "Price must be greather than 0"),
+        subcategory: mixed()
+        .test("isRequired", "Please select a category", function (value: any) {
+          if (value === "") {
+            return false;
+          } else if (value && value.id === undefined && value.name === undefined && value.parentCategory === null) {
+            return false;
+          }
+          return true;
+        }),
+        cookingTime: number().when("subcategory", {
+            is: () => findParentCategory(subcategoryChange) == null,
+            then: () => number().required("Cooking time is required").moreThan(0, "Cooking time must be greather than 0"),
+        }),
+        cost: number().when("subcategory", {
+            is: () => findParentCategory(subcategoryChange) != null,
+            then: () => number().required("Cost is required").moreThan(0, "Cost must be greather than 0"),
+        }),
     })
 
     // Handler Change Image
@@ -59,6 +74,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
 
     // Handle Submit
     const handleOnSubmit = (state: Product) => {
+        if(findParentCategory(subcategoryChange) != null) { state.ingredients = []; state.cookingTime = 0; }
         if (state?.id) {
             Swal.fire({
                 title: 'Updating...',
@@ -70,7 +86,6 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                     Swal.showLoading();
                 },
             })
-
             productService.updateProduct(state, imagen)
             .then((response) => {
                 if(response?.status === 200) {
@@ -120,7 +135,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                             showCancelButton: false,
                             confirmButtonColor: '#E73636'
                         })
-                    } else Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })
+                    } else Swal.fire({ title: 'There was an error.', text: "Make sure all the data is there, including the image.", icon: 'error', confirmButtonColor: '#E73636' })
                 })
 
         }
@@ -144,6 +159,17 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
         setFieldValue('ingredients', updatedIngredients);
     }
 
+    // Se determina recursivamente si la Parent Category final es "Bebidas"
+    const findParentCategory = (category: Category | null): Category | null => {
+        if(!category) return null;
+        if(category.name === "Bebidas") return category;
+
+        return findParentCategory(category.parentCategory)
+    }
+
+    // Se determina el costo total del producto en base a los ingredientes del mismo
+    const totalCost = ()
+
     return (
         <div className='overlay' onClick={() => onClose()}>
             <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
@@ -152,11 +178,9 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
-                            id: "",
                             name: "",
                             active: false,
                             cookingTime: 0,
-                            quantity_sold: 0,
                             subcategory: {id: "", name: "", parentCategory: null},
                             image: '',
                             cost: 0,
@@ -188,12 +212,13 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
-                                <div className="field">
-                                    <label htmlFor='cookingTime'>Cooking Time</label>
-                                    <Field name='cookingTime' type='number' className='input input-sm' disabled={watch}/>
-                                    <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
-                                </div>
-
+                                {!findParentCategory(subcategoryChange) &&
+                                    <div className="field">
+                                        <label htmlFor='cookingTime'>Cooking Time</label>
+                                        <Field name='cookingTime' type='number' className='input input-sm' disabled={watch}/>
+                                        <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
+                                    </div>
+                                }
 
                                 <div className="field">
                                     <label htmlFor='active'>Status</label>
@@ -207,67 +232,72 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                                 <div className="field">
                                     <label htmlFor='active'>Category</label>
                                     <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                                        const selectedCategory = JSON.parse(e.target.value);
-                                        setSubcategoryChange(selectedCategory)
-                                        setFieldValue('subcategory', selectedCategory);
+                                        const selectedValue = e.target.value;
+                                        if(selectedValue != "") {
+                                            const selectedCategory = JSON.parse(e.target.value);
+                                            setSubcategoryChange(selectedCategory)
+                                            setFieldValue('subcategory', selectedCategory);
+                                        } else {
+                                            setSubcategoryChange(null);
+                                            setFieldValue('subcategory', {id: "", name: "", parentCategory: null});
+                                        }
                                     }} disabled={watch}>
-                                        <option value='' label='Select Category' />
-                                        {categories.filter((item: Category) => item?.parentCategory !== null).map((cat: Category, ind: number) => {
+                                        <option value="" label='Select Category' />
+                                        {categories.filter((cat: Category) => cat.parentCategory !== null).map((cat: Category, ind: number) => {
                                             return <option key={ind} value={JSON.stringify(cat)} label={cat.name} />
                                         })}
                                     </Field>
                                     <ErrorMessage name="subcategory">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
-                                {((subcategoryChange?.parentCategory?.name === "Bebidas") || (values.subcategory.parentCategory?.name === "Bebidas")) &&
+                                {findParentCategory(subcategoryChange) &&
                                     <div className="field">
                                         <label htmlFor='cost'>Cost</label>
                                         <Field name='cost' type='number' className='input input-sm' disabled={watch}/>
                                         <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                     </div>
                                 }
-
-
                             </div>
-
 
                             { /* INGREDIENTS */}
-                            <div className='flex flex-col '>
-                                <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
-                                <div className='flex flex-row'>
+                            { !findParentCategory(subcategoryChange) &&
+                                <div className='flex flex-col '>
+                                    <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
+                                    <div className='flex flex-row'>
 
-                                    <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)} disabled={watch}>+</button>
+                                        <button type='button' className='h-36 btn btn-primary btn-sm' onClick={() => handleAddIngredient(values, setFieldValue)} disabled={watch}>+</button>
 
-                                    <div className='flex flex-row ml-5 w-[70%]  h-36 overflow-y-auto'>
-                                        <div className='flex flex-col gap-5 m-1'>
-                                            {values.ingredients.map((e: ProductIngredient, index: number) => {
-                                                return <>
-                                                    <div className='flex flex-row w-full gap-5'>
-                                                        <div className='flex flex-col'>
-                                                            <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
-                                                                <option value='' label='Select Ingredient' disabled={watch}/>
-                                                                {ingredientsOptions.map((i: Ingredient, ind: number) => {
-                                                                    return <option key={ind} value={JSON.stringify(i)} label={i.name} />
-                                                                })}
-                                                            </Field>
+                                        <div className='flex flex-row ml-5 w-[70%]  h-36 overflow-y-auto'>
+                                            <div className='flex flex-col gap-5 m-1'>
+                                                {values.ingredients.map((e: ProductIngredient, index: number) => {
+                                                    return <>
+                                                        <div className='flex flex-row w-full gap-5'>
+                                                            <div className='flex flex-col'>
+                                                                <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
+                                                                    <option value='' label='Select Ingredient' disabled={watch}/>
+                                                                    {ingredientsOptions.map((i: Ingredient, ind: number) => {
+                                                                        return <option key={ind} value={JSON.stringify(i)} label={i.name} />
+                                                                    })}
+                                                                </Field>
+                                                            </div>
+
+                                                            <div className="flex flex-col field">
+                                                                <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} disabled={watch}/>
+                                                            </div>
+
+                                                            <div className='flex flex-col'>
+                                                                <label>{values.ingredients[index].ingredient.measure.measure}</label>
+                                                            </div>
+
+                                                            <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)} disabled={watch}>-</button>
                                                         </div>
-
-                                                        <div className="flex flex-col field">
-                                                            <Field name={`ingredients[${index}].cant`} type='number' className='w-16 input input-sm' value={e.cant} disabled={watch}/>
-                                                        </div>
-
-                                                        <div className='flex flex-col'>
-                                                            <label>{values.ingredients[index].ingredient.measure.measure}</label>
-                                                        </div>
-
-                                                        <button type='button' className='btn btn-primary btn-sm' onClick={() => handleRemoveIngredient(index, values, setFieldValue)} disabled={watch}>-</button>
-                                                    </div>
-                                                </>
-                                            })}
+                                                    </>
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div> 
+                            }
 
                             { !watch && <div className="flex justify-around my-3">
                                 <button
