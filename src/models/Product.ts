@@ -2,7 +2,7 @@ import { Category } from "./Category";
 import { Ingredient } from "./Ingredient";
 
 export interface Product {
-    id?: string,
+    id: string,
     name: string,
     image: string,
     price: number,

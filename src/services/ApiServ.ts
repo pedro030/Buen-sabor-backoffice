@@ -1,7 +1,7 @@
 import store from '../state/store/store';
 
 // Api Service Genérico
-export class ApiServ<T extends { id?: string }> {
+export class ApiServ<T extends { id: string }> {
     // El endpoint dependerá del tipo de service que se instancie
     endpoint: string = "";
     // Se obtiene el token y la Api URL para poder hacer los fetch

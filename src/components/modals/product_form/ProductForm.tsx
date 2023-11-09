@@ -175,6 +175,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                 <Formik
                     initialValues={
                         obj ? obj : {
+                            id: "",
                             name: "",
                             active: false,
                             cookingTime: 0,
