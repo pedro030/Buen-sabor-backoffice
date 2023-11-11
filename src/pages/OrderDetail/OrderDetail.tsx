@@ -152,13 +152,14 @@ const OrderDetail = () => {
     // Fetchs
     const fetchChangeStatus = async (type: string) => {
         const statusType = status.filter((status: Status) => status.statusType === type)
+        console.log(statusType)
         const requestOptions = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(statusType)
+            body: JSON.stringify(statusType[0])
         };
 
         const res = await fetch(`${apiUrl}/orders/changeStatus/${id}`, requestOptions)

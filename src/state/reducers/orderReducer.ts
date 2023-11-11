@@ -1,6 +1,6 @@
 import { ReduxAction } from "../../interfaces/ReduxAction";
 import { Order } from "../../models/Order";
-import { LOAD_ORDERS, UPDATE_ORDER } from "../types";
+import { ADD_ORDER, LOAD_ORDERS, UPDATE_ORDER } from "../types";
 
 const initialState = {
     orders: []
@@ -20,6 +20,12 @@ export default function orderReducer(state = initialState, action: ReduxAction) 
             return {
                 ...state,
                 orders: updatedOrders
+            }
+        case ADD_ORDER:
+            const newOrder = action.payload;
+            return {
+                ...state,
+                orders: [...state.orders, newOrder]
             }
         default:
             return state;

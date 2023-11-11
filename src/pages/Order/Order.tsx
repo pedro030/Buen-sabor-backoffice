@@ -2,8 +2,8 @@
 import { useEffect, useState, ChangeEvent } from "react";
 
 // Redux
-import { useSelector } from "react-redux";
-import { userSessionSelector } from "../../state/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { orderSelector, userSessionSelector } from "../../state/selectors";
 
 // React Router
 import { NavLink } from "react-router-dom";
@@ -21,12 +21,20 @@ import { Order as Order } from "../../models/Order";
 
 // Assets
 import { RiEyeLine } from "react-icons/ri";
+import { addOrder, updateOrder } from "../../state/actions/orderActions";
 
 const Order = () => {
   // Obtiene el Rol para saber a que topico suscribirse
-  const { rol } = useSelector(userSessionSelector)
+  const { rol } = useSelector(userSessionSelector);
+
+  // Redux
+  const dispatch = useDispatch();
+
+  // Obtiene las orders
+  let orders: Order[] = useSelector(orderSelector);
 
   // WebSocket
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [ordersList, setOrdersList] = useState<Order[]>([]);
   const [stompClient, setStompClient] = useState<Client>(
     over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"))
@@ -43,7 +51,7 @@ const Order = () => {
   };
 
   const onConnected = async () => {
-
+    setIsConnected(true);
     await stompClient.subscribe(
       `/topic/${rols[rol]}`,
       onMessageReceived
@@ -63,6 +71,13 @@ const Order = () => {
   const onMessageReceived = (payload: { body: string }) => {
     const payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
+
+    if(payloadData.length != 0) {
+      payloadData.forEach((order: Order) => {
+        const existingOrder = orders.find((o: Order) => o.id == order.id);
+        existingOrder ? dispatch(updateOrder(order.id, order)) : dispatch(addOrder(order))
+      })
+    }
   };
 
   const onError = (err: any) => {
@@ -70,12 +85,12 @@ const Order = () => {
   };
 
   useEffect(() => {
-    connection();
+    !isConnected && connection();
 
     return () => {
-      stompClient.connected ? stompClient?.disconnect(() => { }) : '';
+      stompClient.connected ? stompClient?.disconnect(() => { setIsConnected(false); }) : '';
     };
-  }, []);
+  }, [])
 
   //Filters
   const [filters, setFilters] = useState({
@@ -189,9 +204,7 @@ const Order = () => {
               className='w-full h-full select select-bordered select-sm'
               onChange={handleChangeSorting}
             >
-              <option selected value="id true">
-                SORT BY: ID
-              </option>
+              <option value="id true">SORT BY: ID</option>
               <option value="totalPrice true">SORT BY TOTAL PRICE: LOW to HIGH</option>
               <option value="totalPrice false">SORT BY TOTAL PRICE: HIGH to LOW</option>
               <option value="creationDate true">SORT BY DATE: ASC.</option>
@@ -203,7 +216,7 @@ const Order = () => {
               className='w-full h-full select select-bordered select-sm'
               onChange={handleChangeStatus}
             >
-              <option selected value="">STATUS: ALL</option>
+              <option value="">STATUS: ALL</option>
               <option value="In_Queue">STATUS: IN QUEUE</option>
               <option value="Ready">STATUS: READY</option>
             </select>
@@ -228,13 +241,11 @@ const Order = () => {
           className='w-full max-w-xs select select-bordered select-sm'
           onChange={handleChangeSorting}
         >
-          <option selected value={1}>
-            SORT BY: FEATURED
-          </option>
-          <option value={2}>SORT BY PRICE: LOW to HIGH</option>
-          <option value={3}>SORT BY PRICE: HIGH to LOW</option>
-          <option value={4}>SORT BY DATE: ASC.</option>
-          <option value={5}>SORT BY DATE: DESC.</option>
+          <option value="id true">SORT BY: ID</option>
+          <option value="totalPrice true">SORT BY TOTAL PRICE: LOW to HIGH</option>
+          <option value="totalPrice false">SORT BY TOTAL PRICE: HIGH to LOW</option>
+          <option value="creationDate true">SORT BY DATE: ASC.</option>
+          <option value="creationDate false">SORT BY DATE: DESC.</option>
         </select>
         {/* SI ES CASHIER SE LE MUESTRA FILTRADO POR STATUS */}
         { rol === "_cashier" && <select
@@ -266,7 +277,7 @@ const Order = () => {
                 <td>{order.id}</td>
                 <td>{order.creationDate}</td>
                 <td>{order.withdrawalMode}</td>
-                <td>{order.statusOrder?.statusType}</td>
+                <td>{order.statusOrder?.statusType.replaceAll("_", " ")}</td>
                 <td>{order.totalPrice}</td>
                 <td>{order.user?.id}</td>
                 <td>

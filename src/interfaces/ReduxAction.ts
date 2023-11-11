@@ -11,6 +11,7 @@ import { Section } from "../models/Section";
 import { Status } from "../models/Status";
 import { User } from "../models/User";
 import {
+  ADD_ORDER,
   LOAD_ADDRESSES,
   LOAD_BILLS,
   LOAD_CATEGORIES,
@@ -132,6 +133,11 @@ type UpdateOrderAction = {
   };
 };
 
+type AddOrderAction = {
+  type: typeof ADD_ORDER;
+  payload: Order
+}
+
 export type ReduxAction =
   | LoadStatusesAction
   | LoadCategoriesAction
@@ -149,4 +155,5 @@ export type ReduxAction =
   | LoadUserSessionAction
   | LoadUserRolAction
   | LoadOrdersAction
-  | UpdateOrderAction;
+  | UpdateOrderAction
+  | AddOrderAction;
