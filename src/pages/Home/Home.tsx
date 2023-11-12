@@ -77,15 +77,19 @@ function Home() {
                 else {
                     dispatch(load_rol(rol))
                 }
-                // Se obtienen todos los datos a mostrar
-                new UserService().GetAll()
-                    .then(users => {
-                        let userLoged = users.find(u => u.mail == user?.email);
-                        if (userLoged) {
-                            dispatch(sign_in(userLoged));
-                        }
-                    })
+                // Guardar token antes de hacer llamadas a la api
                 dispatch(load_token(data))
+
+                // Se obtienen los datos del usuario que inicia sesión
+                if(user?.email){
+                    new UserService().getUserByMail(user.email)
+                        .then(userdata => {
+                            if (userdata) {
+                                dispatch(sign_in(userdata));
+                            }
+                        })
+                }
+                // se obtienen los registros de las diferentes secciones del sitio
                     new CategoryService().GetAll().then((categories) => { dispatch(loadCategories(categories)) }),
                     new MeasureService().GetAll().then((measures) => { dispatch(loadMeasures(measures)) }),
                     new IngredientService().GetAll().then((ingredients) => { dispatch(loadIngredients(ingredients)) }),
