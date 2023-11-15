@@ -22,7 +22,7 @@ import { Category } from '../../../models/Category'
 import { IProductFormModal } from '../../../interfaces/IModalCRUDProps'
 import { Ingredient } from '../../../models/Ingredient';
 
-const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
+const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
     // Si no está abierto el modal retorna null y no se muestra
     if (!open) return null
 
@@ -39,8 +39,11 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
     // Imagen a cargar en el producto, en principio es null
     const [imagen, setImagen] = useState<File | null>(null);
 
+    // Const que inicializa el State de "subcategoryChange"
+    const subcat = obj?.subcategory ? obj.subcategory : null;
+
     // Sirve para saber si la subCategory es bebida o no
-    const [subcategoryChange, setSubcategoryChange] = useState<Category | null>(null);
+    const [subcategoryChange, setSubcategoryChange] = useState<Category | null>(subcat);
 
     // Form Validation
     const validationSchema = object({
@@ -210,7 +213,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
-                                {!findParentCategory(subcategoryChange) &&
+                                {!(findParentCategory(subcategoryChange) || (values.subcategory.id === "")) &&
                                     <div className="field">
                                         <label htmlFor='cookingTime'>Cooking Time</label>
                                         <Field name='cookingTime' type='number' className='input input-sm' disabled={watch}/>
@@ -258,7 +261,7 @@ const ProductForm = ({ obj: obj, open, onClose, watch }: IProductFormModal) => {
                             </div>
 
                             { /* INGREDIENTS */}
-                            { !findParentCategory(subcategoryChange) &&
+                            { !(findParentCategory(subcategoryChange) || (values.subcategory.id === "")) &&
                                 <div className='flex flex-col '>
                                     <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
                                     <div className='flex flex-row'>
