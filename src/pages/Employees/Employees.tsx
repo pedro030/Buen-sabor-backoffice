@@ -23,6 +23,8 @@ import { Rol } from "../../models/Rol";
 
 // Assets
 import { RiEyeLine } from "react-icons/ri";
+import { FiEdit2 } from "react-icons/fi";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 const Employees = () => {
   // Redux
@@ -30,7 +32,7 @@ const Employees = () => {
 
   // Obtener los usuarios y filtrarlos para que solo se muestren los empleados
   const user: User[] = useSelector(userSelector);
-  const employees: User[] = user.filter((e: User) => e.rol?.rol != "Client");
+  const employees: User[] = user?.filter((e: User) => e.rol?.rol != "Client");
 
   // Obtiene los Rols para hacer el filtrado en la vista
   const rols = useSelector(rolSelector);
@@ -51,7 +53,7 @@ const Employees = () => {
   });
 
   const filterEmployee = (employees: User[]) => {
-    return employees.filter((e: User) => {
+    return employees?.filter((e: User) => {
       return (
         e.firstName?.toLowerCase().includes(filters.fn?.toLowerCase()) &&
         e.lastName?.toLowerCase().includes(filters.ln?.toLowerCase()) &&
@@ -162,6 +164,9 @@ const Employees = () => {
   return (
     <>
       <div className='m-4'>
+      <button className='btn btn-primary' onClick={() => handleAddNew()}>
+        <IoIosAddCircleOutline className="w-5 h-5" />Add Employee
+      </button>
         {/* WATCH EMPLOYEE INFO */}
         <UserForm
           obj={selectedItem}
@@ -205,10 +210,10 @@ const Employees = () => {
                 <option selected value={0}>
                   ROL: ALL
                 </option>
-                {rols.map((r: Rol) => {
+                {rols?.map((r: Rol) => {
                   if (r.rol != "Client")
                     return (
-                      <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>
+                      <option value={r.id} key={r.id}>ROL: {r.rol.toUpperCase()}</option>
                     );
                 })}
               </select>
@@ -256,7 +261,7 @@ const Employees = () => {
             <option selected value={0}>
               ROL: ALL
             </option>
-            {rols.map((r: Rol) => {
+            {rols?.map((r: Rol) => {
               if (r.rol != "Client")
                 return <option value={r.id}>ROL: {r.rol.toUpperCase()}</option>;
             })}
@@ -283,10 +288,11 @@ const Employees = () => {
                 <th>Password</th>
                 <th>Rol</th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {sortedItems.map((employee: User, i: number) => (
+              {sortedItems?.map((employee: User, i: number) => (
                 <tr key={i}>
                   <td>{employee.firstName + "  " + employee.lastName}</td>
                   <td className="max-sm:text-[10px]">{employee.mail}</td>
@@ -296,6 +302,13 @@ const Employees = () => {
                     <div className='flex gap-2'>
                       <button onClick={() => handleWatch(employee)}>
                         <RiEyeLine className='w-5 h-5 eye-icon' />{" "}
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                  <div className='flex gap-2'>
+                      <button onClick={() => handleEdit(employee)}>
+                        <FiEdit2 className='w-5 h-5 eye-icon' />{" "}
                       </button>
                     </div>
                   </td>

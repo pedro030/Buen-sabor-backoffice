@@ -97,7 +97,7 @@ function Home() {
                     new RolService().GetAll().then((rols) => { dispatch(loadRols(rols)) }),
                     new AddressService().GetAll().then((addressess) => { dispatch(loadAddresses(addressess)) }),
                     new OrderService().GetAll().then((orders) => { dispatch(loadOrders(orders)) }),
-                    new UserService().GetAll().then((users) => { dispatch(loadUsers(users)) }),
+                    new UserService().getAllWP().then((users) => { dispatch(loadUsers(users)) }),
                     new LocationService().GetAll().then((locations) => { dispatch(loadLocations(locations)) }),
                     new StatusService().GetAll().then((statuses) => { dispatch(loadStatuses(statuses)) })
                     new MovementsService().GetAll().then((movements) => { dispatch(loadMovements(movements)) })

@@ -10,7 +10,7 @@ const ComboBoxModel = ({ list, name, title, value, watch}: IComboBoxModelProps) 
             <Field name={name} as="select" className="input" disabled={watch}>
                 <option value="-1" key={-1}>Select {value == 'category' ? 'category' : value}</option>
                 {
-                    list.map((e, index) => (
+                    list?.map((e, index) => (
                         <option value={JSON.stringify(e)} key={index}>
                             {value == 'address' ?
                                 `${e.street} ${e.number}` :
