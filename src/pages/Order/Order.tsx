@@ -1,5 +1,5 @@
 // React
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -36,9 +36,13 @@ const Order = () => {
   // WebSocket
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [ordersList, setOrdersList] = useState<Order[]>([]);
-  const [stompClient, setStompClient] = useState<Client>(
-    over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"))
-  );
+  
+  const stompClientRef = useRef<Client | undefined>(undefined);
+
+  useEffect(() => {
+    stompClientRef.current = over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"));
+  }, [])
+
   const rols: any = {
     _cashier: "cashiers",
     _chef: "chefs",
@@ -47,19 +51,19 @@ const Order = () => {
 
   // Connection to Socket
   const connection = () => {
-    stompClient.connect({}, onConnected, onError);
+    stompClientRef.current?.connect({}, onConnected, onError);
   };
 
   const onConnected = async () => {
     setIsConnected(true);
-    await stompClient.subscribe(
+    await stompClientRef.current?.subscribe(
       `/topic/${rols[rol]}`,
       onMessageReceived
     );
 
-    if (stompClient && stompClient.connected) {
+    if (stompClientRef.current && stompClientRef.current.connected) {
       try {
-        await stompClient.send(`/app/${rols[rol]}`, {});
+        await stompClientRef.current.send(`/app/${rols[rol]}`, {});
       } catch (error) {
         console.log(error);
       }
@@ -81,15 +85,18 @@ const Order = () => {
   };
 
   const onError = (err: any) => {
+    setIsConnected(false);
     console.log(err);
   };
 
   useEffect(() => {
-    !isConnected && connection();
-
     return () => {
-      stompClient.connected ? stompClient?.disconnect(() => { setIsConnected(false); }) : '';
+      stompClientRef.current?.disconnect(() => { setIsConnected(false); });
     };
+  }, [])
+
+  useEffect(() => {
+    !isConnected && connection();
   }, [])
 
   //Filters
