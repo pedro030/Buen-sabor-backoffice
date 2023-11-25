@@ -21,6 +21,8 @@ import './sidebar.scss'
 function Sidebar() {
   // Obtiene la informacion del usuario logueado con Auth0
   const { user, logout } = useAuth0()
+
+  const userInfo = useSelector(userSessionSelector)
   // A su vez se obtiene el rol para cargarle una determinada botonera a cada uno
   const { rol } = useSelector(userSessionSelector)
 
@@ -46,7 +48,7 @@ function Sidebar() {
         </div>
 
         {/* NAME EMPLOYEE */}
-        <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
+        <h3 className='text-center text-gray-600 menu-title'>{(userInfo.user?.firstName ?? "") + ' ' + (userInfo.user?.lastName ?? "")}</h3>
 
         {/* OPTIONS */}
         <div className='flex flex-col justify-between h-[75%]'>
@@ -130,7 +132,7 @@ function Sidebar() {
         </div>
 
         {/* NAME EMPLOYEE */}
-        <h3 className='text-center text-gray-600 menu-title'>{user?.given_name + ' ' + user?.family_name || "User"}</h3>
+        <h3 className='text-center text-gray-600 menu-title'>{(userInfo.user?.firstName ?? "") + ' ' + (userInfo.user?.lastName ?? "")}</h3>
 
         {/* OPTIONS */}
         <div className='flex flex-col'>

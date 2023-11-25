@@ -236,7 +236,7 @@ const UserForm = ({ obj, open, onClose, employee, watch }: IUserFormModal) => {
 
                             <div className="field">
                                 <label htmlFor='mail'>Mail</label>
-                                <Field name='mail' type='text' className='input input-sm' disabled={watch}/>
+                                <Field name='mail' type='text' className='input input-sm' disabled={watch || obj}/>
                                 <ErrorMessage name="mail">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
