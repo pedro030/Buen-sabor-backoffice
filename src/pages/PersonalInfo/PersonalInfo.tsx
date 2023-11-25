@@ -5,6 +5,7 @@ import { userSessionSelector } from '../../state/selectors';
 import { User } from '../../models/User';
 import { UserService } from '../../services/User';
 import { sign_in } from '../../state/actions/userSessionAction';
+import Swal from 'sweetalert2';
 
 const PersonalInfo = () => {
 
@@ -39,6 +40,16 @@ const PersonalInfo = () => {
 
   // Guardar cambios
   const onSubmitChanges = (state: any) => {
+    Swal.fire({
+      title: 'Updating...',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      showCancelButton: false,
+      didOpen: () => {
+          Swal.showLoading();
+      },
+  })
     if (userInfo.user){
         const updatedObj: User = {
             ...userInfo.user,
@@ -52,8 +63,16 @@ const PersonalInfo = () => {
             userSrv.getUserByMail(userInfo.user?.mail)
           .then(updatedUser => {
             dispatch(sign_in(updatedUser))
+            Swal.fire({
+                icon: 'success',
+                title: `The update was successful`,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                showCancelButton: false,
+                confirmButtonColor: '#E73636'
+            })
           })
-        });
+        }).catch(() => { Swal.fire({ title: 'There was an error', icon: 'error', confirmButtonColor: '#E73636' })})
     }
   };
   
