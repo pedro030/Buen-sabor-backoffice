@@ -36,18 +36,20 @@ const Order = () => {
   // WebSocket
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [ordersList, setOrdersList] = useState<Order[]>([]);
-  
+
   const stompClientRef = useRef<Client | undefined>(undefined);
 
   useEffect(() => {
-    stompClientRef.current = over(new SockJS("https://buen-sabor-backend-production.up.railway.app/ws"));
-  }, [])
+    stompClientRef.current = over(
+      new SockJS("https://buen-sabor-backend-production.up.railway.app/ws")
+    );
+  }, []);
 
   const rols: any = {
     _cashier: "cashiers",
     _chef: "chefs",
-    _delivery: "deliveries"
-  }
+    _delivery: "deliveries",
+  };
 
   // Connection to Socket
   const connection = () => {
@@ -76,11 +78,13 @@ const Order = () => {
     const payloadData: Order[] = JSON.parse(payload.body);
     setOrdersList(payloadData);
 
-    if(payloadData.length != 0) {
+    if (payloadData.length != 0) {
       payloadData.forEach((order: Order) => {
         const existingOrder = orders.find((o: Order) => o.id == order.id);
-        existingOrder ? dispatch(updateOrder(order.id, order)) : dispatch(addOrder(order))
-      })
+        existingOrder
+          ? dispatch(updateOrder(order.id, order))
+          : dispatch(addOrder(order));
+      });
     }
   };
 
@@ -91,13 +95,15 @@ const Order = () => {
 
   useEffect(() => {
     return () => {
-      stompClientRef.current?.disconnect(() => { setIsConnected(false); });
+      stompClientRef.current?.disconnect(() => {
+        setIsConnected(false);
+      });
     };
-  }, [])
+  }, []);
 
   useEffect(() => {
     !isConnected && connection();
-  }, [])
+  }, []);
 
   //Filters
   const [filters, setFilters] = useState({
@@ -135,10 +141,10 @@ const Order = () => {
     setFilters((prevState) => {
       return {
         ...prevState,
-        status: value
-      }
-    })
-  }
+        status: value,
+      };
+    });
+  };
 
   const ordersFilter: Order[] = filterOrder(ordersList);
 
@@ -181,91 +187,105 @@ const Order = () => {
   }, [filters, ordersList]);
 
   return (
-    <div className='m-4'>
-      <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
-      <details className='mb-10 dropdown md:hidden'>
+    <div className="m-4">
+      <h2 className="my-2 text-lg font-bold text-center stat-title">Orders</h2>
+      <details className="mb-10 dropdown md:hidden">
         {/* FILTERS */}
-        <summary className='w-full m-1 btn btn-primary lg:btn-wide btn-md '>
+        <summary className="w-full m-1 btn btn-primary lg:btn-wide btn-md ">
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
+        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 ">
           <li>
             <input
-              type='number'
-              placeholder='SEARCH BY ID'
-              className=' input'
+              type="number"
+              placeholder="SEARCH BY ID"
+              className=" input"
               onChange={handleChangeId}
             />
           </li>
           <li>
             <input
-              type='number'
-              placeholder='MIN. TOTAL.'
-              className='input '
+              type="number"
+              placeholder="MIN. TOTAL."
+              className="input "
               onChange={handleChangeTotalPrice}
               onKeyDown={searchTotalPriceOnEnter}
             />
           </li>
           <li>
             <select
-              className='w-full h-full select select-bordered select-sm'
+              className="w-full h-full select select-bordered select-sm"
               onChange={handleChangeSorting}
             >
               <option value="id true">SORT BY: ID</option>
-              <option value="totalPrice true">SORT BY TOTAL PRICE: LOW to HIGH</option>
-              <option value="totalPrice false">SORT BY TOTAL PRICE: HIGH to LOW</option>
+              <option value="totalPrice true">
+                SORT BY TOTAL PRICE: LOW to HIGH
+              </option>
+              <option value="totalPrice false">
+                SORT BY TOTAL PRICE: HIGH to LOW
+              </option>
               <option value="creationDate true">SORT BY DATE: ASC.</option>
               <option value="creationDate false">SORT BY DATE: DESC.</option>
             </select>
           </li>
-          { rol === "_cashier" && <li>
-            <select
-              className='w-full h-full select select-bordered select-sm'
-              onChange={handleChangeStatus}
-            >
-              <option value="">STATUS: ALL</option>
-              <option value="In_Queue">STATUS: IN QUEUE</option>
-              <option value="Ready">STATUS: READY</option>
-            </select>
-          </li> }
+          {rol === "_cashier" && (
+            <li>
+              <select
+                className="w-full h-full select select-bordered select-sm"
+                onChange={handleChangeStatus}
+              >
+                <option value="">STATUS: ALL</option>
+                <option value="In_Queue">STATUS: IN QUEUE</option>
+                <option value="Ready">STATUS: READY</option>
+              </select>
+            </li>
+          )}
         </ul>
       </details>
-      <div className='flex items-center justify-center w-full gap-5 my-5 max-md:hidden'>
+      <div className="flex items-center justify-center w-full gap-5 my-5 max-md:hidden">
         <input
-          type='number'
-          placeholder='SEARCH BY ID'
-          className=' input input-sm'
+          type="number"
+          placeholder="SEARCH BY ID"
+          className=" input input-sm"
           onChange={handleChangeId}
         />
         <input
-          type='number'
-          placeholder='TOTAL MIN.'
-          className='input input-sm'
+          type="number"
+          placeholder="TOTAL MIN."
+          className="input input-sm"
           onChange={handleChangeTotalPrice}
           onKeyDown={searchTotalPriceOnEnter}
         />
         <select
-          className='w-full max-w-xs select select-bordered select-sm'
+          className="w-full max-w-xs select select-bordered select-sm"
           onChange={handleChangeSorting}
         >
           <option value="id true">SORT BY: ID</option>
-          <option value="totalPrice true">SORT BY TOTAL PRICE: LOW to HIGH</option>
-          <option value="totalPrice false">SORT BY TOTAL PRICE: HIGH to LOW</option>
+          <option value="totalPrice true">
+            SORT BY TOTAL PRICE: LOW to HIGH
+          </option>
+          <option value="totalPrice false">
+            SORT BY TOTAL PRICE: HIGH to LOW
+          </option>
           <option value="creationDate true">SORT BY DATE: ASC.</option>
           <option value="creationDate false">SORT BY DATE: DESC.</option>
         </select>
         {/* SI ES CASHIER SE LE MUESTRA FILTRADO POR STATUS */}
-        { rol === "_cashier" && <select
-              className='w-full max-w-xs select select-bordered select-sm'
-              onChange={handleChangeStatus}
-            >
-              <option selected value="">STATUS: ALL</option>
-              <option value="In_Queue">STATUS: IN QUEUE</option>
-              <option value="Ready">STATUS: READY</option>
-            </select> }
+        {rol === "_cashier" && (
+          <select
+            className="w-full max-w-xs select select-bordered select-sm"
+            onChange={handleChangeStatus}
+          >
+            <option selected value="">
+              STATUS: ALL
+            </option>
+            <option value="In_Queue">STATUS: IN QUEUE</option>
+            <option value="Ready">STATUS: READY</option>
+          </select>
+        )}
       </div>
-      <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-pin-rows'>
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="z-0 table table-pin-rows">
           <thead>
             <tr>
               <th>ID</th>
@@ -279,17 +299,27 @@ const Order = () => {
           </thead>
           {/* PENDING ORDERS TABLE */}
           <tbody>
-            { sortedItems.map((order: Order, i: number) => (
+            {sortedItems.map((order: Order, i: number) => (
               <tr key={i}>
                 <td>{order.id}</td>
-                <td>{order.creationDate}</td>
+                <td>
+                  {order.creationDate.split(" ")[0]}
+                  {" / "}
+                  {+order.creationDate.split(" ")[1].substring(0, 2) -
+                    3 +
+                    ":" +
+                    order.creationDate.split(" ")[1].substring(3, 5)}{" "}
+                  {+order.creationDate.split(" ")[1].substring(0, 2) - 3 >= 12
+                    ? "PM"
+                    : "AM"}
+                </td>
                 <td>{order.withdrawalMode}</td>
                 <td>{order.statusOrder?.statusType.replaceAll("_", " ")}</td>
                 <td>{order.totalPrice}</td>
                 <td>{order.user?.id}</td>
                 <td>
                   <NavLink to={`${order.id}`}>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
+                    <RiEyeLine className="w-5 h-5 eye-icon" />
                   </NavLink>
                 </td>
               </tr>

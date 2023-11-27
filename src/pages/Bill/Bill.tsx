@@ -130,14 +130,14 @@ function Bill() {
   }, [movements]);
 
   return (
-    <div className='m-4'>
-      <h2 className='my-2 text-lg font-bold text-center stat-title'>Bills</h2>
+    <div className="m-4">
+      <h2 className="my-2 text-lg font-bold text-center stat-title">Bills</h2>
       {/* FILTERS */}
-      <details className='mb-10 dropdown md:hidden'>
-        <summary className='w-full m-1 btn btn-primary lg:btn-wide btn-md'>
+      <details className="mb-10 dropdown md:hidden">
+        <summary className="w-full m-1 btn btn-primary lg:btn-wide btn-md">
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
+        <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 ">
           <li>
             <div>
               <DatePicker
@@ -148,28 +148,28 @@ function Bill() {
                 startDate={startDate}
                 endDate={endDate}
                 onChange={handleChangeDate}
-                placeholderText='Date: From - To'
-                dateFormat='yyyy/MM/dd'
-                className=' input input-bordered'
+                placeholderText="Date: From - To"
+                dateFormat="yyyy/MM/dd"
+                className=" input input-bordered"
                 maxDate={new Date(Date.now())}
               />
             </div>
           </li>
           <li>
             <select
-              className='w-full h-full select select-bordered select-sm'
+              className="w-full h-full select select-bordered select-sm"
               onChange={handleChangeSorting}
             >
-              <option value='date true'>SORT BY DATE: OLD to NEW</option>
-              <option value='date false'>SORT BY DATE: NEW to OLD</option>
-              <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
-              <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
+              <option value="date true">SORT BY DATE: OLD to NEW</option>
+              <option value="date false">SORT BY DATE: NEW to OLD</option>
+              <option value="total false">SORT BY TOTAL: HIGH to LOW</option>
+              <option value="total true">SORT BY TOTAL: LOW to HIGH</option>
             </select>
           </li>
         </ul>
       </details>
 
-      <div className='flex items-center justify-center w-full gap-5 my-5 max-md:hidden'>
+      <div className="flex items-center justify-center w-full gap-5 my-5 max-md:hidden">
         <div>
           <DatePicker
             isClearable
@@ -179,27 +179,27 @@ function Bill() {
             startDate={startDate}
             endDate={endDate}
             onChange={handleChangeDate}
-            placeholderText='Date: From - To'
-            dateFormat='yyyy/MM/dd'
-            className='input input-sm input-bordered'
+            placeholderText="Date: From - To"
+            dateFormat="yyyy/MM/dd"
+            className="input input-sm input-bordered"
             maxDate={new Date(Date.now())}
           />
         </div>
         <div>
           <select
-            className='w-full max-w-xs select select-bordered select-sm'
+            className="w-full max-w-xs select select-bordered select-sm"
             onChange={handleChangeSorting}
           >
-            <option value='date true'>SORT BY DATE: OLD to NEW</option>
-            <option value='date false'>SORT BY DATE: NEW to OLD</option>
-            <option value='total false'>SORT BY TOTAL: HIGH to LOW</option>
-            <option value='total true'>SORT BY TOTAL: LOW to HIGH</option>
+            <option value="date true">SORT BY DATE: OLD to NEW</option>
+            <option value="date false">SORT BY DATE: NEW to OLD</option>
+            <option value="total false">SORT BY TOTAL: HIGH to LOW</option>
+            <option value="total true">SORT BY TOTAL: LOW to HIGH</option>
           </select>
         </div>
       </div>
       {/* BILLS TABLE */}
-      <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-pin-rows'>
+      <div className="overflow-x-auto h-[35rem]">
+        <table className="z-0 table table-pin-rows">
           <thead>
             <tr>
               <th>DATE</th>
@@ -211,12 +211,22 @@ function Bill() {
           <tbody>
             {currentObjects.map((item: Movement, i: number) => (
               <tr key={i}>
-                <td>{item.date}</td>
+                <td>
+                  {item.date.split(" ")[0]}
+                  {" / "}
+                  {+item.date.split(" ")[1].substring(0, 2) -
+                    3 +
+                    ":" +
+                    item.date.split(" ")[1].substring(3, 5)}{" "}
+                  {+item.date.split(" ")[1].substring(0, 2) - 3 >= 12
+                    ? "PM"
+                    : "AM"}
+                </td>
                 <td>{item.order?.id}</td>
                 <td>{item.total}</td>
                 <td>
                   <NavLink to={`${item.order?.id}`}>
-                    <RiEyeLine className='w-5 h-5 eye-icon' />
+                    <RiEyeLine className="w-5 h-5 eye-icon" />
                   </NavLink>
                 </td>
               </tr>
