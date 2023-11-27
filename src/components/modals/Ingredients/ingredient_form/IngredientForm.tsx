@@ -57,7 +57,7 @@ const IngredientForm = ({ obj, open, onClose, watch }: IIngredientFormModal) => 
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+            <div className='p-5 modal-container w-[80%]' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{watch ? `Info Ingredient` : obj ? 'Edit Ingredient' : 'New Ingredient'}</h3>
                 <Formik
@@ -81,28 +81,28 @@ const IngredientForm = ({ obj, open, onClose, watch }: IIngredientFormModal) => 
                 >
 
                     <Form>
-                        <div className="gap-2 inputs-form">
+                        <div className="flex flex-col gap-2 inputs-form">
                             <div className="field">
                                 <label htmlFor='ingredient'>Ingredient Name</label>
-                                <Field name='name' type='text' className='input input-sm' disabled={watch}/>
+                                <Field name='name' type='text' className='input ' disabled={watch}/>
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='cost'>Cost</label>
-                                <Field name='cost' type='number' className='input input-sm' disabled={watch}/>
+                                <Field name='cost' type='number' className='input ' disabled={watch}/>
                                 <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='stock'>Stock</label>
-                                <Field name='stock' type='number' className='input input-sm' disabled={watch}/>
+                                <Field name='stock' type='number' className='input ' disabled={watch}/>
                                 <ErrorMessage name="stock">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='stockMin'>Stock Min.</label>
-                                <Field name='stockMin' type='number' className='input input-sm' disabled={watch}/>
+                                <Field name='stockMin' type='number' className='input ' disabled={watch}/>
                                 <ErrorMessage name="stockMin">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
@@ -117,12 +117,12 @@ const IngredientForm = ({ obj, open, onClose, watch }: IIngredientFormModal) => 
                                 />
                             </div>
                         </div>
-                        { !watch && <div className="flex justify-around my-3">
+                        { !watch && <div className="flex justify-around gap-5 my-3">
                             <button
                                 type="submit"
-                                className="btn btn-primary btn-wide btn-sm"
+                                className="w-36 btn btn-primary lg:btn-wide btn-md"
                             >Save</button>
-                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                            <span className='w-36 btn btn-secondary lg:btn-wide btn-md' onClick={() => onClose()}>Cancel</span>
                         </div> }
                     </Form>
                 </Formik>

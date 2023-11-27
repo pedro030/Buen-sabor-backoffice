@@ -136,6 +136,9 @@ function CategoriesCRUD() {
 
   return (
     <div className='mx-4 mt-4'>
+      <h2 className='my-2 text-xl font-bold text-center stat-title'>
+          Categories
+        </h2>
       {/* NEW CATEGORY BUTTON */}
       <CrudCreateButton Modal={CategoryForm} Title='Category' />
       {/* EDIT CATEGORY */}
@@ -146,15 +149,13 @@ function CategoriesCRUD() {
         watch={watchInfo}
       />
       <div className=''>
-        <h2 className='my-2 text-lg font-bold text-center stat-title'>
-          Categories
-        </h2>
+        
         {/* FILTERS */}
         <details className='mb-10 dropdown lg:hidden'>
-          <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+          <summary className='w-full mt-5 btn btn-primary btn-md'>
             Filter
           </summary>
-          <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  '>
+          <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full  '>
             <li>
               <input
                 type='text'
@@ -167,7 +168,7 @@ function CategoriesCRUD() {
             </li>
             <li>
               <select
-                className='w-full h-full max-w-xs select select-bordered select-sm'
+                className='w-full h-full select select-bordered select-sm'
                 onChange={handleChangeSorting}
               >
                 <option value={"id true"}>
@@ -179,7 +180,7 @@ function CategoriesCRUD() {
             </li>
             <li>
               <select
-                className='w-full h-full max-w-xs select select-bordered select-sm'
+                className='w-full h-full select select-bordered select-sm'
                 onChange={handleChangeSubcategory}
               >
                 <option value={1}>
@@ -222,7 +223,7 @@ function CategoriesCRUD() {
         </div>
         {/* CATEGORIES TABLE */}
         <div className='overflow-x-auto h-[35rem]'>
-          <table className='z-0 table table-xs table-pin-rows '>
+          <table className='z-0 table table-pin-rows '>
             <thead>
               <tr>
                 <th>Name</th>

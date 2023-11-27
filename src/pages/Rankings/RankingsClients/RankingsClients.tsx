@@ -159,7 +159,7 @@ const RankingsClients = () => {
             <ExportCSV csvData={sortedItems} rankingType={'Client Ranking'} rankingOpc={2} startDate={startDate} endDate={endDate}/>
           </div>
           {/* CLIENT RANKING TABLE */}
-          <table className="z-0 table table-xs">
+          <table className="z-0 table ">
             <thead>
               <tr>
                 <th>ID</th>

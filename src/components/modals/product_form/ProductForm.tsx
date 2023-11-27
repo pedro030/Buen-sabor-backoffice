@@ -172,7 +172,7 @@ const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+            <div className='p-5 modal-container ' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{watch ? `Info Product` : obj ? 'Edit Product' : 'New Product'}</h3>
                 <Formik
@@ -193,37 +193,37 @@ const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
                     onSubmit={(state) => { handleOnSubmit(state) }}
                 >
                     {({ values, setFieldValue }) => (
-                        <Form>
-                            <div className="inputs-form">
+                        <Form className=' h-[60vh] flex flex-col '>
+                            <div className="flex flex-col overflow-auto">
                                 <div className="field">
                                     <label htmlFor='name'>Name</label>
-                                    <Field name='name' type='text' className='input input-sm' disabled={watch}/>
+                                    <Field name='name' type='text' className='w-full input' disabled={watch}/>
                                     <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='price'>Price</label>
-                                    <Field name='price' type='number' className='input input-sm' disabled={watch}/>
+                                    <Field name='price' type='number' className='w-full input' disabled={watch}/>
                                     <ErrorMessage name="price">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 <div className="field">
                                     <label htmlFor='image'>Image</label>
-                                    <Field accept="image/*" name='images' type='file' className='input input-sm' onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(e)} disabled={watch}/>
+                                    <Field accept="image/*" name='images' type='file' className='w-full input' onChange={(e: ChangeEvent<HTMLInputElement>) => handleImageChange(e)} disabled={watch}/>
                                     <ErrorMessage name="images">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                 </div>
 
                                 {!(findParentCategory(subcategoryChange) || (values.subcategory.id === "")) &&
                                     <div className="field">
                                         <label htmlFor='cookingTime'>Cooking Time</label>
-                                        <Field name='cookingTime' type='number' className='input input-sm' disabled={watch}/>
+                                        <Field name='cookingTime' type='number' className='w-full input' disabled={watch}/>
                                         <ErrorMessage name="cookingTime">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                     </div>
                                 }
 
                                 <div className="field">
                                     <label htmlFor='active'>Status</label>
-                                    <Field name='active' as='select' className="input input-sm" disabled={watch}>
+                                    <Field name='active' as='select' className="w-full input" disabled={watch}>
                                         <option value="true">Active</option>
                                         <option value="false">Unactive</option>
                                     </Field>
@@ -232,7 +232,7 @@ const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
 
                                 <div className="field">
                                     <label htmlFor='active'>Category</label>
-                                    <Field name="subcategory" as='select' className="input input-sm" value={JSON.stringify(values.subcategory)} onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                                    <Field name="subcategory" as='select' className="w-full input" value={JSON.stringify(values.subcategory)} onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                                         const selectedValue = e.target.value;
                                         if(selectedValue != "") {
                                             const selectedCategory = JSON.parse(e.target.value);
@@ -252,17 +252,14 @@ const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
                                 </div>
 
                                 {findParentCategory(subcategoryChange) &&
-                                    <div className="field">
+                                    <div className="flex flex-col field">
                                         <label htmlFor='cost'>Cost</label>
-                                        <Field name='cost' type='number' className='input input-sm' disabled={watch}/>
+                                        <Field name='cost' type='number' className='input' disabled={watch}/>
                                         <ErrorMessage name="cost">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                                     </div>
                                 }
-                            </div>
-
-                            { /* INGREDIENTS */}
-                            { !(findParentCategory(subcategoryChange) || (values.subcategory.id === "")) &&
-                                <div className='flex flex-col '>
+                                { !(findParentCategory(subcategoryChange) || (values.subcategory.id === "")) &&
+                                <div className='flex flex-col mt-5'>
                                     <h1 className='tracking-widest text-center w-[60%] my-1'>Ingredients</h1>
                                     <div className='flex flex-row'>
 
@@ -299,13 +296,17 @@ const ProductForm = ({ obj, open, onClose, watch }: IProductFormModal) => {
                                     </div>
                                 </div> 
                             }
+                            </div>
 
-                            { !watch && <div className="flex justify-around my-3">
+                            { /* INGREDIENTS */}
+                            
+
+                            { !watch && <div className="flex justify-around gap-5 my-3">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary btn-wide btn-sm"
+                                    className="btn btn-primary w-36 lg:btn-wide btn-md"
                                 >Save</button>
-                                <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                                <span className='btn btn-secondary w-36 lg:btn-wide btn-md' onClick={() => onClose()}>Cancel</span>
                             </div> }
                         </Form>)}
                 </Formik>

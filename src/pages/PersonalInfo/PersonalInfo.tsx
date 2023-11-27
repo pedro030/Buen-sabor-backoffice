@@ -77,7 +77,7 @@ const PersonalInfo = () => {
   };
   
   return (
-    <div className=''>
+    <div className='flex flex-col items-center justify-center h-full'>
       <h2 className='mb-5 text-center stat-title'>Account Info</h2>
       <Formik
         initialValues={ userInfo.user ? userInfo.user : {
@@ -92,7 +92,7 @@ const PersonalInfo = () => {
         onSubmit={onSubmitChanges}
         validationSchema={validationSchema}
       >
-        <Form className='grid grid-cols-2 gap-4 max-md:grid-cols-1 place-content-center'>
+        <Form className='flex flex-col items-center justify-center w-full gap-4'>
           <div className='flex flex-col items-center justify-center'>
             <div>
               <label className='label' htmlFor='firstName'>
@@ -147,7 +147,7 @@ const PersonalInfo = () => {
           <div className='flex justify-center'>
             <button
               type='submit'
-              className='w-full mb-10 rounded-full btn btn-primary max-md:w-72'
+              className='w-full mb-10 rounded-full btn btn-primary w-72'
             >
               Save changes
             </button>

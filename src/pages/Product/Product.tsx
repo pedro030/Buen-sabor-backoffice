@@ -186,6 +186,9 @@ const Product = () => {
 
   return (
     <div className='m-4 h-[90vh]'>
+       <h2 className='my-2 text-xl font-bold text-center stat-title'>
+        Products
+      </h2>
       {/* NEW PRODUCT */}
       <CrudCreateButton Modal={ProductForm} Title='Products' />
       {/* EDIT PRODUCT */}
@@ -196,35 +199,33 @@ const Product = () => {
         watch={watchInfo}
       />
 
-      <h2 className='my-2 text-lg font-bold text-center stat-title'>
-        Products
-      </h2>
+     
       {/* FILTERS */}
-      <details className='mb-10 dropdown lg:hidden'>
-        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+      <details className='mt-3 mb-10 dropdown lg:hidden'>
+        <summary className='w-full btn btn-primary btn-md'>
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  '>
-          <li></li>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box  w-full  '>
+          <li>
           <input
             type='text'
             placeholder='NAME'
-            className=' input input-sm'
+            className=' input'
             onChange={handleChangeSearch}
             onKeyDown={searchOnEnter}
           />
-
+</li>
           <li>
             <input
               type='number'
               placeholder='PRICE MIN'
-              className='input input-sm'
+              className='input '
               onChange={handleChangePrice}
               onKeyDown={searchPriceOnEnter}
             />
           </li>
           <select
-            className='w-full h-full select select-bordered select-sm'
+            className='w-full h-full select select-bordered '
             onChange={handleChangeStatus}
           >
             <option selected value={1}>
@@ -318,7 +319,7 @@ const Product = () => {
       </div>
       {/* PRODUCTS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-xs table-pin-rows'>
+        <table className='z-0 table table-pin-rows'>
           <thead>
             <tr>
               <th>Name</th>
@@ -340,7 +341,7 @@ const Product = () => {
                       product.active
                         ? "badge badge-success text-white  "
                         : "badge badge-primary"
-                    } text-[7px] sm:text-[10px] lg:text-sm min-w-full max:lg:badge-lg`}
+                    }`}
                   >
                     {product.active ? "Active" : "No Active"}
                   </div>

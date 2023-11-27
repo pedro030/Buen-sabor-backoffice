@@ -167,10 +167,13 @@ const Ingredient = () => {
 
   return (
     <div className='mx-4 mt-4'>
+       <h2 className='my-2 text-xl font-bold text-center stat-title'>
+        Ingredients
+      </h2>
       {/* NEW INGREDIENT & RE-STOCK */}
-      <div className='flex gap-5'>
+      <div className='flex flex-col w-full gap-2 lg:flex-row'>
         <CrudCreateButton Modal={IngredientForm} Title='Ingredients' />
-        <button className='btn btn-primary' onClick={() => setReStockModalOpen(true)}>
+        <button className='btn btn-primary lg:btn-wide' onClick={() => setReStockModalOpen(true)}>
           <AiOutlineReload className="w-5 h-5" />Re - Stock
         </button>
       </div>
@@ -186,20 +189,18 @@ const Ingredient = () => {
         open={reStockModalOpen}
         onClose={() => setReStockModalOpen(false)}
       />
-      <h2 className='my-2 text-lg font-bold text-center stat-title'>
-        Ingredients
-      </h2>
+     
       <details className='mb-10 dropdown lg:hidden'>
         {/* FILTERS */}
-        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+        <summary className='w-full mt-2 btn btn-primary btn-md'>
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  '>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full  '>
           <li>
             <input
               type='text'
               placeholder='NAME'
-              className=' input input-sm'
+              className=' input'
               value={search}
               onKeyDown={searchOnEnter}
               onChange={handleChangeSearch}
@@ -209,7 +210,7 @@ const Ingredient = () => {
             <input
               type='number'
               placeholder='STOCK'
-              className='input input-sm '
+              className='input '
               onKeyDown={searchStockOnEnter}
               onChange={handleChangeStock}
             />
@@ -295,7 +296,7 @@ const Ingredient = () => {
       </div>
       {/* INGREDIENTS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-xs table-pin-rows'>
+        <table className='z-0 table table-pin-rows'>
           <thead>
             <tr>
               <th>Name</th>

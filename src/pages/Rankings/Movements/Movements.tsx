@@ -225,7 +225,7 @@ const Movements = () => {
           </div>
           {/* MOVEMENTS TABLE */}
           <div className="h-[60vh] overflow-y-auto">
-            <table className="z-0 table max-sm:table-xs table-sm table-pin-rows">
+            <table className="z-0 table max-sm: table-sm table-pin-rows">
               <thead>
                 <tr>
                   <th className="text-center">TYPE</th>

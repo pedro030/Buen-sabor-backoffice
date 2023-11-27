@@ -12,7 +12,7 @@ const CrudCreateButton = ({ Modal, Title }: ICrudCreateButtonProps) => {
 
   return (
     <div>
-      <button className='btn btn-primary' onClick={() => setOpen(true)}>
+      <button className='w-full btn btn-primary lg:btn-wide' onClick={() => setOpen(true)}>
         <IoIosAddCircleOutline className="w-5 h-5" />Add {Title}
       </button>
       <Modal open={open} onClose={() => setOpen(false)} watch={false}/>

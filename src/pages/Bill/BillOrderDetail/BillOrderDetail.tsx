@@ -38,10 +38,10 @@ export const BillOrderDetail = () => {
 
       { /* ORDER */}
       <div className='flex flex-col items-center w-full'>
-        <div className="flex flex-col gap-6 w-[80%]" >
-          <div className="w-full h-32 p-5 bg-white rounded-3xl">
-            <div className="flex flex-row items-center justify-between">
-              <div className="flex flex-row items-center">
+        <div className="flex w-[90%] flex-col gap-6" >
+          <div className="flex flex-col justify-between w-full p-5 bg-white lg:flex-row rounded-3xl">
+            <div className="flex flex-col items-center justify-between lg:flex-row">
+              <div className="flex flex-col items-center lg:flex-row">
                 <div className="flex justify-center avatar">
                   <div className="w-16 rounded-full">
                     <img src={user.picture} />
@@ -49,11 +49,12 @@ export const BillOrderDetail = () => {
                 </div>
                 <h1 className="ml-5 font-semibold tracking-widest">{`${user.firstName}  ${user.lastName}`}</h1>
               </div>
-              <h2 className="tracking-widest">Creation Date: <span className="font-bold">{creationDate.substring(0, 10)} / {(+creationDate.split(' ')[1].substring(0, 2) - 3) + ":" + creationDate.split(' ')[1].substring(3, 5)} { (+creationDate.split(' ')[1].substring(0, 2) - 3) >= 12 ? 'PM' : 'AM' }</span></h2>
             </div>
-            <div className="m-3">
-              <h2>{withdrawalMode === "Delivery" ? `Delivery Address: ${address}` : `Take Away In: ${address}`}</h2>
+            <div className="mt-5 ">
+              <h2 className='text-xs lg:text-sm lg:text-right'>{withdrawalMode === "Delivery" ? `Delivery Address: ${address}` : `Take Away In: ${address}`}</h2>
+              <h2 className="text-sm tracking-widest lg:text-right">Creation Date: <span className="font-bold">{creationDate.substring(0, 10)} / {(+creationDate.split(' ')[1].substring(0, 2) - 3) + ":" + creationDate.split(' ')[1].substring(3, 5)} { (+creationDate.split(' ')[1].substring(0, 2) - 3) >= 12 ? 'PM' : 'AM' }</span></h2>
             </div>
+
           </div>
 
           { /* PRODUCTS */}
@@ -67,7 +68,7 @@ export const BillOrderDetail = () => {
                 {products.map((item: ProductOrder) => {
                   return <div className='flex items-center'>
                     <img className='h-4 mr-4' src={pizzaSvg} alt="category icon" />
-                    <p className="my-1">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
+                    <p className="my-1 text-xs">{item.cant}x {item.product.name} ${item.product.price * item.cant}</p>
                   </div>
                 })}
               </div>
@@ -76,9 +77,9 @@ export const BillOrderDetail = () => {
             { /* DELIVERY TIME */}
             <div>
               <hr />
-              <div className="flex justify-between my-3">
-                <p>{ withdrawalMode === "Delivery" ? <p>Approximate Delivery Time: </p> : <p>Approximate Take Away Time:</p> }</p>
-                <p>{ setDeliveryTime(new Date(creationDate), totalCookingTime !== null ? totalCookingTime : 0)}</p>
+              <div className="flex justify-between my-3 [&>p]:text-xs ">
+                <p className='lg:text-md'>{ withdrawalMode === "Delivery" ? <p>Approximate Delivery Time: </p> : <p>Approximate Take Away Time:</p> }</p>
+                <p className='lg:text-md'>{ setDeliveryTime(new Date(creationDate), totalCookingTime !== null ? totalCookingTime : 0)}</p>
               </div>
             </div>
           </div>

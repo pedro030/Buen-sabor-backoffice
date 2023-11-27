@@ -86,7 +86,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container w-[60vw]' onClick={(e) => { e.stopPropagation() }}>
+            <div className='modal-container w-[80%] p-5' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>Ingredient List</h3>
                 <Formik
@@ -106,7 +106,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
 
                                     <div className='flex flex-row w-full h-64 ml-5 overflow-y-auto'>
                                         <div className='flex flex-col gap-5 m-1'>
-                                            <div className='grid grid-cols-[200px_100px_100px_130px_100px] text-center'>
+                                            <div className='grid grid-cols-[200px_150px_100px_130px_100px] text-center'>
                                                 <h2>Ingrediet</h2>
                                                 <h2>Amount</h2>
                                                 <h2>Stock</h2>
@@ -114,7 +114,7 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
                                                 <h2>Measure </h2>
                                             </div>
                                             {values.ingredients.map((e: IngredientInList, index: number) => (
-                                                <div key={index} className='grid grid-cols-[200px_100px_100px_130px_100px_100px] text-center'>
+                                                <div key={index} className='grid grid-cols-[200px_150px_100px_130px_100px_100px] text-center'>
                                                     <div className='field'>
                                                         <Field name={`ingredients[${index}].ingredient`} as='select' className="input input-sm" value={JSON.stringify(e.ingredient)} onChange={(e: ChangeEvent<HTMLSelectElement>) => handleSelect(e, index, values, setFieldValue)}>
                                                             <option value='' label='Select Ingredient' />
@@ -147,12 +147,12 @@ const IngredientListForm = ({ obj, open, onClose }: IIngredientListFormModal) =>
                                 </div>
 
                             </div>
-                            <div className="flex justify-around my-3">
+                            <div className="flex justify-around gap-5 my-3">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary btn-wide btn-sm"
+                                    className="btn btn-primary w-36 lg:btn-wide btn-md"
                                 >Save</button>
-                                <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                                <span className='btn btn-secondary w-36 lg:btn-wide btn-md' onClick={() => onClose()}>Cancel</span>
                             </div>
                         </Form>)}
                 </Formik>

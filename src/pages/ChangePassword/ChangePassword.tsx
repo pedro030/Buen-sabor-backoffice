@@ -72,7 +72,7 @@ const ChangePassword = () => {
     }
 
     return (
-        <>
+        <div className='flex flex-col items-center justify-center h-full'>
             <h1 className="m-5 mb-10 text-xl tracking-widest text-center">CHANGE PASSWORD</h1>
             <div className="flex items-center justify-center ">
                 <Formik
@@ -83,7 +83,7 @@ const ChangePassword = () => {
                     onSubmit={handleSubmit}
                     validationSchema={validationSchema}
                 >
-                    <Form className="flex flex-col gap-5 md:w-[60%]">
+                    <Form className="flex flex-col gap-5 md:w-[80%]">
                         <div className="flex flex-col ">
                             <label className="label">
                                 <span className="label-text">New Password</span>
@@ -107,7 +107,7 @@ const ChangePassword = () => {
                     </Form>
                 </Formik>
             </div>
-        </>
+        </div>
     )
 }
 

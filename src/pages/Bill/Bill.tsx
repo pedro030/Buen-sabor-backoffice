@@ -134,10 +134,10 @@ function Bill() {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Bills</h2>
       {/* FILTERS */}
       <details className='mb-10 dropdown md:hidden'>
-        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+        <summary className='w-full m-1 btn btn-primary lg:btn-wide btn-md'>
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
           <li>
             <div>
               <DatePicker
@@ -150,7 +150,7 @@ function Bill() {
                 onChange={handleChangeDate}
                 placeholderText='Date: From - To'
                 dateFormat='yyyy/MM/dd'
-                className=' input input-sm input-bordered'
+                className=' input input-bordered'
                 maxDate={new Date(Date.now())}
               />
             </div>
@@ -199,7 +199,7 @@ function Bill() {
       </div>
       {/* BILLS TABLE */}
       <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-xs table-pin-rows'>
+        <table className='z-0 table table-pin-rows'>
           <thead>
             <tr>
               <th>DATE</th>

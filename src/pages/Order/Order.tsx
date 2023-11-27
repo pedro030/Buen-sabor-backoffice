@@ -185,15 +185,15 @@ const Order = () => {
       <h2 className='my-2 text-lg font-bold text-center stat-title'>Orders</h2>
       <details className='mb-10 dropdown md:hidden'>
         {/* FILTERS */}
-        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+        <summary className='w-full m-1 btn btn-primary lg:btn-wide btn-md '>
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
           <li>
             <input
               type='number'
               placeholder='SEARCH BY ID'
-              className=' input input-sm'
+              className=' input'
               onChange={handleChangeId}
             />
           </li>
@@ -201,7 +201,7 @@ const Order = () => {
             <input
               type='number'
               placeholder='MIN. TOTAL.'
-              className='input input-sm'
+              className='input '
               onChange={handleChangeTotalPrice}
               onKeyDown={searchTotalPriceOnEnter}
             />
@@ -265,7 +265,7 @@ const Order = () => {
             </select> }
       </div>
       <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table table-xs table-pin-rows'>
+        <table className='z-0 table table-pin-rows'>
           <thead>
             <tr>
               <th>ID</th>

@@ -60,7 +60,7 @@ const CategoryForm = ({ obj, open, onClose, watch }: ICategoryFormModal) => {
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+            <div className='p-5 modal-container w-[80%]' onClick={(e) => { e.stopPropagation() }}>
                 <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{watch ? `Info Category` : obj ? 'Edit Category' : 'New Category'}</h3>
                 <Formik
@@ -79,10 +79,10 @@ const CategoryForm = ({ obj, open, onClose, watch }: ICategoryFormModal) => {
                     onSubmit={(state) => { handleOnSubmit(state as Category) }}
                 >
                     <Form>
-                        <div className=" inputs-form w-96">
+                        <div className="flex flex-col inputs-form">
                             <div className="field ">
                                 <label htmlFor='name'>Name</label>
-                                <Field name='name' type='text' className='w-full max-w-xs input ' disabled={watch}/>
+                                <Field name='name' type='text' className='w-full input ' disabled={watch}/>
                                 <ErrorMessage name="name">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
                             <div className="field">

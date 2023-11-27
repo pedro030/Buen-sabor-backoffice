@@ -280,7 +280,7 @@ const Employees = () => {
           </select>
         </div>
         <div className='overflow-x-auto h-[35rem]'>
-          <table className='z-0 table table-xs table-pin-rows'>
+          <table className='z-0 table  table-pin-rows'>
             <thead>
               <tr>
                 <th>Full Name</th>

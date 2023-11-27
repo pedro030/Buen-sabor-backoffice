@@ -232,7 +232,7 @@ const RankingsProducts = () => {
                       product.active
                         ? "badge badge-success text-white  "
                         : "badge badge-primary"
-                    } text-[7px] sm:text-[10px] min-w-full max:lg:badge-lg`}
+                    }`}
                   >
                     {product.active ? "Active" : "No Active"}
                   </div>
@@ -283,7 +283,7 @@ const RankingsProducts = () => {
                       product.active
                         ? "badge badge-success text-white  "
                         : "badge badge-primary"
-                    } text-[7px] sm:text-[10px] min-w-full max:lg:badge-lg`}
+                    }`}
                   >
                     {product.active ? "Active" : "No Active"}
                   </div>

@@ -86,7 +86,7 @@ export const UserDetail = () => {
             <div className='flex justify-center w-full'>
                 <div className="overflow-x-auto h-[35rem] w-[60vw]">
                     <h1 className='mb-5 text-lg font-bold tracking-widest text-center uppercase'>{`Ordered by: ${firstName} ${lastName}`}</h1>
-                    <table className="table table-xs table-pin-rows ">
+                    <table className="table  table-pin-rows ">
                         <thead>
                             <tr>
                                 <th>DATE / HOUR</th>
