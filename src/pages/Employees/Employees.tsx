@@ -164,7 +164,10 @@ const Employees = () => {
   return (
     <>
       <div className='m-4'>
-      <button className='btn btn-primary' onClick={() => handleAddNew()}>
+      <h2 className='my-2 text-lg font-bold text-center stat-title'>
+          Employees
+        </h2>
+      <button className='w-full lg:btn-wide btn btn-primary' onClick={() => handleAddNew()}>
         <IoIosAddCircleOutline className="w-5 h-5" />Add Employee
       </button>
         {/* WATCH EMPLOYEE INFO */}
@@ -175,12 +178,10 @@ const Employees = () => {
           employee={true}
           watch={watchInfo}
         />
-        <h2 className='my-2 text-lg font-bold text-center stat-title'>
-          Employees
-        </h2>
+      
         {/* FILTERS */}
-        <details className='mb-10 dropdown md:hidden'>
-          <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+        <details className='mt-3 mb-10 dropdown md:hidden'>
+          <summary className='w-full btn btn-primary lg:btn-wide btn-md'>
             Filter
           </summary>
           <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
@@ -188,7 +189,7 @@ const Employees = () => {
               <input
                 type='text'
                 placeholder='FIRST NAME'
-                className=' input input-sm'
+                className=' input'
                 onChange={handleChangeFirstName}
                 onKeyDown={searchFirstNameOnEnter}
               />
@@ -197,7 +198,7 @@ const Employees = () => {
               <input
                 type='text'
                 placeholder='LAST NAME'
-                className=' input input-sm'
+                className=' input'
                 onChange={handleChangeLastName}
                 onKeyDown={searchLastNameOnEnter}
               />
@@ -280,7 +281,7 @@ const Employees = () => {
           </select>
         </div>
         <div className='overflow-x-auto h-[35rem]'>
-          <table className='z-0 table  table-pin-rows'>
+          <table className='z-0 table table-pin-rows'>
             <thead>
               <tr>
                 <th>Full Name</th>

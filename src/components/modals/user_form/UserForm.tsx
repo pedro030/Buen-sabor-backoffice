@@ -188,7 +188,7 @@ const UserForm = ({ obj, open, onClose, employee, watch }: IUserFormModal) => {
 
     return (
         <div className='overlay' onClick={() => onClose()}>
-            <div className='modal-container' onClick={(e) => { e.stopPropagation() }}>
+            <div className='p-5 modal-container w-[90%]' onClick={(e) => { e.stopPropagation() }}>
             <button onClick={onClose} className="absolute btn btn-sm btn-circle btn-ghost right-3 top-2">✕</button>
                 <h3>{watch ? `Info ${userEmployee}` : obj ? `Edit ${userEmployee}` : `New ${userEmployee}`}</h3>
                 <Formik
@@ -213,37 +213,37 @@ const UserForm = ({ obj, open, onClose, employee, watch }: IUserFormModal) => {
                     validationSchema={obj?validationSchemaEdit:validationSchemaCreate}
                     onSubmit={(state) => { handleOnSubmit(state as User) }}
                 >
-                    <Form>
-                        <div className="inputs-form">
+                    <Form className='h-[70vh] w-full overflow-auto'>
+                        <div className="flex flex-col inputs-form">
 
                             <div className="field">
                                 <label htmlFor='firstName'>First Name</label>
-                                <Field name='firstName' type='text' className='input input-sm' disabled={watch}/>
+                                <Field name='firstName' type='text' className='input ' disabled={watch}/>
                                 <ErrorMessage name="firstname">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='lastName'>Last Name</label>
-                                <Field name='lastName' type='text' className='input input-sm' disabled={watch}/>
+                                <Field name='lastName' type='text' className='input ' disabled={watch}/>
                                 <ErrorMessage name="lastname">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='telephone'>telephone</label>
-                                <Field name='telephone' type='number' className='input input-sm' disabled={watch}/>
+                                <Field name='telephone' type='number' className='input ' disabled={watch}/>
                                 <ErrorMessage name="telephone">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             <div className="field">
                                 <label htmlFor='mail'>Mail</label>
-                                <Field name='mail' type='text' className='input input-sm' disabled={watch || obj}/>
+                                <Field name='mail' type='text' className='input ' disabled={watch || obj}/>
                                 <ErrorMessage name="mail">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>
 
                             {obj? <></>:
                             <div className="field">
                                 <label htmlFor='password'>Password</label>
-                                <Field name='password' type='text' className='input input-sm' disabled={watch}/>
+                                <Field name='password' type='text' className='input ' disabled={watch}/>
                                 <ErrorMessage name="password">{msg => <span className="error-message">{msg}</span>}</ErrorMessage>
                             </div>}
 
@@ -258,12 +258,12 @@ const UserForm = ({ obj, open, onClose, employee, watch }: IUserFormModal) => {
                                 />
                             </div>
                         </div>
-                        { !watch && <div className="flex justify-around my-3">
+                        { !watch && <div className="flex justify-around gap-5 my-3">
                             <button
                                 type="submit"
-                                className="btn btn-primary btn-wide btn-sm"
+                                className="btn btn-primary w-36 lg:btn-wide btn-md"
                             >Save</button>
-                            <span className='btn btn-secondary btn-wide btn-sm' onClick={() => onClose()}>Cancel</span>
+                            <span className='btn btn-secondary w-36 lg:btn-wide btn-md' onClick={() => onClose()}>Cancel</span>
                         </div> }
                     </Form>
                 </Formik>

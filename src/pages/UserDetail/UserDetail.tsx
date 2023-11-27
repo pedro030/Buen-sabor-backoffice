@@ -95,29 +95,25 @@ export const UserDetail = () => {
     );
   }
 
-  return (
-    <div className="m-4">
-      <span
-        className="flex flex-row items-center gap-2 cursor-pointer"
-        onClick={() => navigate(-1)}
-      >
-        <IoMdArrowRoundBack /> back
-      </span>
-      <h2 className="my-2 text-lg font-bold text-center stat-title"></h2>
-      <div className="flex items-center justify-center w-full gap-5 "></div>
-      <div className="flex justify-center w-full">
-        <div className="overflow-x-auto h-[35rem] w-[60vw]">
-          <h1 className="mb-5 text-lg font-bold tracking-widest text-center uppercase">{`Ordered by: ${firstName} ${lastName}`}</h1>
-          <table className="table  table-pin-rows ">
-            <thead>
-              <tr>
-                <th>DATE / HOUR</th>
-                <th>WITHDRAWAL MODE</th>
-                <th>STATUS</th>
-                <th>TOTAL</th>
-                <th>VIEW ORDER</th>
-              </tr>
-            </thead>
+  return(
+<div className="m-4">
+            <span className='flex flex-row items-center gap-2 cursor-pointer' onClick={() => navigate(-1)}><IoMdArrowRoundBack /> back</span>
+            <h2 className='my-2 text-lg font-bold text-center stat-title'></h2>
+            <div className="flex items-center justify-center w-full gap-5 ">
+            </div>
+            <div className='flex justify-center w-full'>
+                <div className="overflow-x-auto h-[35rem] ">
+                    <h1 className='mb-5 text-lg font-bold tracking-widest text-center uppercase'>{`Ordered by: ${firstName} ${lastName}`}</h1>
+                    <table className="table table-pin-rows ">
+                        <thead>
+                            <tr>
+                                <th>DATE / HOUR</th>
+                                <th>WITHDRAWAL MODE</th>
+                                <th>STATUS</th>
+                                <th>TOTAL</th>
+                                <th>VIEW ORDER</th>
+                            </tr>
+                        </thead>
             <tbody>
               {orders.length > 0 &&
                 orders.map((order: Order, i: number) => (
@@ -153,6 +149,7 @@ export const UserDetail = () => {
               <h1 className="text-2xl font-bold tracking-widest text-secondary">
                 He does not have any orders
               </h1>
+
             </div>
           )}
         </div>

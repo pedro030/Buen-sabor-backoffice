@@ -160,34 +160,29 @@ const Movements = () => {
       {/* FILTERS */}
       <div className="flex justify-center">
         <div>
-          <details className="mb-10 dropdown md:hidden">
-            <summary className="m-1 btn btn-primary btn-wide btn-sm">
-              Filter
-            </summary>
-            <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80  ">
-              <li>
-                <DatePicker
-                  isClearable
-                  withPortal
-                  selectsRange
-                  selected={startDate}
-                  startDate={startDate}
-                  endDate={endDate}
-                  onChange={handleChangeDate}
-                  placeholderText="Date: From - To"
-                  dateFormat="yyyy/MM/dd"
-                  className="input input-sm input-bordered"
-                  maxDate={new Date(Date.now())}
-                />
-              </li>
-              <li>
-                <select
-                  className="w-full h-full select select-bordered select-sm"
-                  onChange={handleChangeType}
-                >
-                  <option selected value="">
-                    TYPE: ALL
-                  </option>
+        <details className='mb-10 dropdown md:hidden'>
+        <summary className='w-full btn btn-primary lg:btn-wide btn-md'>
+          Filter
+        </summary>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full   '>
+          <li>
+            <DatePicker
+                    isClearable
+                    withPortal
+                    selectsRange
+                    selected={startDate}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={handleChangeDate}
+                    placeholderText="Date: From - To"
+                    dateFormat="yyyy/MM/dd"
+                    className="input input-bordered"
+                    maxDate={new Date(Date.now())}
+                  />
+          </li>
+          <li>
+            <select className="w-full h-full select select-bordered select-sm" onChange={handleChangeType}>
+                  <option selected value="">TYPE: ALL</option>
                   <option value="Restocking">TYPE: RESTOCKING</option>
                   <option value="Bill">TYPE: BILL</option>
                   <option value="Credit_Note">TYPE: CREDIT NOTE</option>

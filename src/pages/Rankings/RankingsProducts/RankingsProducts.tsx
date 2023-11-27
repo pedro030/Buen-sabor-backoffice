@@ -130,10 +130,10 @@ const RankingsProducts = () => {
         </h1>
 
         <details className='mb-10 dropdown md:hidden'>
-          <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+          <summary className='w-full btn btn-primary lg:btn-wide btn-md'>
             Filter
           </summary>
-          <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+          <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
             <li>
               <DatePicker
                 isClearable
@@ -145,7 +145,7 @@ const RankingsProducts = () => {
                 onChange={handleChangeDate}
                 placeholderText='Date: From - To'
                 dateFormat='yyyy/MM/dd'
-                className='cursor-pointer input input-sm input-bordered'
+                className='cursor-pointer input input-bordered'
                 maxDate={new Date(Date.now())}
               />
             </li>

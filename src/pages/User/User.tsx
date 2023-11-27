@@ -250,15 +250,15 @@ function User() {
 
       {/* FILTERS */}
       <details className='mb-10 dropdown md:hidden'>
-        <summary className='m-1 btn btn-primary btn-wide btn-sm'>
+        <summary className='w-full m-1 btn btn-primary lg:btn-wide btn-md'>
           Filter
         </summary>
-        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-80 gap-5 '>
+        <ul className='p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-full gap-5 '>
           <li>
             <input
               type='text'
               placeholder='FIRST NAME'
-              className=' input input-sm'
+              className=' input'
               onChange={handleChangeFirstName}
               onKeyDown={searchFirstNameOnEnter}
             />
@@ -267,7 +267,7 @@ function User() {
             <input
               type='text'
               placeholder='LAST NAME'
-              className=' input input-sm'
+              className=' input'
               onChange={handleChangeLastName}
               onKeyDown={searchLastNameOnEnter}
             />
@@ -347,7 +347,7 @@ function User() {
         </select>
       </div>
       <div className='overflow-x-auto h-[35rem]'>
-        <table className='z-0 table  table-pin-rows'>
+        <table className='z-0 table table-pin-rows'>
           <thead>
             <tr>
               <th>Full Name</th>
